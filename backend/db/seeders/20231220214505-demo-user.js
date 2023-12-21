@@ -24,7 +24,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    await options.bulkCreate([
+    await options.tableName.bulkCreate([
       {
         firstName:'Stryker',
         lastName:'Huber',
@@ -57,7 +57,7 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-   
+
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
       username: { [Op.in]: ['Demo-lition', 'FakeUser1', 'FakeUser2'] }
