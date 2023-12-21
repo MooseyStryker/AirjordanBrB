@@ -1,5 +1,12 @@
 'use strict';
 
+let options = {};
+
+/* you specified a schema name for the production environment only. When you look at your data in sqlite in the development environment, the tables will not be prefixed by the schema name */
+if (process.env.NODE_ENV === 'production'){
+  options.schema = process.env.SCHEMA // Defines your schema in options object
+}
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
@@ -9,10 +16,10 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    await queryInterface.addColumn('Users', 'firstName', {
+    await queryInterface.addColumn(options, 'firstName', {
       type: Sequelize.STRING
     })
-    await queryInterface.addColumn('Users', 'lastName', {
+    await queryInterface.addColumn(options, 'lastName', {
       type: Sequelize.STRING
     })
   },
@@ -24,7 +31,7 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    await queryInterface.removeColumn('Users', 'firstName')
-    await queryInterface.removeColumn('Users', 'lastName')
+    await queryInterface.removeColumn(options, 'firstName')
+    await queryInterface.removeColumn(options, 'lastName')
   }
 };
