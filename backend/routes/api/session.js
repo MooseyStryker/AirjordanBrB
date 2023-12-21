@@ -35,6 +35,7 @@ router.post('/', validateLogin, async (req, res, next) => {
       });
 
       if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
+
         const err = new Error('Login failed');
         err.status = 401;
         err.title = 'Login failed';
@@ -65,19 +66,21 @@ router.delete('/',(_req, res) => {
 
 
 // Restore session user
-router.get(
-  '/',
-  (req, res) => {
+router.get('/',(req, res) => {
     const { user } = req;
+
     if (user) {
       const safeUser = {
         id: user.id,
+        firstName: user.firstName,
+        lastNmae: user.lastName,
         email: user.email,
         username: user.username,
       };
       return res.json({
         user: safeUser
       });
+
     } else return res.json({ user: null });
   }
 );
