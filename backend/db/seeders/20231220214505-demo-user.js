@@ -5,7 +5,6 @@ const bcrypt = require('bcryptjs')
 
 let options = {}
 
-/* you specified a schema name for the production environment only. When you look at your data in sqlite in the development environment, the tables will not be prefixed by the schema name */
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;  // define your schema in options object
 }
