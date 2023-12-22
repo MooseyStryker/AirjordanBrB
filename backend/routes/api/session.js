@@ -45,6 +45,8 @@ router.post('/', validateLogin, async (req, res, next) => {
 
       const safeUser = {
         id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         username: user.username,
       };
@@ -73,7 +75,7 @@ router.get('/',(req, res) => {
       const safeUser = {
         id: user.id,
         firstName: user.firstName,
-        lastNmae: user.lastName,
+        lastName: user.lastName,
         email: user.email,
         username: user.username,
       };
@@ -85,5 +87,5 @@ router.get('/',(req, res) => {
   }
 );
 
-
+// VL1Jj0ta-6jqy1jdvlMM-WL0BXdV0zVVJdSg
 module.exports = router;
