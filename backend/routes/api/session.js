@@ -87,5 +87,4 @@ router.get('/',(req, res) => {
   }
 );
 
-// 3RRKn3Vr-wWoCeo6dQqYZqZLaa49ZrjJ88GM
 module.exports = router;
