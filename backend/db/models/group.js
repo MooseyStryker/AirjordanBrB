@@ -1,7 +1,6 @@
 'use strict';
 const {
-  Model,
-  Op
+  Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Group extends Model {
@@ -12,12 +11,19 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Group.belongsTo(models.User, {
+        foreignKey: 'organizerId'
+      })
     }
   }
   Group.init({
     organizerId: {
-      type: DataTypes.INTEGER.BOOLEAN,
-      allowNull: false
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'User',
+        key: 'id'
+      }
     },
     name: {
       type: DataTypes.STRING,
@@ -30,26 +36,23 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len: [1,50]
+        len: {
+          arg: [1,50],
+          msg: 'Length must be between 1 and 50'
+        }
+
       }
     },
     type: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate:{
-        twoOptions(value){
-          if (value !== 'Online' || 'In person') {
-            throw new Error("Type must be 'Online' or 'In person'")
-          }
-        }
-      }
+      type:DataTypes.ENUM,
+      values:['Online', 'In person']
     },
     private: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       validate:{
         isBoolean(value){
-          if (value != true || false){
+          if (value !== true && value !== false){
             throw new Error('Private must be a boolean')
           }
         }
@@ -59,14 +62,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: false,
       validate: {
-        notEmpty: false
+        notEmpty: true
       }
     },
     state: {
       type: DataTypes.TEXT,
       allowNull: false,
       validate: {
-        notEmpty: false
+        notEmpty: true
       }
     },
     numMembers: {

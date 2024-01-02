@@ -19,7 +19,11 @@ module.exports = {
       },
       organizerId: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: 'Users',
+          key: 'id'
+        }
       },
       name: {
         type: Sequelize.STRING,
@@ -30,7 +34,7 @@ module.exports = {
         allowNull: false,
       },
       type: {
-        type: Sequelize.STRING,
+        type: Sequelize.ENUM,
         allowNull: false,
       },
       private: {
