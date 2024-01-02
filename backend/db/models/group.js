@@ -15,7 +15,25 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'groupId',
         onDelete: 'CASCADE',
         hooks: true
-      })
+      }),
+
+      Group.hasMany(models.Venue, {
+        foreignKey: 'groupId',
+        onDelete: 'CASCADE',
+        hooks: true
+      }),
+
+      Group.hasMany(models.GroupImage, {
+        foreignKey: 'groupId',
+        onDelete: 'CASCADE',
+        hooks: true
+      }),
+
+      Group.hasMany(models.Membershi, {
+        foreignKey: 'groupId',
+        onDelete: 'CASCADE',
+        hooks: true
+      }),
 
       Group.belongsTo(models.User, {
         foreignKey: 'organizerId'
