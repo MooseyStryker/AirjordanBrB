@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class events extends Model {
+  class Event extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,33 +11,100 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Event.belongsto(models.Group, {
+        foreignKey: 'groupId'
+      })
+
+      Event.belongsTo(models.Venue, {
+        foreignKey: 'venueId'
+      })
     }
   }
-  events.init({
+  Event.init({
     venueId: {
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'Venues',
+        key: 'id'
+      }
     },
     groupId: {
-      type: DataTypes.INTEGER},
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'Groups',
+        key: 'id'
+      }
+    },
     name: {
-      type: DataTypes.STRING},
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: {
+          args: [5],
+          msg: "Name must be at least 5 characters"
+        }
+      }
+    },
     description: {
-      type: DataTypes.TEXT},
+      type: DataTypes.TEXT,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: "Description is required"
+        }
+      }
+    },
     type: {
       type:DataTypes.ENUM,
-      values:['Online', 'In person']
+      values:['Online', 'In person'],
+      validate: {
+        isIn: {
+          args: [['Online', 'In person']],
+          msg: "Type must be Online or In person"
+        }
+      }
     },
     capacity: {
-      type: DataTypes.INTEGER},
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        isInt: {
+          msg: "Capacity must be an integer"
+        }
+      }
+    },
     price: {
-      type: DataTypes.INTEGER},
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        isInt: {
+          msg: "Price is invalid"
+        }
+      }
+    },
     startDate: {
-      type: DataTypes.DATE},
+      type: DataTypes.DATE,
+      allowNull: false,
+      validate: {
+        isDate: {
+          msg: "Start date must be in the future",
+          isAfter: new Date().toString()
+        }
+      }
+    },
     endDate: {
-      type: DataTypes.DATE}
+      type: DataTypes.DATE,
+      allowNull: false,
+      validate: {
+        isDate: {
+          msg: "End date is less than start date",
+          isAfter: "startDate"
+        }
+      }
+    }
   }, {
     sequelize,
-    modelName: 'events',
+    modelName: 'Event',
   });
-  return events;
+  return Event;
 };
