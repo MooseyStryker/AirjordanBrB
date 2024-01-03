@@ -29,13 +29,14 @@ module.exports = (sequelize, DataTypes) => {
         hooks: true
       }),
 
-      Group.hasMany(models.Membershi, {
+      Group.hasMany(models.Membership, {
         foreignKey: 'groupId',
         onDelete: 'CASCADE',
         hooks: true
       }),
 
       Group.belongsTo(models.User, {
+        as: 'Organizer',
         foreignKey: 'organizerId'
       })
     }
@@ -53,7 +54,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len: [1,60]
+        len: {
+          args: [1,60],
+          msg: 'Name must be 60 characters or more'
+
+        }
       }
     },
     about: {
@@ -62,14 +67,18 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         len: {
           arg: [1,50],
-          msg: 'Length must be between 1 and 50'
+          msg: 'Info in About must be 50 characters or less'
         }
-
       }
     },
     type: {
-      type:DataTypes.ENUM,
-      values:['Online', 'In person']
+      type: DataTypes.ENUM('Online', 'In person'),
+      validate: {
+        isIn: {
+          args: [['Online', 'In person']],
+          msg: "Type must be 'Online' or 'In person'"
+        }
+      }
     },
     private: {
       type: DataTypes.BOOLEAN,
@@ -97,12 +106,10 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     numMembers: {
-      type: DataTypes.INTEGER,
-      allowNull: false
+      type: DataTypes.INTEGER
     },
     previewImage: {
-      type: DataTypes.STRING,
-      allowNull: false
+      type: DataTypes.STRING
     }
   }, {
     sequelize,

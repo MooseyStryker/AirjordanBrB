@@ -14,39 +14,73 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     try {
       await Group.bulkCreate([
-        {
-          organizerId: 1,
-          name:"farms",
-          about:'This is all about touching grass and seeing cows',
-          type: 'In person',
-          private: false,
-          city: 'Tucson',
-          state: 'Az',
-          numMembers: 10,
-          previewImage:'Thiskdjae'
-        },
-        {
-          organizerId: 2,
-          name:"zoos",
-          about:'This is all about touching concrete and seeing elephants',
-          type: 'In person',
-          private: false,
-          city: 'Tucson',
-          state: 'Az',
-          numMembers: 10,
-          previewImage:'Thiskdjae'
-        },
-        {
-          organizerId: 3,
-          name:"skate",
-          about:'This is all about touching skateboards and seeing kids fall',
-          type: 'In person',
-          private: true,
-          city: 'Tucson',
-          state: 'Az',
-          numMembers: 10,
-          previewImage:'Thiskdjae'
-        }
+
+          {
+            organizerId: 1,
+            name: "gardening",
+            about: "This is all about planting flowers and growing vegetables",
+            type: "In person",
+            private: false,
+            city: "Tucson",
+            state: "Az",
+            numMembers: 15,
+            previewImage: "Thiskdjae"
+          },
+          {
+            organizerId: 2,
+            name: "aquariums",
+            about: "This is all about maintaining fish tanks and aquatic plants",
+            type: "In person",
+            private: false,
+            city: "Tucson",
+            state: "Az",
+            numMembers: 20,
+            previewImage: "Thiskdjae"
+          },
+          {
+            organizerId: 3,
+            name: "coding",
+            about: "This is all about learning to code and building projects",
+            type: "In person",
+            private: true,
+            city: "Tucson",
+            state: "Az",
+            numMembers: 25,
+            previewImage: "Thiskdjae"
+          },
+          {
+            organizerId: 1,
+            name: "hiking",
+            about: "This is all about exploring nature trails and mountain climbing",
+            type: "In person",
+            private: false,
+            city: "Tucson",
+            state: "Az",
+            numMembers: 30,
+            previewImage: "Thiskdjae"
+          },
+          {
+            organizerId: 2,
+            name: "photography",
+            about: "This is all about taking stunning photos and editing techniques",
+            type: "In person",
+            private: false,
+            city: "Tucson",
+            state: "Az",
+            numMembers: 35,
+            previewImage: "Thiskdjae"
+          },
+          {
+            organizerId: 3,
+            name: "cooking",
+            about: "This is all about trying new recipes and cooking techniques",
+            type: "In person",
+            private: true,
+            city: "Tucson",
+            state: "Az",
+            numMembers: 40,
+            previewImage: "Thiskdjae"
+          }
       ], { validate: true });
     } catch (error) {
       console.error('Error occurred:', error);
