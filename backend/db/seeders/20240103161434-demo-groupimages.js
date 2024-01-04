@@ -21,12 +21,12 @@ module.exports = {
           preview: true
         },
         {
-          groupId: 1,
+          groupId: 2,
           url: 'https://example.com/image2.jpg',
           preview: false
         },
         {
-          groupId: 2,
+          groupId: 3,
           url: 'https://example.com/image3.jpg',
           preview: true
         }

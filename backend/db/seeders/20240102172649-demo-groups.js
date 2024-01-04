@@ -22,9 +22,7 @@ module.exports = {
             type: "In person",
             private: false,
             city: "Tucson",
-            state: "Az",
-            numMembers: 15,
-            previewImage: "Thiskdjae"
+            state: "Az"
           },
           {
             organizerId: 2,
@@ -33,9 +31,7 @@ module.exports = {
             type: "In person",
             private: false,
             city: "Tucson",
-            state: "Az",
-            numMembers: 20,
-            previewImage: "Thiskdjae"
+            state: "Az"
           },
           {
             organizerId: 3,
@@ -45,8 +41,6 @@ module.exports = {
             private: true,
             city: "Tucson",
             state: "Az",
-            numMembers: 25,
-            previewImage: "Thiskdjae"
           },
           {
             organizerId: 1,
@@ -55,9 +49,7 @@ module.exports = {
             type: "In person",
             private: false,
             city: "Tucson",
-            state: "Az",
-            numMembers: 30,
-            previewImage: "Thiskdjae"
+            state: "Az"
           },
           {
             organizerId: 2,
@@ -66,9 +58,7 @@ module.exports = {
             type: "In person",
             private: false,
             city: "Tucson",
-            state: "Az",
-            numMembers: 35,
-            previewImage: "Thiskdjae"
+            state: "Az"
           },
           {
             organizerId: 3,
@@ -77,9 +67,7 @@ module.exports = {
             type: "In person",
             private: true,
             city: "Tucson",
-            state: "Az",
-            numMembers: 40,
-            previewImage: "Thiskdjae"
+            state: "Az"
           }
       ], { validate: true });
     } catch (error) {
