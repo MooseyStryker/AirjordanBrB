@@ -4,19 +4,19 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Event extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+  
     static associate(models) {
       // define association here
       Event.hasMany(models.Attendence, {
-        foreignKey: 'eventId'
+        foreignKey: 'eventId',
+        onDelete: 'CASCADE',
+        hooks: true
       }),
 
       Event.hasMany(models.EventImage, {
-        foreignKey: 'eventId'
+        foreignKey: 'eventId',
+        onDelete: 'CASCADE',
+        hooks: true
       }),
 
       Event.belongsTo(models.Group, {
@@ -82,14 +82,20 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     price: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DECIMAL,
       allowNull: false,
       validate: {
-        isInt: {
-          msg: "Price is invalid"
-        }
+          isDecimal: {
+              args: true,
+              msg: "Price must be a decimal number"
+          },
+          isPositive(value) {
+              if (parseFloat(value) < 0) {
+                  throw new Error('Price must be a positive number');
+              }
+          }
       }
-    },
+  },
     startDate: {
       type: DataTypes.DATE,
       allowNull: false,
@@ -113,6 +119,9 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Event',
+    defaultScope: {
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
+    },
   });
   return Event;
 };

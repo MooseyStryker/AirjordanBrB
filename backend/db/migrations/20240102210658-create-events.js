@@ -1,4 +1,5 @@
 'use strict';
+
 let options = {};
 
 /* you specified a schema name for the production environment only. When you look at your data in sqlite in the development environment, the tables will not be prefixed by the schema name */
@@ -18,7 +19,6 @@ module.exports = {
       },
       venueId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
         references: {
           model: 'Venues',
           key: 'id'
@@ -26,7 +26,6 @@ module.exports = {
       },
       groupId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
         references: {
           model: 'Groups',
           key: 'id'
@@ -48,7 +47,7 @@ module.exports = {
         allowNull: false
       },
       price: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.DECIMAL,
         allowNull: false
       },
       startDate: {

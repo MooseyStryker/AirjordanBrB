@@ -45,6 +45,38 @@ const processGroupData = (groupData) => {
 }
 
 
+const processEventList = (EventList) => {
+    const ensuresThisIsAnArray = Array.isArray(EventList) ? EventList : [EventList]; // Converts findByPk and findOne to array
+
+    const eventList = ensuresThisIsAnArray.map(event => {
+
+        const eventJSON = event.toJSON();
+        // If the event has attendences, counth them, if not set the count to 0.
+        if (event.Attendences){
+            eventJSON.numAttending = event.Attendences.length;
+        } else {
+            eventJSON.numAttending = 0;
+        }
+
+        // If the event has images, find the first one with a url and set it as the preview image
+        if (event.EventImages && event.EventImages.length > 0) {
+            const image = event.EventImages.find(img => img.url);
+
+            if (image) {
+                eventJSON.previewImage = image.url
+            }
+        }
+
+        // Remove membership, eventimages properties
+        delete eventJSON.Attendences;
+        delete eventJSON.EventImages;
+
+        console.log(eventJSON)
+        return eventJSON
+    })
+    return eventList
+}
+
 
 router.get('/', async (req, res, next) => {
     try {
@@ -55,25 +87,6 @@ router.get('/', async (req, res, next) => {
             ]
         });
 
-        // const groupList = groupData.map(group => {
-
-        //     const groupJSON = group.toJSON();
-        //     groupJSON.numMembers = group.Memberships.length
-
-        //     if (group.GroupImages && group.GroupImages.length > 0) {
-        //         const image = group.GroupImages.find(img => img.url);
-
-        //         if (image) {
-        //             groupJSON.previewImage = image.url
-        //         }
-        //     }
-
-
-        //     delete groupJSON.Memberships;
-        //     delete groupJSON.GroupImages;
-
-        //     return groupJSON
-        // })
 
         const groupList = processGroupData(groupData);
 
@@ -197,6 +210,121 @@ router.get('/:groupId/venues', restoreUser, requireAuth, async (req, res, next) 
 
 });
 
+router.get('/:groupId/events', async (req, res, next) => {
+    try{
+        const thisgroupId = req.params.groupId
+
+        const group = await Group.findByPk(thisgroupId);
+
+        if(!group) return res.status(403).json({"message": "Group couldn't be found"})
+
+        const events = await Event.findAll({
+            where: {
+                groupId: thisgroupId
+            },
+            include:[
+                {model: Attendence},
+                {model: EventImage},
+                {
+                    model: Group,
+                    attributes: ['id','name','city','state']
+                },
+                {
+                    model:Venue,
+                    attributes:['id', 'city', 'state']
+                }
+            ]
+        });
+
+        // Extra error, pprobably not needed
+        // if(events.length === 0) return res.status(403).json({"message": "This group doesn't have an event"})
+
+
+
+        if(events) {
+            const eventList = processEventList(events);
+            res.json({Events: eventList})
+        } else {
+            res.status(404).json({
+                message: "Group couldn't be found"
+            });
+        }
+    } catch (error){
+        next(error)
+    }
+});
+
+router.get('/:groupId/members', async (req, res, next) => {
+    try {
+        const thisGroupId = req.params.groupId;
+        const { user } = req;
+
+
+        if(!user){
+            const err = new Error('Please login or sign up');
+            err.status = 401;
+            err.title = 'User authentication failed';
+            return next(err);
+        }
+
+        // Fetch the group
+        const group = await Group.findByPk(thisGroupId);
+
+        // If the group doesn't exist, return a 404 error
+        if (!group) {
+            return res.status(404).json({ message: "Group couldn't be found" });
+        }
+
+        // Fetch the members of the group
+        const members = await Membership.findAll({
+            where: { groupId: thisGroupId },
+            include: [
+                {
+                    model: User,
+                    as: 'User',
+                    attributes: ['id', 'firstName', 'lastName']
+                }
+            ]
+        });
+
+        // Format the members
+        const formattedMembers = members.map(member => ({
+            id: member.User.id,
+            firstName: member.User.firstName,
+            lastName: member.User.lastName,
+            Membership: {
+                status: member.status
+            }
+        }));
+
+    
+
+        if ( membership.status !== 'co-host' || group.organizerId !== req.user.id) {
+            res.json({ Members: formattedMembers });
+        } else {
+            const nonPendingMembers = formattedMembers.filter(member => member.Membership.status !== 'pending');
+            res.json({ Members: nonPendingMembers });
+        }
+    } catch (error) {
+        next(error);
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* POST */
 
 router.post('/', restoreUser, requireAuth, async (req, res, next) => {
     const { name, about, type, private, city, state } = req.body
@@ -321,6 +449,55 @@ router.post('/:groupId/venues', restoreUser, requireAuth, async (req, res, next)
     }
 })
 
+
+
+
+router.post('/:groupId/events', restoreUser, requireAuth, async (req, res, next) => {
+    try {
+        const thisGroupId = req.params.groupId;
+        const { groupId, venueId, name, type, capacity, price, description, startDate, endDate } = req.body
+
+        const group = await Group.findByPk(thisGroupId)
+
+
+        if(!group) return res.status(403).json({"message": "Group couldn't be found"})
+
+        if (group.organizerId !== req.user.id && Membership.status !== 'co-host') {
+            return res.status(403).json({
+                message: "You don't have permission to create this events"
+            });
+        }
+
+        const event = await Event.create({
+            venueId,
+            name,
+            type,
+            capacity,
+            price,
+            description,
+            startDate,
+            endDate
+        });
+
+        res.json({
+            groupId: thisGroupId,
+            venueId: event.venueId,
+            name: event.name,
+            type: event.type,
+            capacity: event.capacity,
+            price: event.price,
+            description: event.description,
+            startDate: event.startDate,
+            endDate: event.endDate
+        })
+    } catch (error) {
+        next(error);
+    }
+})
+
+
+
+/*  DELETE   */
 router.delete('/:groupId', restoreUser, requireAuth, async (req, res) => {
     const groupDelete = await Group.findByPk(req.params.groupId)
 
