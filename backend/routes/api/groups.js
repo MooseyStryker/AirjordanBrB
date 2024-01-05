@@ -267,15 +267,15 @@ router.get('/:groupId/members', async (req, res, next) => {
             return next(err);
         }
 
-        // Fetch the group
+
         const group = await Group.findByPk(thisGroupId);
 
-        // If the group doesn't exist, return a 404 error
+
         if (!group) {
             return res.status(404).json({ message: "Group couldn't be found" });
         }
 
-        // Fetch the members of the group
+
         const members = await Membership.findAll({
             where: { groupId: thisGroupId },
             include: [
@@ -287,7 +287,7 @@ router.get('/:groupId/members', async (req, res, next) => {
             ]
         });
 
-        // Format the members
+
         const formattedMembers = members.map(member => ({
             id: member.User.id,
             firstName: member.User.firstName,
@@ -297,7 +297,7 @@ router.get('/:groupId/members', async (req, res, next) => {
             }
         }));
 
-    
+
 
         if ( membership.status !== 'co-host' || group.organizerId !== req.user.id) {
             res.json({ Members: formattedMembers });
@@ -495,6 +495,62 @@ router.post('/:groupId/events', restoreUser, requireAuth, async (req, res, next)
     }
 })
 
+router.post('/:groupId/memberships', restoreUser, requireAuth, async (req, res) => {
+    try {
+
+        const thisGroupId = req.params.groupId
+        const group = await Group.findByPk(thisGroupId)
+
+        if (!group) {
+            return res.status(404).json(
+                {
+                    message: "Group couldn't be found"
+            });
+        }
+
+        const existingMembership = await Membership.findOne({
+            where:{
+                groupId: group.id,
+                userId: req.user.id
+            }
+        });
+
+        if (existingMembership) {
+            if (existingMembership.status === 'pending') {
+            return res.status(400).json({
+                message: 'Membership has already been requested'
+            });
+            } else if (
+                existingMembership.status === 'member'
+                || existingMembership.status === 'co-host'
+            ){
+            return res.status(400).json({
+                message: 'User is already a member of the group'
+            });
+            }
+        }
+
+        const newMembership = await Membership.create(
+            {
+                groupId: group.id,
+                userId: req.user.id,
+                status: 'pending'
+        });
+        res.status(200).json({
+            memberId: newMembership.id,
+            status: newMembership.status
+        });
+
+    } catch (err) {
+        console.error('Error: ', err);
+    }
+  });
+
+
+
+
+
+
 
 
 /*  DELETE   */
@@ -515,6 +571,9 @@ router.delete('/:groupId', restoreUser, requireAuth, async (req, res) => {
 })
 
 
+
+
+/*       PUT      */
 
 
 router.put('/:groupId', restoreUser, requireAuth, async (req, res, next) => {
@@ -563,6 +622,11 @@ router.put('/:groupId', restoreUser, requireAuth, async (req, res, next) => {
         }
     }
 })
+
+
+
+
+
 
 
 

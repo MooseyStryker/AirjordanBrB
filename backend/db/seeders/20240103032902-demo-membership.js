@@ -20,8 +20,8 @@ module.exports = {
           status: 'co-host'
         },
         {
-          groupId: 1,
-          userId: 2,
+          groupId: 3,
+          userId: 1,
           status: 'member'
         },
         {
@@ -33,7 +33,78 @@ module.exports = {
           groupId: 1,
           userId: 3,
           status: 'pending'
+        },
+        {
+          groupId: 3,
+          userId: 1,
+          status: 'member'
+        },
+        {
+          groupId: 4,
+          userId: 5,
+          status: 'co-host'
+        },
+        {
+          groupId: 5,
+          userId: 6,
+          status: 'pending'
+        },
+        {
+          groupId: 6,
+          userId: 7,
+          status: 'member'
+        },
+        {
+          groupId: 7,
+          userId: 8,
+          status: 'co-host'
+        },
+        {
+          groupId: 8,
+          userId: 9,
+          status: 'pending'
+        },
+        {
+          groupId: 9,
+          userId: 10,
+          status: 'member'
+        },
+        {
+          groupId: 10,
+          userId: 11,
+          status: 'co-host'
+        },
+        {
+          groupId: 11,
+          userId: 12,
+          status: 'pending'
+        },
+        {
+          groupId: 12,
+          userId: 13,
+          status: 'member'
+        },
+        {
+          groupId: 13,
+          userId: 1,
+          status: 'member'
+        },
+        {
+          groupId: 1,
+          userId: 2,
+          status: 'pending'
+        },
+        {
+          groupId: 2,
+          userId: 3,
+          status: 'member'
+        },
+        {
+          groupId: 3,
+          userId: 4,
+          status: 'co-host'
         }
+
       ]);
     } catch (error){
       console.error('Error occured:', error)

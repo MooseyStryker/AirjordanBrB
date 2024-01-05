@@ -23,7 +23,58 @@ module.exports = {
           eventId: 2,
           url: 'https://example.com/image2.jpg',
           preview: false
+        },
+        {
+          eventId: 3,
+          url: 'https://example.com/image3.jpg',
+          preview: true
+        },
+        {
+          eventId: 4,
+          url: 'https://example.com/image4.jpg',
+          preview: false
+        },
+        {
+          eventId: 5,
+          url: 'https://example.com/image5.jpg',
+          preview: true
+        },
+        {
+          eventId: 6,
+          url: 'https://example.com/image6.jpg',
+          preview: false
+        },
+        {
+          eventId: 7,
+          url: 'https://example.com/image7.jpg',
+          preview: true
+        },
+        {
+          eventId: 8,
+          url: 'https://example.com/image8.jpg',
+          preview: false
+        },
+        {
+          eventId: 9,
+          url: 'https://example.com/image9.jpg',
+          preview: true
+        },
+        {
+          eventId: 10,
+          url: 'https://example.com/image10.jpg',
+          preview: false
+        },
+        {
+          eventId: 11,
+          url: 'https://example.com/image11.jpg',
+          preview: true
+        },
+        {
+          eventId: 12,
+          url: 'https://example.com/image12.jpg',
+          preview: false
         }
+
       ]);
     } catch (error){
       console.error('Error occured:', error)
