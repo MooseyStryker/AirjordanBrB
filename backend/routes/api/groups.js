@@ -532,7 +532,6 @@ router.post('/:groupId/memberships', restoreUser, requireAuth, async (req, res) 
 
         const newMembership = await Membership.create(
             {
-                groupId: group.id,
                 userId: req.user.id,
                 status: 'pending'
         });
@@ -569,6 +568,50 @@ router.delete('/:groupId', restoreUser, requireAuth, async (req, res) => {
         'message': "Successfully deleted"
     })
 })
+
+router.delete('/:groupId/membership/:memberId', restoreUser, requireAuth, async (req, res, next) => {
+    try {
+        const { groupId, memberId } = req.params;
+        const group = await Group.findByPk(groupId);
+
+        if (!group) {
+            return res.status(404).json({ message: "Group couldn't be found" });
+        }
+
+        const user = await User.findByPk(memberId);
+
+        if (!user) {
+            return res.status(404).json({ message: "User couldn't be found" });
+        }
+
+        const membership = await Membership.findOne({
+            where: {
+                groupId: group.id,
+                userId: user.id
+            }
+        });
+
+        if (!membership) {
+            return res.status(404).json({ message: "Membership does not exist for this User" });
+        }
+
+        if (group.organizerId !== req.user.id && user.id !== req.user.id) {
+            return res.status(403).json({ message: "You don't have permission to delete this membership" });
+        }
+
+        await membership.destroy();
+
+        res.status(200).json({ message: "Successfully deleted membership from group" });
+
+    } catch (err) {
+        console.error('Error: ', err);
+        next(err);
+    }
+});
+
+
+
+
 
 
 
@@ -625,6 +668,66 @@ router.put('/:groupId', restoreUser, requireAuth, async (req, res, next) => {
 
 
 
+/* This needs to be fixed */
+router.put('/:groupId/memberships', restoreUser, requireAuth, async (req, res, next) => {
+    try {
+
+        const thisGroupId = req.params.groupId
+        const group = await Group.findByPk(thisGroupId)
+
+        if (!group) {
+            return res.status(404).json(
+                {
+                    message: "Group couldn't be found"
+            });
+        }
+
+        const existingMembership = await Membership.findOne({
+            where:{
+                groupId: group.id,
+                userId: req.user.id
+            }
+        });
+
+        console.log('/****************************************/')
+        console.log('What is this?',existingMembership)
+
+        if(!existingMembership) {
+            return res.status(400).json({
+                message: "Membership between the user and the group does not exist"
+              });
+        }
+
+        if (req.body.status === 'pending'){
+            return res.status(400).json({
+                message: "Bad Request",
+                errors: {
+                    status: 'Cannot change a membership status to pending'
+                }
+            })
+        }
+
+        if (group.organizerId !== req.user.id || existingMembership.status !== 'co-host') {
+            return res.status(403).json({
+                message: "You don't have permission to create this venue"
+            });
+        } else {
+            existingMembership.status = req.body.status;
+            await existingMembership.save();
+            return res.status(200).json({
+                id: existingMembership.id,
+                groupId: group.id,
+                memberId: req.user.id,
+                status: existingMembership.status
+        })
+    };
+
+
+    } catch (err) {
+        console.error('Error: ', err);
+        next(err)
+    }
+  });
 
 
 

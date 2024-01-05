@@ -15,9 +15,9 @@ const processEventList = (EventList) => {
     const eventList = ensuresThisIsAnArray.map(event => {
 
         const eventJSON = event.toJSON();
-        // If the event has attendences, counth them, if not set the count to 0.
-        if (event.Attendences){
-            eventJSON.numAttending = event.Attendences.length;
+        // If the event has Attendances, counth them, if not set the count to 0.
+        if (event.Attendances){
+            eventJSON.numAttending = event.Attendances.length;
         } else {
             eventJSON.numAttending = 0;
         }
@@ -32,7 +32,7 @@ const processEventList = (EventList) => {
         }
 
         // Remove membership, eventimages properties
-        delete eventJSON.Attendences;
+        delete eventJSON.Attendances;
         delete eventJSON.EventImages;
 
         console.log(eventJSON)
@@ -93,8 +93,8 @@ router.get('/:eventId', async (req, res, next) => {
             const ensuresThisIsAnArray = Array.isArray(EventList) ? EventList : [EventList];
             const eventList = ensuresThisIsAnArray.map(event => {
                 const eventJSON = event.toJSON();
-                if (event.Attendences){
-                    eventJSON.numAttending = event.Attendences.length;
+                if (event.Attendances){
+                    eventJSON.numAttending = event.Attendances.length;
                 } else {
                     eventJSON.numAttending = 0;
                 }
@@ -105,7 +105,7 @@ router.get('/:eventId', async (req, res, next) => {
                         eventJSON.previewImage = image.url
                     }
                 }
-                delete eventJSON.Attendences;
+                delete eventJSON.Attendances;
                 return eventJSON
             })
             return eventList
@@ -123,6 +123,54 @@ router.get('/:eventId', async (req, res, next) => {
         next(error)
     }
 })
+
+router.get('/:eventId/attendees', async (req, res, next) => {
+    try {
+        const eventId = req.params.eventId;
+        const event = await Event.findByPk(eventId);
+
+        if (!event) {
+            return res.status(404).json({ message: "Event couldn't be found" });
+        }
+
+        let attendees = await Attendence.findAll({
+            where: { eventId: event.id },
+            include: [
+                {
+                    model: User,
+                    attributes: ['id', 'firstName', 'lastName'],
+                },
+            ],
+            attributes: ['status'],
+        });
+
+
+        attendees = attendees.map(attendee => ({
+            id: attendee.User.id,
+            firstName: attendee.User.firstName,
+            lastName: attendee.User.lastName,
+            Attendence: {
+                status: attendee.status
+            },
+        }));
+
+        if (req.user && (event.organizerId === req.user.id || req.user.status === 'co-host')) {
+            res.status(200).json({ Attendees: attendees });
+        } else {
+            const filteredAttendees = attendees.filter(attendee => attendee.Attendence.status !== 'pending');
+            res.status(200).json({ Attendees: filteredAttendees });
+        }
+    } catch (err) {
+        console.error('Error: ', err);
+        next(err);
+    }
+});
+
+
+
+
+
+
 
 
 
@@ -235,6 +283,72 @@ router.put('/:eventId', restoreUser, requireAuth, async (req, res, next) => {
 });
 
 
+router.put('/:eventId/attendance', requireAuth, async (req, res, next) => {
+    try {
+        const { eventId } = req.params;
+        const { userId, status } = req.body;
+
+        const event = await Event.findByPk(eventId);
+        if (!event) {
+            return res.status(404).json({ message: "Event couldn't be found" });
+        }
+
+
+        const user = await User.findByPk(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User couldn't be found" });
+        }
+
+
+        const attendance = await Attendence.findOne({
+            where: {
+                eventId,
+                userId
+            }
+        });
+
+
+        if (!attendance) {
+            return res.status(404).json({ message: "Attendence does not exist for this User" });
+        }
+
+        if (status === 'pending') {
+            return res.status(400).json({
+                message: "Bad Request",
+                errors: { status: "Cannot change an attendance status to pending" }
+            });
+        }
+
+        
+        const membership = await Membership.findOne(
+            { where: {
+                groupId: event.groupId,
+                userId: req.user.id
+            }
+        });
+        if (req.user.id !== event.organizerId && (!membership || membership.status !== 'co-host')) {
+            return res.status(403).json({ message: "You don't have permission to edit this attendance" });
+        }
+
+        attendance.status = status;
+        await attendance.save();
+
+        res.status(200).json({
+            id: attendance.id,
+            eventId,
+            userId,
+            status
+        });
+    } catch (err) {
+        console.error('Error: ', err);
+        next(err);
+    }
+});
+
+
+
+
+
 
 /*          DELETE           */
 router.delete('/:eventId', restoreUser, requireAuth, async (req, res, next) => {
@@ -272,6 +386,51 @@ router.delete('/:eventId', restoreUser, requireAuth, async (req, res, next) => {
     }
 });
 
+
+
+
+router.delete('/:eventId/attendance/:userId', restoreUser, requireAuth, async (req, res, next) => {
+    try {
+        const { eventId, userId } = req.params;
+
+        const event = await Event.findByPk(eventId);
+        if (!event) {
+            return res.status(404).json({ message: "Event couldn't be found" });
+        }
+
+        const user = await User.findByPk(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User couldn't be found" });
+        }
+
+        const group = await Group.findByPk(userId);
+
+        const attendance = await Attendence.findOne({
+            where: {
+                eventId,
+                userId
+            }
+        });
+        if (!attendance) {
+            return res.status(404).json({ message: "Attendence does not exist for this User" });
+        }
+
+        console.log('req.user.id',req.user.id)
+        console.log('event.organizerid',group.organizerId)
+        console.log('userId', userId)
+
+        if (req.user.id !== group.organizerId && req.user.id !== userId) {
+            return res.status(403).json({ message: "You don't have permission to delete this attendance" });
+        }
+
+        await attendance.destroy();
+
+        res.status(200).json({ message: "Successfully deleted attendance from event" });
+    } catch (err) {
+        console.error('Error: ', err);
+        next(err);
+    }
+});
 
 
 module.exports = router;

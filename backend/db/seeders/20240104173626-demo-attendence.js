@@ -44,7 +44,6 @@ module.exports = {
           userId: 6,
           status: 'pending'
         },
-        // ... similar data for events 3 through 11 ...
         {
           eventId: 12,
           userId: 12,
