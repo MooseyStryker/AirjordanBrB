@@ -382,6 +382,12 @@ router.post('/:groupId/images', restoreUser, requireAuth, async (req, res, next)
 
         if(!group) return res.status(403).json({"message": "Group couldn't be found"})
 
+        if (group.organizerId !== req.user.id) {
+            return res.status(403).json({
+                message: "You don't have permission to create this venue"
+            });
+        }
+
         const image = await GroupImage.create({
             groupId: groupId,
             url,
@@ -533,6 +539,7 @@ router.post('/:groupId/memberships', restoreUser, requireAuth, async (req, res) 
         const newMembership = await Membership.create(
             {
                 userId: req.user.id,
+                groupId: thisGroupId,
                 status: 'pending'
         });
         res.status(200).json({

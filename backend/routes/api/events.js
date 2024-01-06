@@ -16,8 +16,8 @@ const processEventList = (EventList) => {
 
         const eventJSON = event.toJSON();
         // If the event has Attendances, counth them, if not set the count to 0.
-        if (event.Attendances){
-            eventJSON.numAttending = event.Attendances.length;
+        if (event.Attendences){
+            eventJSON.numAttending = event.Attendences.length;
         } else {
             eventJSON.numAttending = 0;
         }
@@ -32,7 +32,7 @@ const processEventList = (EventList) => {
         }
 
         // Remove membership, eventimages properties
-        delete eventJSON.Attendances;
+        delete eventJSON.Attendences;
         delete eventJSON.EventImages;
 
         console.log(eventJSON)
@@ -43,9 +43,28 @@ const processEventList = (EventList) => {
 
 router.get('/', async (req, res, next) => {
     try{
+        const page = req.query.page || 1;
+        const size = req.query.size || 20;
+        const name = req.query.name;
+        const type = req.query.type;
+        const startDate = req.query.startDate;
+
+        const isWhere = {};
+        if (name) isWhere.name = { [Op.like]: `%${name}%` };
+        if (type) isWhere.type = type;
+        if (startDate) isWhere.startDate = { [Op.gte]: startDate };
+
+        const errors = {};
+        if (page < 1 || page > 10) errors.page = "Page must be greater than or equal to 1 and less than or equal to 10";
+        if (size < 1 || size > 20) errors.size = "Size must be greater than or equal to 1 and less than or equal to 20";
+        if (name && typeof name !== 'string') errors.name = "Name must be a string";
+        if (type && type !== 'Online' && type !== 'In Person') errors.type = "Type must be 'Online' or 'In Person'";
+        if (startDate && isNaN(Date.parse(startDate))) errors.startDate = "Start date must be a valid datetime";
+
         const events = await Event.findAll({
+            where: isWhere,
             include:[
-                // {model: Attendence},
+                {model: Attendence},
                 {model: EventImage},
                 {
                 model: Group,
@@ -55,7 +74,9 @@ router.get('/', async (req, res, next) => {
                     model:Venue,
                     attributes:['id', 'city', 'state']
                 }
-            ]
+            ],
+            limit: size,
+            offset: (page - 1) * size
         });
 
         const eventList = processEventList(events);
@@ -65,6 +86,8 @@ router.get('/', async (req, res, next) => {
         next(error)
     }
 })
+
+
 
 router.get('/:eventId', async (req, res, next) => {
     try{
@@ -319,7 +342,7 @@ router.put('/:eventId/attendance', requireAuth, async (req, res, next) => {
             });
         }
 
-        
+
         const membership = await Membership.findOne(
             { where: {
                 groupId: event.groupId,
