@@ -25,9 +25,6 @@ router.delete('/:imageId', restoreUser, requireAuth, async (req,res, next) => {
 
         if(!group) return res.status(403).json({"message": "Group couldn't be found"})
 
-        console.log(image)
-        console.log(group.organizerId)
-        console.log(Membership.status)
 
         if (group.organizerId !== req.user.id && Membership.status !== 'co-host') {
             return res.status(403).json({

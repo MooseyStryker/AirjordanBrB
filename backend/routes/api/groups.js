@@ -38,7 +38,7 @@ const processGroupData = (groupData) => {
         delete groupJSON.Memberships;
         delete groupJSON.GroupImages;
 
-        console.log(groupJSON)
+
         return groupJSON
     })
     return groupList
@@ -71,7 +71,7 @@ const processEventList = (EventList) => {
         delete eventJSON.Attendences;
         delete eventJSON.EventImages;
 
-        console.log(eventJSON)
+
         return eventJSON
     })
     return eventList
@@ -90,7 +90,6 @@ router.get('/', async (req, res, next) => {
 
         const groupList = processGroupData(groupData);
 
-        console.log(groupList)
         res.json({
             'Groups': groupList
         })
@@ -191,7 +190,7 @@ router.get('/:groupId', async (req, res) => {
                 });
             }
 
-            console.log(groupJSON)
+            (groupJSON)
             return groupJSON
         })
         return groupList
@@ -279,7 +278,7 @@ router.get('/', async (req, res, next) => {
                 Venue: eventJSON.Group.Venue
             };
 
-            console.log(reorderedEvent)
+            (reorderedEvent)
             return reorderedEvent
         })
          return eventList
@@ -300,7 +299,7 @@ router.get('/:groupId/venues', restoreUser, requireAuth, async (req, res, next) 
     try {
         const groupId = req.params.groupId;
         const { user } = req;
-        console.log("This is it",groupId)
+        ("This is it",groupId)
 
         if(!user){
             const err = new Error('Please login or sign up');
@@ -421,7 +420,7 @@ router.get('/:groupId/events', async (req, res, next) => {
                     Venue: eventJSON.Venue
                 };
 
-                console.log(reorderedEvent)
+                (reorderedEvent)
                 return reorderedEvent
             })
             return eventList
@@ -483,9 +482,9 @@ router.get('/:groupId/members', async (req, res, next) => {
             }
         }));
 
-        // console.log(membership.status)
-        // console.log(req.user.id)
-        // console.log(group.organizerId)
+        // (membership.status)
+        // (req.user.id)
+        // (group.organizerId)
 
         if ( membership.status === 'co-host' || group.organizerId === req.user.id) {
             res.json({ Members: formattedMembers });
@@ -546,7 +545,7 @@ router.post('/', restoreUser, requireAuth, async (req, res, next) => {
             return res.status(400).json({
                 message: 'Validation Error',
                 errors: error.errors.map(e => {
-                  console.log(e);
+                  (e);
                   return {
                     [e.path]: e.message
                   };
@@ -593,7 +592,7 @@ router.post('/:groupId/images', restoreUser, requireAuth, async (req, res, next)
             return res.status(400).json({
                 message: 'Validation Error',
                 errors: error.errors.map(e => {
-                  console.log(e);
+                  (e);
                   return {
                     [e.path]: e.message
                   };
@@ -902,7 +901,7 @@ router.put('/:groupId', restoreUser, requireAuth, async (req, res, next) => {
             return res.status(400).json({
                 message: 'Validation Error',
                 errors: error.errors.map(e => {
-                  console.log(e);
+                  (e);
                   return {
                     [e.path]: e.message
                   };
@@ -953,9 +952,9 @@ router.put('/:groupId/membership', restoreUser, requireAuth, async (req, res, ne
                 message: "Invalid status"
             });
         }
-        console.log('id', group.organizerId)
-        console.log('id', req.user.id)
-        console.log('id', existingMembership.status)
+        ('id', group.organizerId)
+        ('id', req.user.id)
+        ('id', existingMembership.status)
 
         if (group.organizerId !== req.user.id && existingMembership.status !== 'co-host') {
             return res.status(403).json({
@@ -1001,8 +1000,8 @@ router.put('/:groupId/membership', restoreUser, requireAuth, async (req, res, ne
 //             }
 //         });
 
-//         console.log('/****************************************/')
-//         console.log('What is this?',existingMembership)
+//         ('/****************************************/')
+//         ('What is this?',existingMembership)
 
 //         if(!existingMembership) {
 //             return res.status(400).json({

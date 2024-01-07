@@ -34,7 +34,7 @@ const processEventList = (EventList) => {
         delete eventJSON.Attendences;
         delete eventJSON.EventImages;
 
-        console.log(eventJSON)
+
         return eventJSON
     })
     return eventList
@@ -595,14 +595,6 @@ router.delete('/:eventId/attendance/:userId', restoreUser, requireAuth, async (r
         if (!attendance) {
             return res.status(404).json({ message: "Attendence does not exist for this User" });
         }
-        // console.log('*******************************')
-        // console.log('*******************************')
-        // console.log('*******************************')
-        // console.log('req.user.id',req.user.id)
-        // console.log('event.organizerid',group.organizerId)
-        // console.log('userId', userId)
-        // console.log('Membership', membership)
-        // console.log('Membership status', membership.status)
 
         if (req.user.id !== group.organizerId && req.user.id !== userId && (!membership || membership.status !== 'co-host')) {
             return res.status(403).json({ message: "You don't have permission to delete this attendance" });
