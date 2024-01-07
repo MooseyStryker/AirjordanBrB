@@ -49,12 +49,6 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false,
       },
-      numMembers: {
-        type: Sequelize.INTEGER
-      },
-      previewImage: {
-        type: Sequelize.STRING
-      },
       createdAt: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')

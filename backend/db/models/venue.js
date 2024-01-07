@@ -33,23 +33,59 @@ module.exports = (sequelize, DataTypes) => {
     address: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: "Street address is required"
+        }
+      }
     },
     city: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: "City is required"
+        }
+      }
     },
     state: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: "State is required"
+        }
+      }
     },
     lat: {
       type: DataTypes.DECIMAL,
       allowNull: false,
+      validate: {
+        min: {
+          args: [-90],
+          msg: "Latitude must be within -90 and 90"
+        },
+        max: {
+          args: [90],
+          msg: "Latitude must be within -90 and 90"
+        }
+      }
     },
     lng: {
       type: DataTypes.DECIMAL,
       allowNull: false,
-    },
+      validate: {
+        min: {
+          args: [-180],
+          msg: "Longitude must be within -180 and 180"
+        },
+        max: {
+          args: [180],
+          msg: "Longitude must be within -180 and 180"
+        }
+      }
+    }
+
   }, {
     sequelize,
     modelName: 'Venue',

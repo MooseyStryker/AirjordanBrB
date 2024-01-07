@@ -66,8 +66,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         len: {
-          arg: [1,50],
-          msg: 'Info in About must be 50 characters or less'
+          args: [50,3000],
+          msg: 'About must have 50 characters or less'
         }
       }
     },
@@ -104,12 +104,6 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notEmpty: true
       }
-    },
-    numMembers: {
-      type: DataTypes.INTEGER
-    },
-    previewImage: {
-      type: DataTypes.STRING
     }
   }, {
     sequelize,

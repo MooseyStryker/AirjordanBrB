@@ -1,6 +1,6 @@
 'use strict';
 
-const { GroupImage } = require('../models');
+const { EventImage } = require('../models');
 
 let options = {}
 
@@ -9,106 +9,70 @@ if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;  // define your schema in options object
 }
 
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
     try {
-      await GroupImage.bulkCreate([
+      await EventImage.bulkCreate([
         {
-          groupId: 1,
+          eventId: 1,
           url: 'https://example.com/image1.jpg',
           preview: true
         },
         {
-          groupId: 2,
+          eventId: 2,
           url: 'https://example.com/image2.jpg',
           preview: false
         },
         {
-          groupId: 3,
+          eventId: 3,
           url: 'https://example.com/image3.jpg',
           preview: true
         },
         {
-          groupId: 4,
+          eventId: 4,
           url: 'https://example.com/image4.jpg',
           preview: false
         },
         {
-          groupId: 5,
+          eventId: 5,
           url: 'https://example.com/image5.jpg',
           preview: true
         },
         {
-          groupId: 6,
+          eventId: 6,
           url: 'https://example.com/image6.jpg',
           preview: false
         },
         {
-          groupId: 7,
+          eventId: 7,
           url: 'https://example.com/image7.jpg',
           preview: true
         },
         {
-          groupId: 8,
+          eventId: 8,
           url: 'https://example.com/image8.jpg',
           preview: false
         },
         {
-          groupId: 9,
+          eventId: 9,
           url: 'https://example.com/image9.jpg',
           preview: true
         },
         {
-          groupId: 10,
+          eventId: 10,
           url: 'https://example.com/image10.jpg',
           preview: false
         },
         {
-          groupId: 11,
+          eventId: 11,
           url: 'https://example.com/image11.jpg',
           preview: true
         },
         {
-          groupId: 12,
+          eventId: 12,
           url: 'https://example.com/image12.jpg',
           preview: false
-        },
-        {
-          groupId: 13,
-          url: 'https://example.com/image13.jpg',
-          preview: true
-        },
-        {
-          groupId: 14,
-          url: 'https://example.com/image14.jpg',
-          preview: false
-        },
-        {
-          groupId: 15,
-          url: 'https://example.com/image15.jpg',
-          preview: true
-        },
-        {
-          groupId: 16,
-          url: 'https://example.com/image16.jpg',
-          preview: false
-        },
-        {
-          groupId: 17,
-          url: 'https://example.com/image17.jpg',
-          preview: true
-        },
-        {
-          groupId: 18,
-          url: 'https://example.com/image18.jpg',
-          preview: false
-        },
-        {
-          groupId: 19,
-          url: 'https://example.com/image19.jpg',
-          preview: true
         }
 
       ]);
@@ -117,16 +81,11 @@ module.exports = {
     }
   },
 
-
   async down (queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
-    options.tableName = 'GroupImages';
+
+    options.tableName = 'EventImages';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, null, {});
+
   }
 };
