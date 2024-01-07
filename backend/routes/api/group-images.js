@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.delete('/:imageId', restoreUser, requireAuth, async (req,res, next) => {
     try{
-    
+
         const thisImageId = req.params.imageId;
         const image = await GroupImage.findByPk(thisImageId);
 
@@ -21,9 +21,13 @@ router.delete('/:imageId', restoreUser, requireAuth, async (req,res, next) => {
             });
         }
 
-        const group = await Group.findByPk(thisImageId)
+        const group = await Group.findByPk(image.groupId)
 
         if(!group) return res.status(403).json({"message": "Group couldn't be found"})
+
+        console.log(image)
+        console.log(group.organizerId)
+        console.log(Membership.status)
 
         if (group.organizerId !== req.user.id && Membership.status !== 'co-host') {
             return res.status(403).json({

@@ -146,12 +146,61 @@ router.get('/:groupId', async (req, res) => {
                 as: 'Organizer',
                 attributes:['id', 'firstName', 'lastName']
             },
-            Venue]
+            Venue,
+            Membership
+        ]
     });
 
+    const getDetailsOfGroupById = (groupData) => {
+        const ensuresThisIsAnArray = Array.isArray(groupData) ? groupData : [groupData];
+
+        const groupList = ensuresThisIsAnArray.map(group => {
+
+            const groupJSON = group.toJSON();
+
+            if (group.Memberships){
+                groupJSON.numMembers = group.Memberships.length;
+            } else {
+                groupJSON.numMembers = 0;
+            }
+
+            if (group.GroupImages && group.GroupImages.length > 0) {
+                const image = group.GroupImages.find(img => img.url);
+
+                if (image) {
+                    groupJSON.previewImage = image.url
+                }
+            }
+
+
+            groupJSON.GroupImages = group.GroupImages.map(image => {
+                const { groupId, createdAt, updatedAt, ...imageWithoutTimestamps } = image.toJSON();
+                return imageWithoutTimestamps;
+            });
+
+
+            delete groupJSON.Memberships;
+
+            delete groupJSON.previewImage;
+
+
+            if (groupJSON.Venues) {
+                groupJSON.Venues.forEach(venue => {
+                    delete venue.createdAt;
+                    delete venue.updatedAt;
+                });
+            }
+
+            console.log(groupJSON)
+            return groupJSON
+        })
+        return groupList
+
+    }
+
     if (group) {
-        const groupList = processGroupData(group);
-        // If groupList has one element in the array, return that element. If not, then return the entire array.
+        const groupList = getDetailsOfGroupById(group);
+
         return res.json(Array.isArray(groupList) && groupList.length === 1 ? groupList[0] : groupList);
     } else {
         res.status(404).json({
@@ -160,6 +209,91 @@ router.get('/:groupId', async (req, res) => {
     }
 });
 
+
+router.get('/', async (req, res, next) => {
+    try{
+        const events = await Event.findAll({
+            where: isWhere,
+            include:[
+                {model: Attendence},
+                {model: EventImage},
+                {
+                    model: Group,
+                    attributes: ['id','name','city','state'],
+                    include: [
+                        {
+                            model:Venue,
+
+                            attributes:['id', 'city', 'state'],
+                        }
+                    ]
+                }
+            ],
+            limit: size,
+            offset: (page - 1) * size
+        });
+
+        const thisWorksOnlyInHere = (EventList) => {
+            const ensuresThisIsAnArray = Array.isArray(EventList) ? EventList : [EventList]; // Converts findByPk and findOne to array
+
+            const eventList = ensuresThisIsAnArray.map(event => {
+
+            const eventJSON = event.toJSON();
+
+            if (event.Attendences){
+                eventJSON.numAttending = event.Attendences.length;
+            } else {
+                eventJSON.numAttending = 0;
+            }
+
+            if (event.EventImages && event.EventImages.length > 0) {
+                const image = event.EventImages.find(img => img.url);
+
+                if (image) {
+                    eventJSON.previewImage = image.url
+                }
+            }
+
+            if (event.Group.Venues && event.Group.Venues.length > 0) {
+                eventJSON.Group.Venue = event.Group.Venues[0];
+            } else {
+                eventJSON.Group.Venue = null;
+            }
+
+            delete eventJSON.Attendences;
+            delete eventJSON.EventImages;
+            delete eventJSON.Group.Venues;
+
+            // Reorder the properties cause this one is being a butt
+            const reorderedEvent = {
+                id: eventJSON.id,
+                groupId: eventJSON.groupId,
+                venueId: eventJSON.venueId,
+                name: eventJSON.name,
+                type: eventJSON.type,
+                startDate: eventJSON.startDate,
+                endDate: eventJSON.endDate,
+                numAttending: eventJSON.numAttending,
+                previewImage: eventJSON.previewImage,
+                Group: eventJSON.Group,
+                Venue: eventJSON.Group.Venue
+            };
+
+            console.log(reorderedEvent)
+            return reorderedEvent
+        })
+         return eventList
+        }
+
+        const eventList = thisWorksOnlyInHere(events);
+
+
+
+        res.json({Events: eventList})
+    } catch (error){
+        next(error)
+    }
+})
 
 
 router.get('/:groupId/venues', restoreUser, requireAuth, async (req, res, next) => {
@@ -176,9 +310,11 @@ router.get('/:groupId/venues', restoreUser, requireAuth, async (req, res, next) 
         }
 
         const group = await Group.findByPk(groupId);
+        if(!group) return res.status(403).json({"message": "Group couldn't be found"})
+
         if (group.organizerId !== req.user.id && Membership.status !== 'co-host') {
             return res.status(403).json({
-                message: "You don't have permission to edit this group"
+                message: "You don't have permission to see this venue"
             });
         }
 
@@ -218,6 +354,7 @@ router.get('/:groupId/events', async (req, res, next) => {
 
         if(!group) return res.status(403).json({"message": "Group couldn't be found"})
 
+
         const events = await Event.findAll({
             where: {
                 groupId: thisgroupId
@@ -227,22 +364,71 @@ router.get('/:groupId/events', async (req, res, next) => {
                 {model: EventImage},
                 {
                     model: Group,
-                    attributes: ['id','name','city','state']
-                },
-                {
-                    model:Venue,
-                    attributes:['id', 'city', 'state']
+                    attributes: ['id','name','city','state'],
+                    include: [
+                        {
+                            model:Venue,
+                            attributes:['id', 'city', 'state']
+                        }
+                    ]
                 }
             ]
         });
 
-        // Extra error, pprobably not needed
-        // if(events.length === 0) return res.status(403).json({"message": "This group doesn't have an event"})
+        const thisReordersProperly= (EventList) => {
+            const ensuresThisIsAnArray = Array.isArray(EventList) ? EventList : [EventList]; // Converts findByPk and findOne to array
 
+            const eventList = ensuresThisIsAnArray.map(event => {
 
+                const eventJSON = event.toJSON();
+
+                if (event.Attendences){
+                    eventJSON.numAttending = event.Attendences.length;
+                } else {
+                    eventJSON.numAttending = 0;
+                }
+
+                if (event.EventImages && event.EventImages.length > 0) {
+                    const image = event.EventImages.find(img => img.url);
+
+                    if (image) {
+                        eventJSON.previewImage = image.url
+                    }
+                }
+
+                if (event.Group.Venues && event.Group.Venues.length > 0) {
+                    eventJSON.Venue = event.Group.Venues[0];
+                } else {
+                    eventJSON.Venue = null;
+                }
+
+                delete eventJSON.Attendences;
+                delete eventJSON.EventImages;
+                delete eventJSON.Group.Venues;
+
+                // Reorder the properties cause this one is being a butt
+                const reorderedEvent = {
+                    id: eventJSON.id,
+                    groupId: eventJSON.groupId,
+                    venueId: eventJSON.venueId,
+                    name: eventJSON.name,
+                    type: eventJSON.type,
+                    startDate: eventJSON.startDate,
+                    endDate: eventJSON.endDate,
+                    numAttending: eventJSON.numAttending,
+                    previewImage: eventJSON.previewImage,
+                    Group: eventJSON.Group,
+                    Venue: eventJSON.Venue
+                };
+
+                console.log(reorderedEvent)
+                return reorderedEvent
+            })
+            return eventList
+        }
 
         if(events) {
-            const eventList = processEventList(events);
+            const eventList = thisReordersProperly(events);
             res.json({Events: eventList})
         } else {
             res.status(404).json({
@@ -269,7 +455,7 @@ router.get('/:groupId/members', async (req, res, next) => {
 
 
         const group = await Group.findByPk(thisGroupId);
-
+        const membership = await Membership.findByPk(thisGroupId)
 
         if (!group) {
             return res.status(404).json({ message: "Group couldn't be found" });
@@ -297,9 +483,11 @@ router.get('/:groupId/members', async (req, res, next) => {
             }
         }));
 
+        // console.log(membership.status)
+        // console.log(req.user.id)
+        // console.log(group.organizerId)
 
-
-        if ( membership.status !== 'co-host' || group.organizerId !== req.user.id) {
+        if ( membership.status === 'co-host' || group.organizerId === req.user.id) {
             res.json({ Members: formattedMembers });
         } else {
             const nonPendingMembers = formattedMembers.filter(member => member.Membership.status !== 'pending');
@@ -372,7 +560,7 @@ router.post('/', restoreUser, requireAuth, async (req, res, next) => {
     }
 })
 
-// Issue with error not giving the right order of errors
+
 router.post('/:groupId/images', restoreUser, requireAuth, async (req, res, next) => {
     try {
         const groupId = req.params.groupId;
@@ -421,10 +609,12 @@ router.post('/:groupId/images', restoreUser, requireAuth, async (req, res, next)
 
 router.post('/:groupId/venues', restoreUser, requireAuth, async (req, res, next) => {
     try {
-        const groupId = req.params.groupId;
+        const thisGroupId = req.params.groupId;
         const { address, city, state, lat, lng } = req.body
 
-        const group = await Group.findByPk(groupId)
+        const group = await Group.findByPk(thisGroupId)
+
+
 
         if(!group) return res.status(403).json({"message": "Group couldn't be found"})
 
@@ -435,7 +625,7 @@ router.post('/:groupId/venues', restoreUser, requireAuth, async (req, res, next)
         }
 
         const venue = await Venue.create({
-            groupId: groupId,
+            groupId: thisGroupId,
             address,
             city,
             state,
@@ -451,11 +641,22 @@ router.post('/:groupId/venues', restoreUser, requireAuth, async (req, res, next)
             lng: venue.lng
         })
     } catch (error) {
-        next(error);
+        if (error.name === 'SequelizeValidationError') {
+            const errors = error.errors.reduce((acc, curr) => {
+                acc[curr.path] = curr.message;
+                return acc;
+            }, {});
+
+            res.status(400).json({
+                message: 'Bad Request',
+                errors
+            });
+        } else {
+            next(error);
+        }
     }
+
 })
-
-
 
 
 router.post('/:groupId/events', restoreUser, requireAuth, async (req, res, next) => {
@@ -465,6 +666,9 @@ router.post('/:groupId/events', restoreUser, requireAuth, async (req, res, next)
 
         const group = await Group.findByPk(thisGroupId)
 
+        const venue = await Venue.findByPk(venueId)
+
+        if (!venue) return res.status(400).json({"message": "Venue couldn't be found"})
 
         if(!group) return res.status(403).json({"message": "Group couldn't be found"})
 
@@ -473,6 +677,7 @@ router.post('/:groupId/events', restoreUser, requireAuth, async (req, res, next)
                 message: "You don't have permission to create this events"
             });
         }
+
 
         const event = await Event.create({
             venueId,
@@ -484,6 +689,8 @@ router.post('/:groupId/events', restoreUser, requireAuth, async (req, res, next)
             startDate,
             endDate
         });
+
+
 
         res.json({
             groupId: thisGroupId,
@@ -497,11 +704,25 @@ router.post('/:groupId/events', restoreUser, requireAuth, async (req, res, next)
             endDate: event.endDate
         })
     } catch (error) {
-        next(error);
-    }
-})
+        if (error.name === 'SequelizeValidationError') {
+            const errors = error.errors.reduce((acc, curr) => {
+                acc[curr.path] = curr.message;
+                return acc;
+            }, {});
 
-router.post('/:groupId/memberships', restoreUser, requireAuth, async (req, res) => {
+
+            res.status(400).json({
+                message: 'Bad Request',
+                errors
+            });
+        } else {
+            next(error);
+        }
+    }
+});
+
+
+router.post('/:groupId/membership', restoreUser, requireAuth, async (req, res) => {
     try {
 
         const thisGroupId = req.params.groupId
@@ -543,6 +764,8 @@ router.post('/:groupId/memberships', restoreUser, requireAuth, async (req, res) 
                 status: 'pending'
         });
         res.status(200).json({
+            id: thisGroupId,
+            groupId:thisGroupId,
             memberId: newMembership.id,
             status: newMembership.status
         });
@@ -561,7 +784,10 @@ router.post('/:groupId/memberships', restoreUser, requireAuth, async (req, res) 
 
 /*  DELETE   */
 router.delete('/:groupId', restoreUser, requireAuth, async (req, res) => {
-    const groupDelete = await Group.findByPk(req.params.groupId)
+    const thisGroupId = req.params.groupId
+
+    const groupDelete = await Group.findByPk(thisGroupId)
+    const group = await Group.findByPk(thisGroupId);
 
     if(!groupDelete) {
         return res.status(404).json({
@@ -569,12 +795,21 @@ router.delete('/:groupId', restoreUser, requireAuth, async (req, res) => {
         })
     }
 
+    if (group.organizerId !== req.user.id) {
+        return res.status(403).json({
+            message: "You don't have permission to edit this group"
+        });
+    }
+
+
     groupDelete.destroy();
 
     res.json({
         'message': "Successfully deleted"
     })
 })
+
+
 
 router.delete('/:groupId/membership/:memberId', restoreUser, requireAuth, async (req, res, next) => {
     try {
@@ -584,6 +819,12 @@ router.delete('/:groupId/membership/:memberId', restoreUser, requireAuth, async 
         if (!group) {
             return res.status(404).json({ message: "Group couldn't be found" });
         }
+        if (group.organizerId !== req.user.id && Membership.status !== 'co-host') {
+            return res.status(403).json({
+                message: "You don't have permission to edit this group"
+            });
+        }
+
 
         const user = await User.findByPk(memberId);
 
@@ -624,8 +865,6 @@ router.delete('/:groupId/membership/:memberId', restoreUser, requireAuth, async 
 
 
 /*       PUT      */
-
-
 router.put('/:groupId', restoreUser, requireAuth, async (req, res, next) => {
     try {
         const groupId = req.params.groupId;
@@ -675,17 +914,14 @@ router.put('/:groupId', restoreUser, requireAuth, async (req, res, next) => {
 
 
 
-/* This needs to be fixed */
-router.put('/:groupId/memberships', restoreUser, requireAuth, async (req, res, next) => {
+router.put('/:groupId/membership', restoreUser, requireAuth, async (req, res, next) => {
     try {
-
         const thisGroupId = req.params.groupId
         const group = await Group.findByPk(thisGroupId)
 
         if (!group) {
-            return res.status(404).json(
-                {
-                    message: "Group couldn't be found"
+            return res.status(404).json({
+                message: "Group couldn't be found"
             });
         }
 
@@ -696,13 +932,11 @@ router.put('/:groupId/memberships', restoreUser, requireAuth, async (req, res, n
             }
         });
 
-        console.log('/****************************************/')
-        console.log('What is this?',existingMembership)
 
         if(!existingMembership) {
-            return res.status(400).json({
+            return res.status(404).json({
                 message: "Membership between the user and the group does not exist"
-              });
+            });
         }
 
         if (req.body.status === 'pending'){
@@ -714,9 +948,22 @@ router.put('/:groupId/memberships', restoreUser, requireAuth, async (req, res, n
             })
         }
 
-        if (group.organizerId !== req.user.id || existingMembership.status !== 'co-host') {
+        if (['member', 'co-host'].indexOf(req.body.status) === -1) {
+            return res.status(400).json({
+                message: "Invalid status"
+            });
+        }
+        console.log('id', group.organizerId)
+        console.log('id', req.user.id)
+        console.log('id', existingMembership.status)
+
+        if (group.organizerId !== req.user.id && existingMembership.status !== 'co-host') {
             return res.status(403).json({
-                message: "You don't have permission to create this venue"
+                message: "You don't have permission to change this membership status"
+            });
+        } else if (existingMembership.status === 'member' && group.organizerId !== req.user.id) {
+            return res.status(403).json({
+                message: "You don't have permission to change this membership status"
             });
         } else {
             existingMembership.status = req.body.status;
@@ -726,15 +973,71 @@ router.put('/:groupId/memberships', restoreUser, requireAuth, async (req, res, n
                 groupId: group.id,
                 memberId: req.user.id,
                 status: existingMembership.status
-        })
-    };
-
-
+            })
+        };
     } catch (err) {
         console.error('Error: ', err);
         next(err)
     }
-  });
+});
+
+// router.put('/:groupId/membership', restoreUser, requireAuth, async (req, res, next) => {
+//     try {
+
+//         const thisGroupId = req.params.groupId
+//         const group = await Group.findByPk(thisGroupId)
+
+//         if (!group) {
+//             return res.status(404).json(
+//                 {
+//                     message: "Group couldn't be found"
+//             });
+//         }
+
+//         const existingMembership = await Membership.findOne({
+//             where:{
+//                 groupId: group.id,
+//                 userId: req.user.id
+//             }
+//         });
+
+//         console.log('/****************************************/')
+//         console.log('What is this?',existingMembership)
+
+//         if(!existingMembership) {
+//             return res.status(400).json({
+//                 message: "Membership between the user and the group does not exist"
+//               });
+//         }
+
+//         if (req.body.status === 'pending'){
+//             return res.status(400).json({
+//                 message: "Bad Request",
+//                 errors: {
+//                     status: 'Cannot change a membership status to pending'
+//                 }
+//             })
+//         }
+
+//         if (group.organizerId !== req.user.id || existingMembership.status !== 'co-host') {
+//             return res.status(403).json({
+//                 message: "You don't have permission to create this venue"
+//             });
+//         } else {
+//             existingMembership.status = req.body.status;
+//             await existingMembership.save();
+//             return res.status(200).json({
+//                 id: existingMembership.id,
+//                 groupId: group.id,
+//                 memberId: req.user.id,
+//                 status: existingMembership.status
+//         })
+//     };
+//     } catch (err) {
+//         console.error('Error: ', err);
+//         next(err)
+//     }
+// });
 
 
 
