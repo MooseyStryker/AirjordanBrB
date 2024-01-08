@@ -534,11 +534,7 @@ router.post('/', restoreUser, requireAuth, async (req, res, next) => {
             city,
             state
         })
-        res.status(201).json({
-            message: 'Group Successfully Added',
-            data: newGroup
-        }
-        )
+        res.status(201).json(newGroup)
     } catch (error) {
         if(error instanceof Sequelize.ValidationError) {
 
