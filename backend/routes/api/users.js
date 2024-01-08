@@ -31,26 +31,76 @@ const validateSignup = [
   ];
 
 // Sign up
+// router.post('/', validateSignup, async (req, res) => {
+//       const { firstName, lastName, email, password, username } = req.body;
+//       const hashedPassword = bcrypt.hashSync(password);
+//       const user = await User.create({ firstName, lastName, email, username, password, hashedPassword });
+
+//       const safeUser = {
+//         id: user.id,
+//         firstName: user.firstName,
+//         lastname: user.lastName,
+//         email: user.email,
+//         username: user.username,
+//       };
+
+//       await setTokenCookie(res, safeUser);
+
+//       return res.json({
+//         user: safeUser
+//       });
+//     }
+//   );
+
 router.post('/', validateSignup, async (req, res) => {
-      const { firstName, lastName, email, password, username } = req.body;
-      const hashedPassword = bcrypt.hashSync(password);
-      const user = await User.create({ firstName, lastName, email, username, password, hashedPassword });
+  const { firstName, lastName, email, password, username } = req.body;
+  const hashedPassword = bcrypt.hashSync(password);
 
-      const safeUser = {
-        id: user.id,
-        firstName: user.firstName,
-        lastname: user.lastName,
-        email: user.email,
-        username: user.username,
-      };
-
-      await setTokenCookie(res, safeUser);
-
-      return res.json({
-        user: safeUser
-      });
+  try {
+    // Check if a user with the same email or username already exists
+    const existingUser = await User.findOne({ where: { [Op.or]: [{ email }, { username }] } });
+    if (existingUser) {
+      if (existingUser.email === email) {
+        return res.status(500).json({
+          message: "User already exists",
+          errors: {
+            email: "User with that email already exists"
+          }
+        });
+      } else if (existingUser.username === username) {
+        return res.status(500).json({
+          message: "User already exists",
+          errors: {
+            username: "User with that username already exists"
+          }
+        });
+      }
     }
-  );
+
+    // Create the user
+    const user = await User.create({ firstName, lastName, email, username, password, hashedPassword });
+
+    const safeUser = {
+      id: user.id,
+      firstName: user.firstName,
+      lastname: user.lastName,
+      email: user.email,
+      username: user.username,
+    };
+
+    await setTokenCookie(res, safeUser);
+
+    return res.json({
+      user: safeUser
+    });
+  } catch (err) {
+    // Handle any other errors
+    return res.status(400).json({
+      message: "Bad Request",
+      errors: err.errors
+    });
+  }
+});
 
 
 
