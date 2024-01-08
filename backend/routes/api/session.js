@@ -20,44 +20,100 @@ const validateLogin = [
     .withMessage('Please provide a password.'),
   handleValidationErrors
 ];
+// teLogin,
 
 // Log in
-router.post('/', validateLogin, async (req, res, next) => {
-      const { credential, password } = req.body;
+// router.post('/',
+// async (req, res, next) => {
+//       const { credential, password } = req.body;
 
-      const user = await User.unscoped().findOne({
-        where: {
-          [Op.or]: {
-            username: credential,
-            email: credential
-          }
-        }
-      });
+//       const user = await User.unscoped().findOne({
+//         where: {
+//           [Op.or]: {
+//             username: credential,
+//             email: credential
+//           }
+//         }
+//       });
 
-      if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
+//       if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
 
-        const err = new Error('Login failed');
-        err.status = 401;
-        err.title = 'Login failed';
-        err.errors = { credential: 'The provided credentials were invalid.' };
-        return next(err);
+//         const err = new Error('Login failed');
+//         err.status = 401;
+//         err.title = 'Login failed';
+//         err.errors = { message : 'The provided credentials were invalid.' };
+//         return next(err);
+//       }
+
+//       const safeUser = {
+//         id: user.id,
+//         firstName: user.firstName,
+//         lastName: user.lastName,
+//         email: user.email,
+//         username: user.username,
+//       };
+
+//       await setTokenCookie(res, safeUser);
+
+//       return res.json({
+//         user: safeUser
+//       });
+//     }
+//   );
+
+router.post('/', async (req, res, next) => {
+  const { credential, password } = req.body;
+  let errors = {};
+
+  // Check for missing fields
+  if (!credential) {
+    errors.credential = "Email or username is required";
+  }
+
+  if (!password) {
+    errors.password = "Password is required";
+  }
+
+  // If there are errors, return them
+  if (Object.keys(errors).length > 0) {
+    return res.status(400).json({
+      message: "Bad Request",
+      errors: errors
+    });
+  }
+
+  const user = await User.unscoped().findOne({
+    where: {
+      [Op.or]: {
+        username: credential,
+        email: credential
       }
-
-      const safeUser = {
-        id: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        username: user.username,
-      };
-
-      await setTokenCookie(res, safeUser);
-
-      return res.json({
-        user: safeUser
-      });
     }
-  );
+  });
+
+  if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
+    return res.status(401).json({
+      message: "Invalid credentials"
+    });
+  }
+
+  const safeUser = {
+    id: user.id,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    username: user.username,
+  };
+
+  await setTokenCookie(res, safeUser);
+
+  return res.json({
+    user: safeUser
+  });
+});
+
+
+
 
 // Log out
 router.delete('/',(_req, res) => {
