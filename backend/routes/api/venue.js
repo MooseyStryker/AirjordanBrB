@@ -10,7 +10,6 @@ const router = express.Router();
 router.put('/:venueId', restoreUser, requireAuth, async (req, res, next) => {
     try {
         const venuesId = req.params.venueId;
-        ('This is the venue Id', venuesId)
         const { address, city, state, lat, lng } = req.body
 
         const venue = await Venue.findByPk(venuesId);

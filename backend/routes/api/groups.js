@@ -678,7 +678,8 @@ router.post('/:groupId/events', restoreUser, requireAuth, async (req, res, next)
 
 
         const event = await Event.create({
-            venueId,
+            groupId: thisGroupId,
+            venueId: venue.id,
             name,
             type,
             capacity,
@@ -692,7 +693,7 @@ router.post('/:groupId/events', restoreUser, requireAuth, async (req, res, next)
 
         res.json({
             groupId: thisGroupId,
-            venueId: event.venueId,
+            venueId: venue.id,
             name: event.name,
             type: event.type,
             capacity: event.capacity,
