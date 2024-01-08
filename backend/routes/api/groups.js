@@ -895,18 +895,6 @@ router.put('/:groupId', restoreUser, requireAuth, async (req, res, next) => {
 
 
     } catch (error) {
-        // if(error instanceof Sequelize.ValidationError) {
-
-        //     return res.status(400).json({
-        //         message: 'Validation Error',
-        //         errors: error.errors.map(e => {
-        //           (e);
-        //           return {
-        //             [e.path]: e.message
-        //           };
-        //         })
-        //       });
-        // }
 
         if (error instanceof Sequelize.ValidationError) {
             let errors = {};
@@ -923,7 +911,7 @@ router.put('/:groupId', restoreUser, requireAuth, async (req, res, next) => {
           res.status(400).json({
             message: 'Bad Request'
           });
-          
+
     }
 })
 

@@ -14,8 +14,6 @@ router.put('/:venueId', restoreUser, requireAuth, async (req, res, next) => {
         const { address, city, state, lat, lng } = req.body
 
         const venue = await Venue.findByPk(venuesId);
-        ('*****************************************************')
-        ('This is inside our venue:', venue)
 
         if(!venue){
             return res.status(404).json({
@@ -30,15 +28,14 @@ router.put('/:venueId', restoreUser, requireAuth, async (req, res, next) => {
                 status: 'co-host'
             }
         })
-        ('*****************************************************')
-        ('This is inside our membership:', membership)
+
 
         if (!membership || membership.userId !== req.user.id) {
             return res.status(403).json({
                 message: "You don't have permission to edit this venue"
             });
         }
-        ('Did I get here?')
+
 
         venue.address = address !== undefined ? address : venue.address;
         venue.city = city !== undefined ? city : venue.city;
