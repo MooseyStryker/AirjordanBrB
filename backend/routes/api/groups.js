@@ -957,9 +957,7 @@ router.put('/:groupId/membership', restoreUser, requireAuth, async (req, res, ne
                 message: "Invalid status"
             });
         }
-        ('id', group.organizerId)
-        ('id', req.user.id)
-        ('id', existingMembership.status)
+
 
         if (group.organizerId !== req.user.id && existingMembership.status !== 'co-host') {
             return res.status(403).json({
