@@ -536,7 +536,7 @@ router.post('/', restoreUser, requireAuth, async (req, res, next) => {
         })
         res.status(201).json(newGroup)
     } catch (error) {
-      
+
         if (error instanceof Sequelize.ValidationError) {
             let errors = {};
             error.errors.forEach(e => {
@@ -895,18 +895,35 @@ router.put('/:groupId', restoreUser, requireAuth, async (req, res, next) => {
 
 
     } catch (error) {
-        if(error instanceof Sequelize.ValidationError) {
+        // if(error instanceof Sequelize.ValidationError) {
+
+        //     return res.status(400).json({
+        //         message: 'Validation Error',
+        //         errors: error.errors.map(e => {
+        //           (e);
+        //           return {
+        //             [e.path]: e.message
+        //           };
+        //         })
+        //       });
+        // }
+
+        if (error instanceof Sequelize.ValidationError) {
+            let errors = {};
+            error.errors.forEach(e => {
+              errors[e.path] = e.message;
+            });
 
             return res.status(400).json({
-                message: 'Validation Error',
-                errors: error.errors.map(e => {
-                  (e);
-                  return {
-                    [e.path]: e.message
-                  };
-                })
-              });
-        }
+              message: 'Validation Error',
+              errors: errors
+            });
+          }
+
+          res.status(400).json({
+            message: 'Bad Request'
+          });
+          
     }
 })
 
