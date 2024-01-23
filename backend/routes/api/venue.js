@@ -7,12 +7,19 @@ const { User, Group, Membership, GroupImage, Venue, Event, EventImage, Attendenc
 
 const router = express.Router();
 
+
+
 router.put('/:venueId', restoreUser, requireAuth, async (req, res, next) => {
     try {
-        const venuesId = req.params.venueId;
         const { address, city, state, lat, lng } = req.body
+        const venuesId = req.params.venueId;
+        console.log("🚀 ~ router.put ~ venuesId:", venuesId)
 
         const venue = await Venue.findByPk(venuesId);
+        console.log("🚀 ~ router.put ~ venue:", venue)
+
+        const group = await Group.findByPk(venue.groupId)
+        console.log("🚀 ~ router.put ~ group:", group)
 
         if(!venue){
             return res.status(404).json({
@@ -27,9 +34,15 @@ router.put('/:venueId', restoreUser, requireAuth, async (req, res, next) => {
                 status: 'co-host'
             }
         })
+        console.log("🚀 ~ router.put ~ membership:", membership)
 
 
-        if (!membership || membership.userId !== req.user.id) {
+        // if (!membership || group.organizerId !== req.user.id) {
+        //     return res.status(403).json({
+        //         message: "You don't have permission to edit this venue"
+        //     });
+        // }
+        if (group.organizerId !== req.user.id && (!membership || membership.status !== 'co-host')) {
             return res.status(403).json({
                 message: "You don't have permission to edit this venue"
             });
@@ -45,10 +58,21 @@ router.put('/:venueId', restoreUser, requireAuth, async (req, res, next) => {
 
         await venue.save();
 
-        res.json(venue)
+        const venueResponse = {
+            id: venue.id,
+            groupId: venue.groupId,
+            address: venue.address,
+            city: venue.city,
+            state: venue.state,
+            lat: venue.lat,
+            lng: venue.lng
+          };
+
+          res.json(venueResponse);
 
 
     } catch (error) {
+        console.log(error)
         if (error instanceof Sequelize.ValidationError) {
             let errors = {};
             error.errors.forEach(e => {

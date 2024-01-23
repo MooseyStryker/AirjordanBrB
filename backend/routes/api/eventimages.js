@@ -21,7 +21,7 @@ router.delete('/:imageId', restoreUser, requireAuth, async (req, res, next) => {
       const group = await Group.findByPk(event.groupId);
       const membership = await Membership.findOne({ where: { userId: req.user.id, groupId: group.id } });
 
-    
+
       if (group.organizerId !== req.user.id && (!membership || membership.status !== 'co-host')) {
         return res.status(403).json({
           message: "You don't have permission to delete this image"

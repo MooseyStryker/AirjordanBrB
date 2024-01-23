@@ -40,6 +40,7 @@ const router = express.Router();
 // Sign up
 
 // validateSignup,
+
 router.post('/', async (req, res) => {
   const { firstName, lastName, email, password, username } = req.body;
   let errors = {};
@@ -54,14 +55,18 @@ router.post('/', async (req, res) => {
   }
 
   if (!email) {
-    errors.email = "Invalid email";
+    errors.email = "Email is required";
   }
 
   if (!username) {
     errors.username = "Username is required";
   }
 
-  const existingUser = await User.findOne({ where: { [Op.or]: [{ email }, { username }] } });
+  if (!password) {
+    errors.password = "Password is required";
+  }
+
+  const existingUser = await User.findOne({ where: { [Op.or]: [{ email }, { username }]}});
   if (existingUser) {
     if (existingUser.email === email) {
       errors.email = "User with that email already exists";
@@ -82,14 +87,15 @@ router.post('/', async (req, res) => {
   // If there are no errors, create the user
   try {
     const hashedPassword = bcrypt.hashSync(password);
-    const user = await User.create({ firstName, lastName, email, username, password, hashedPassword });
+    const user = await User.create({ firstName, lastName, email, username, hashedPassword });
+    console.log('Where are you!!')
 
     const safeUser = {
       id: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      username: user.username,
+      username: user.username
     };
 
     await setTokenCookie(res, safeUser);
@@ -98,6 +104,7 @@ router.post('/', async (req, res) => {
       user: safeUser
     });
   } catch (err) {
+    console.log(err)
     if (err.name === 'SequelizeUniqueConstraintError') {
       const constraintErrors = err.errors.map((error) => error.message);
       return res.status(409).json({
@@ -106,10 +113,9 @@ router.post('/', async (req, res) => {
       });
     }
     // handle other types of errors
-    return res.status(500).json({ message: 'An error occurred' });
+    return res.status(500).json({ message: err.message });
   }
 });
-
 
 
 

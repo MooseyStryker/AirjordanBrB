@@ -130,10 +130,13 @@ router.get('/', async (req, res, next) => {
 router.get('/:eventId', async (req, res, next) => {
     try{
         const thisEventId = req.params.eventId
+        const event = await Event.findByPk(thisEventId)
 
         const events = await Event.findAll({
             where: {
-                groupId: thisEventId
+                groupId:
+                // thisEventId
+                event.groupId
             },
             include:[
                 {model: Attendence},
@@ -151,6 +154,8 @@ router.get('/:eventId', async (req, res, next) => {
 
             ]
         });
+
+
         // Needs to keep EventImages
         const processEventListKeepImages = (EventList) => {
             const ensuresThisIsAnArray = Array.isArray(EventList) ? EventList : [EventList];
@@ -202,8 +207,6 @@ router.get('/:eventId', async (req, res, next) => {
         next(error)
     }
 });
-
-
 
 
 router.get('/:eventId/attendees', async (req, res, next) => {
@@ -268,6 +271,7 @@ router.get('/:eventId/attendees', async (req, res, next) => {
 
 
 /*          POST         */
+
 router.post('/:eventId/images', restoreUser, requireAuth, async (req, res, next) => {
     try{
         const thisEventId = req.params.eventId;
@@ -275,41 +279,33 @@ router.post('/:eventId/images', restoreUser, requireAuth, async (req, res, next)
 
         const event = await Event.findByPk(thisEventId);
 
+        if(!event || event.groupId === null) return res.status(404).json({"message": "Event couldn't be found"})
 
-        if(!event || event.groupId === null) return res.status(403).json({"message": "Event couldn't be found"})
-
-        const group = await Group.findOne({
+        const group = await Group.findByPk(event.groupId);
+        const membership = await Membership.findOne({
             where: {
-                organizerId: req.user.id
+                userId: req.user.id,
+                groupId: event.groupId
             }
         });
-        const membership = await Membership.findOne({
-             where: {
-                 userId: req.user.id,
-                 groupId: group.id
-                }
-            });
-
 
         if (
-            event.groupId !== req.user.id
-            || membership.status !== 'co-host'
-            || group.organizerId !== req.user.id
+            group.organizerId !== req.user.id
+            && (!membership || (membership.status !== 'co-host' && membership.status !== 'attendee'))
         ) {
             return res.status(403).json({
-                message: "You don't have permission to create this venue"
+                message: "You don't have permission to create this image"
             });
         }
 
-
-
         const image = await EventImage.create({
+            eventId: thisEventId,
             url,
             preview
         })
 
         res.json({
-            id: thisEventId,
+            id: image.id,
             url: image.url,
             preview: image.preview
         })
@@ -318,6 +314,7 @@ router.post('/:eventId/images', restoreUser, requireAuth, async (req, res, next)
         next(e)
     }
 })
+
 
 router.post('/:eventId/attendance', restoreUser, requireAuth, async (req, res, next) => {
     try {
@@ -340,6 +337,16 @@ router.post('/:eventId/attendance', restoreUser, requireAuth, async (req, res, n
                 userId: userId
             }
         });
+
+
+
+
+        console.log("🚀 ~ router.post ~ userId:", userId)
+        console.log("🚀 ~ router.post ~ event:", event)
+        console.log("🚀 ~ router.post ~ group:", group)
+        console.log("🚀 ~ router.post ~ membership:", membership)
+
+
 
         if (!membership) {
             return res.status(403).json({ message: "Current User must be a member of the group" });
@@ -375,6 +382,14 @@ router.post('/:eventId/attendance', restoreUser, requireAuth, async (req, res, n
         next(err);
     }
 });
+
+
+
+
+
+
+
+
 
 
 
@@ -462,12 +477,17 @@ router.put('/:eventId/attendance', requireAuth, async (req, res, next) => {
         const { userId, status } = req.body;
 
         const event = await Event.findByPk(eventId);
+        console.log("🚀 ~ router.put ~ event:", event)
         if (!event) {
             return res.status(404).json({ message: "Event couldn't be found" });
         }
 
+        const group = await Group.findByPk(event.groupId)
+        console.log("🚀 ~ router.put ~ group:", group)
+
 
         const user = await User.findByPk(userId);
+        console.log("🚀 ~ router.put ~ user:", user)
         if (!user) {
             return res.status(404).json({ message: "User couldn't be found" });
         }
@@ -479,6 +499,7 @@ router.put('/:eventId/attendance', requireAuth, async (req, res, next) => {
                 userId
             }
         });
+        console.log("🚀 ~ router.put ~ attendance:", attendance)
 
 
         if (!attendance) {
@@ -499,7 +520,9 @@ router.put('/:eventId/attendance', requireAuth, async (req, res, next) => {
                 userId: req.user.id
             }
         });
-        if (req.user.id !== event.organizerId && (!membership || membership.status !== 'co-host')) {
+        console.log("🚀 ~ router.put ~ membership:", membership)
+
+        if (req.user.id !== group.organizerId && (!membership || membership.status !== 'co-host')) {
             return res.status(403).json({ message: "You don't have permission to edit this attendance" });
         }
 
@@ -527,11 +550,14 @@ router.put('/:eventId/attendance', requireAuth, async (req, res, next) => {
 router.delete('/:eventId', restoreUser, requireAuth, async (req, res, next) => {
     try {
         const thisEventId = req.params.eventId;
+
         const event = await Event.findByPk(thisEventId);
+
         if (!event) {
             return res.status(404).json({ message: "Event couldn't be found" });
         }
         const group = await Group.findByPk(event.groupId);
+
         const membership = await Membership.findOne({
             where:
             {
@@ -542,11 +568,13 @@ router.delete('/:eventId', restoreUser, requireAuth, async (req, res, next) => {
 
 
 
-        if (group.organizerId !== req.user.id || (!membership || membership.status !== 'co-host')) {
-            return res.status(403).json(
-                {
-                    message: "You don't have permission to delete this event"
-                });
+        if (
+            group.organizerId !== req.user.id
+            && (!membership || membership.status !== 'co-host')
+        ) {
+            return res.status(403).json({
+                message: "You don't have permission to delete this event"
+            });
         }
 
         await event.destroy();
@@ -596,7 +624,8 @@ router.delete('/:eventId/attendance/:userId', restoreUser, requireAuth, async (r
             return res.status(404).json({ message: "Attendence does not exist for this User" });
         }
 
-        if (req.user.id !== group.organizerId && req.user.id !== userId && (!membership || membership.status !== 'co-host')) {
+
+        if (!(req.user.id == userId || req.user.id == group.organizerId)) {
             return res.status(403).json({ message: "You don't have permission to delete this attendance" });
         }
 

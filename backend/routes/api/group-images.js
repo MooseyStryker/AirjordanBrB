@@ -25,12 +25,27 @@ router.delete('/:imageId', restoreUser, requireAuth, async (req,res, next) => {
 
         if(!group) return res.status(403).json({"message": "Group couldn't be found"})
 
+        const membership = await Membership.findOne({
+            where : {
+                groupId: image.groupId
+            }
+        })
 
-        if (group.organizerId !== req.user.id && Membership.status !== 'co-host') {
-            return res.status(403).json({
-                message: "You don't have permission to create this events"
-            });
+        console.log("🚀 ~ router.delete ~ membership:", membership)
+        // console.log("🚀 ~ router.delete ~ membership.status:", membership.status)
+        console.log("🚀 ~ router.delete ~ req.user.id:", req.user.id)
+        console.log("🚀 ~ router.delete ~ group.organizerId:", group.organizerId)
+
+
+
+        if (group.organizerId !== req.user.id) {
+            if (!membership || membership.status !== 'co-host') {
+                return res.status(403).json({
+                    message: "You don't have permission to create this events"
+                });
+            }
         }
+
         await image.destroy();
         res.status(200).json({ message: 'Successfully deleted' });
       } catch (error) {
