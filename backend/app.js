@@ -79,14 +79,15 @@ app.use((err, _req, res, _next) => {
 
   if (isProduction) {
     return res.json ({
-      message: err.errors.message
+      message: err.errors
     })
   } else {
     return res.json({
-      title: err.title || 'Server Error',
-      message: err.message,
-      errors: err.errors,
-      stack: isProduction ? null : err.stack
+      message: err.errors.message
+      // title: err.title || 'Server Error',
+      // message: err.message,
+      // errors: err.errors,
+      // stack: isProduction ? null : err.stack
     });
   }
 });
