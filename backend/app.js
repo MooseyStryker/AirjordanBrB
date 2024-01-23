@@ -77,19 +77,14 @@ app.use((err, _req, res, _next) => {
   res.status(err.status || 500);
   console.error(err);
 
-  if (isProduction) {
-    return res.json ({
-      message: err.errors
-    })
-  } else {
-    return res.json({
-      message: err.errors.message
-      // title: err.title || 'Server Error',
-      // message: err.message,
-      // errors: err.errors,
-      // stack: isProduction ? null : err.stack
+    res.json({
+      message: err.errors.message,
+      title: err.title || 'Server Error',
+      message: err.message,
+      errors: err.errors,
+      stack: isProduction ? null : err.stack
     });
-  }
+
 });
 
 module.exports = app;
