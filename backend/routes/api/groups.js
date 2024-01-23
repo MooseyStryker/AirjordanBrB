@@ -6,7 +6,6 @@ const { restoreUser, requireAuth } = require('../../utils/auth');
 
 
 const { User, Group, Membership, GroupImage, Venue, Event, EventImage, Attendence } = require('../../db/models');
-const membership = require('../../db/models/membership');
 
 const router = express.Router();
 
