@@ -228,6 +228,19 @@ router.get('/:groupId/venues', restoreUser, requireAuth, async (req, res, next) 
         const group = await Group.findByPk(groupId);
         if(!group) return res.status(403).json({"message": "Group couldn't be found"})
 
+        if (group.organizerId === req.user.id){
+            const venues = await Venue.findAll({
+                where: {
+                    groupId: groupId
+                },
+                attributes: ["id","groupId","address","city","state","lat","lng"]
+            });
+
+            return res.json({
+                Venues: venues
+            })
+        }
+
         const membership = await Membership.findOne({
             where:{
                 userId: req.user.id,
@@ -250,10 +263,6 @@ router.get('/:groupId/venues', restoreUser, requireAuth, async (req, res, next) 
             },
             attributes: ["id","groupId","address","city","state","lat","lng"]
         });
-
-
-
-
 
         res.json({
             Venues: venues
@@ -383,6 +392,37 @@ router.get('/:groupId/members', async (req, res, next) => {
 
 
         const group = await Group.findByPk(thisGroupId);
+        if (!group) {
+            return res.status(404).json({ message: "Group couldn't be found" });
+        }
+        if (group.organizerId === req.user.id) {
+
+            const members = await Membership.findAll({
+                where: { groupId: thisGroupId },
+                include: [
+                    {
+                        model: User,
+                        as: 'User',
+                        attributes: ['id', 'firstName', 'lastName']
+                    }
+                ]
+            });
+
+            const formattedMembers = members.map(member => ({
+                id: member.User.id,
+                firstName: member.User.firstName,
+                lastName: member.User.lastName,
+                Membership: {
+                    status: member.status
+                }
+            }));
+
+            return res.json({ Members: formattedMembers });
+        }
+
+
+
+
         const membership = await Membership.findOne({
             where: {
                 userId: req.user.id,
@@ -392,9 +432,6 @@ router.get('/:groupId/members', async (req, res, next) => {
         console.log("🚀 ~ router.get ~ membership:", membership)
 
 
-        if (!group) {
-            return res.status(404).json({ message: "Group couldn't be found" });
-        }
 
 
         const members = await Membership.findAll({
@@ -419,7 +456,7 @@ router.get('/:groupId/members', async (req, res, next) => {
         }));
 
 
-        if(!membership || (membership.status !== 'co-host' && group.organizerId !== req.user.id)) {
+        if(!membership || membership.status !== 'co-host') {
             const nonPendingMembers = formattedMembers.filter(member => member.Membership.status !== 'pending');
             res.json({ Members: nonPendingMembers });
         } else {
@@ -549,6 +586,28 @@ router.post('/:groupId/venues', restoreUser, requireAuth, async (req, res, next)
         const group = await Group.findByPk(thisGroupId)
         if(!group) return res.status(403).json({"message": "Group couldn't be found"})
 
+
+        if (group.organizerId === req.user.id) {
+            const venue = await Venue.create({
+                groupId: thisGroupId,
+                address,
+                city,
+                state,
+                lat,
+                lng
+            })
+
+            return res.json({
+                id: venue.id,
+                groupId: thisGroupId,
+                address: venue.address,
+                city: venue.city,
+                state: venue.state,
+                lat: venue.lat,
+                lng: venue.lng
+            })
+        }
+
         const membership = await Membership.findOne({
             where:{
                 userId: req.user.id,
@@ -615,6 +674,34 @@ router.post('/:groupId/events', restoreUser, requireAuth, async (req, res, next)
         const venue = await Venue.findByPk(venueId)
         if (!venue) return res.status(400).json({"message": "Venue couldn't be found"})
 
+        if (group.organizerId === req.user.id) {
+            const event = await Event.create({
+                groupId: thisGroupId,
+                venueId: venue.id,
+                name,
+                type,
+                capacity,
+                price,
+                description,
+                startDate,
+                endDate
+            });
+
+
+
+            return res.json({
+                id: event.id,
+                groupId: thisGroupId,
+                venueId: venue.id,
+                name: event.name,
+                type: event.type,
+                capacity: event.capacity,
+                price: event.price,
+                description: event.description,
+                startDate: event.startDate,
+                endDate: event.endDate
+            })
+        }
 
 
         const membership = await Membership.findOne({
@@ -791,10 +878,6 @@ router.delete('/:groupId/membership/:memberId', restoreUser, requireAuth, async 
             }
         });
 
-
-        console.log("🚀 ~ router.delete ~ user:", user.id)
-        console.log("🚀 ~ router.delete ~ req.user.id:", req.user.id)
-        console.log("🚀 ~ router.delete ~ group.organizerId:", group.organizerId)
 
 
         if (!membership) {

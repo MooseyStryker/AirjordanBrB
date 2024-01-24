@@ -17,16 +17,20 @@ router.put('/:venueId', restoreUser, requireAuth, async (req, res, next) => {
 
 
         const venue = await Venue.findByPk(venuesId);
-
-
-        const group = await Group.findByPk(venue.groupId)
-
-
         if(!venue){
             return res.status(404).json({
                 message: "Venue couldn't be found"
             })
         }
+
+
+        const group = await Group.findByPk(venue.groupId)
+        if(!group){
+            return res.status(404).json({
+                message: "Group couldn't be found"
+            })
+        }
+
 
         const membership = await Membership.findOne({
             where: {
@@ -35,7 +39,7 @@ router.put('/:venueId', restoreUser, requireAuth, async (req, res, next) => {
                 status: 'co-host'
             }
         })
-     
+
 
 
         // if (!membership || group.organizerId !== req.user.id) {
@@ -43,6 +47,7 @@ router.put('/:venueId', restoreUser, requireAuth, async (req, res, next) => {
         //         message: "You don't have permission to edit this venue"
         //     });
         // }
+
         if (group.organizerId !== req.user.id && (!membership || membership.status !== 'co-host')) {
             return res.status(403).json({
                 message: "You don't have permission to edit this venue"
