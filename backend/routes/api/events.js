@@ -305,32 +305,6 @@ router.post('/:eventId/images', restoreUser, requireAuth, async (req, res, next)
             })
         }
 
-
-
-        const attend = await Attendence.findOne({
-            where: {
-                eventId: thisEventId,
-                userId: req.user.id
-            }
-        })
-        if(!attend){
-            return res.status(404).json({"message": "You must be attending this event to share images"})
-        }
-        if (attend.status === 'attending') {
-            const image = await EventImage.create({
-                eventId: thisEventId,
-                url,
-                preview
-            })
-
-            return res.json({
-                id: image.id,
-                url: image.url,
-                preview: image.preview
-            })
-        }
-
-
         const membership = await Membership.findOne({
             where: {
                 userId: req.user.id,
@@ -353,6 +327,32 @@ router.post('/:eventId/images', restoreUser, requireAuth, async (req, res, next)
                 preview: image.preview
             })
         }
+
+
+        const attend = await Attendence.findOne({
+            where: {
+                eventId: thisEventId,
+                userId: req.user.id
+            }
+        })
+        if(!attend){
+            return res.status(403).json({"message": "You must be attending this event to share images"})
+        }
+        if (attend.status === 'attending') {
+            const image = await EventImage.create({
+                eventId: thisEventId,
+                url,
+                preview
+            })
+
+            return res.json({
+                id: image.id,
+                url: image.url,
+                preview: image.preview
+            })
+        }
+
+
 
 
         if (group.organizerId !== req.user.id
@@ -486,14 +486,13 @@ router.put('/:eventId', restoreUser, requireAuth, async (req, res, next) => {
 
 
         const event = await Event.findByPk(thisEventId);
-
-        const venue = await Venue.findByPk(venueId)
-
-        if (!venue) return res.status(400).json({"message": "Venue couldn't be found"})
-
         if (!event) {
             return res.status(404).json({ message: "Event couldn't be found" });
         }
+
+        const venue = await Venue.findByPk(venueId)
+        if (!venue) return res.status(404).json({"message": "Venue couldn't be found"})
+
 
 
         const group = await Group.findByPk(event.groupId);

@@ -86,7 +86,7 @@ router.post('/', async (req, res) => {
 
   // If there are errors, return them
   if (Object.keys(errors).length > 0) {
-    return res.status(400).json({
+    return res.status(500).json({
       message: "User already exists",
       errors: errors
     });

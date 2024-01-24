@@ -283,7 +283,7 @@ router.get('/:groupId/events', async (req, res, next) => {
 
         const group = await Group.findByPk(thisgroupId);
 
-        if(!group) return res.status(403).json({"message": "Group couldn't be found"})
+        if(!group) return res.status(404).json({"message": "Group couldn't be found"})
 
 
         const events = await Event.findAll({
@@ -669,10 +669,10 @@ router.post('/:groupId/events', restoreUser, requireAuth, async (req, res, next)
         const { groupId, venueId, name, type, capacity, price, description, startDate, endDate } = req.body
 
         const group = await Group.findByPk(thisGroupId)
-        if(!group) return res.status(403).json({"message": "Group couldn't be found"})
+        if(!group) return res.status(404).json({"message": "Group couldn't be found"})
 
         const venue = await Venue.findByPk(venueId)
-        if (!venue) return res.status(400).json({"message": "Venue couldn't be found"})
+        if (!venue) return res.status(404).json({"message": "Venue couldn't be found"})
 
         if (group.organizerId === req.user.id) {
             const event = await Event.create({
@@ -988,7 +988,7 @@ router.put('/:groupId/membership', restoreUser, requireAuth, async (req, res, ne
             }
         });
         if(!existingMembership) {
-            return res.status(404).json({
+            return res.status(403).json({
                 message: "Membership between the user and the group does not exist"
             });
         }
@@ -1007,7 +1007,7 @@ router.put('/:groupId/membership', restoreUser, requireAuth, async (req, res, ne
         // }
 
         if (!currentUserMembership && req.user.id !== group.organizerId) {
-            return res.status(404).json({
+            return res.status(403).json({
                 message: "You don't have a membership with this group"
             });
         }
