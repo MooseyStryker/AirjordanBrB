@@ -12,14 +12,15 @@ const router = express.Router();
 router.put('/:venueId', restoreUser, requireAuth, async (req, res, next) => {
     try {
         const { address, city, state, lat, lng } = req.body
-        const venuesId = req.params.venueId;
-        console.log("🚀 ~ router.put ~ venuesId:", venuesId)
+        let venuesId = req.params.venueId;
+        venuesId = +venuesId;
+
 
         const venue = await Venue.findByPk(venuesId);
-        console.log("🚀 ~ router.put ~ venue:", venue)
+
 
         const group = await Group.findByPk(venue.groupId)
-        console.log("🚀 ~ router.put ~ group:", group)
+
 
         if(!venue){
             return res.status(404).json({
@@ -34,7 +35,7 @@ router.put('/:venueId', restoreUser, requireAuth, async (req, res, next) => {
                 status: 'co-host'
             }
         })
-        console.log("🚀 ~ router.put ~ membership:", membership)
+     
 
 
         // if (!membership || group.organizerId !== req.user.id) {

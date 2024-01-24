@@ -129,8 +129,12 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:eventId', async (req, res, next) => {
     try{
-        const thisEventId = req.params.eventId
+        let thisEventId = req.params.eventId
+        thisEventId = +thisEventId
         const event = await Event.findByPk(thisEventId)
+        if (!event) {
+            return res.status(404).json({ message: "Event couldn't be found" });
+        }
 
         const events = await Event.findAll({
             where: {
@@ -211,7 +215,8 @@ router.get('/:eventId', async (req, res, next) => {
 
 router.get('/:eventId/attendees', async (req, res, next) => {
     try {
-        const thisEventId = req.params.eventId;
+        let thisEventId = req.params.eventId;
+        thisEventId = +thisEventId;
         const event = await Event.findByPk(thisEventId);
 
         if (!event) {
@@ -274,12 +279,22 @@ router.get('/:eventId/attendees', async (req, res, next) => {
 
 router.post('/:eventId/images', restoreUser, requireAuth, async (req, res, next) => {
     try{
-        const thisEventId = req.params.eventId;
+        let thisEventId = req.params.eventId;
+        thisEventId = +thisEventId
         const{ url, preview } = req.body;
 
         const event = await Event.findByPk(thisEventId);
 
         if(!event || event.groupId === null) return res.status(404).json({"message": "Event couldn't be found"})
+
+        const attend = await Attendence.findOne({
+            where: {
+                eventId: thisEventId,
+                userId: req.user.id
+            }
+        })
+  
+
 
         const group = await Group.findByPk(event.groupId);
         const membership = await Membership.findOne({
@@ -289,9 +304,12 @@ router.post('/:eventId/images', restoreUser, requireAuth, async (req, res, next)
             }
         });
 
+
+
+
         if (
             group.organizerId !== req.user.id
-            && (!membership || (membership.status !== 'co-host' && membership.status !== 'attendee'))
+            && (!membership || (membership.status !== 'co-host' && attend.status !== 'attending'))
         ) {
             return res.status(403).json({
                 message: "You don't have permission to create this image"
@@ -316,10 +334,13 @@ router.post('/:eventId/images', restoreUser, requireAuth, async (req, res, next)
 })
 
 
-router.post('/:eventId/attendance', restoreUser, requireAuth, async (req, res, next) => {
+router.post('/:eventId/attendance', requireAuth, restoreUser, async (req, res, next) => {
     try {
-        const thisEventId = req.params.eventId;
-        const userId = req.user.id;
+        let thisEventId = req.params.eventId;
+        thisEventId = +thisEventId;
+
+        let userId = req.user.id;
+        userId = +userId
 
         const event = await Event.findByPk(thisEventId);
         if (!event) {
@@ -337,15 +358,12 @@ router.post('/:eventId/attendance', restoreUser, requireAuth, async (req, res, n
                 userId: userId
             }
         });
+        if(!membership) return res.status(403).json({"message": "Your membership to this group couldn't be found"})
 
 
-
-
-        console.log("🚀 ~ router.post ~ userId:", userId)
-        console.log("🚀 ~ router.post ~ event:", event)
-        console.log("🚀 ~ router.post ~ group:", group)
-        console.log("🚀 ~ router.post ~ membership:", membership)
-
+        if (membership.status === 'pending'){
+            return res.status(403).json({ message: "You need to have your pending membership accepted by a member, co-host, or the organizer" });
+        }
 
 
         if (!membership) {
@@ -396,18 +414,28 @@ router.post('/:eventId/attendance', restoreUser, requireAuth, async (req, res, n
 
 /*          Edit             */
 router.put('/:eventId', restoreUser, requireAuth, async (req, res, next) => {
+
     try {
-        const thisEventId = req.params.eventId;
+        let thisEventId = req.params.eventId;
+        thisEventId = +thisEventId;
         const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
 
         const errors = {};
         if (!name || name.length < 5) errors.name = "Name must be at least 5 characters";
-        if (!type || (type !== 'Online' && type !== 'In Person')) errors.type = "Type must be 'Online' or 'In Person'";
+        if (!type || (type !== 'Online' && type !== 'In person')) errors.type = "Type must be 'Online' or 'In Person'";
         if (!capacity || !Number.isInteger(capacity)) errors.capacity = "Capacity must be an integer";
         if (!price || isNaN(price)) errors.price = "Price is invalid";
         if (!description) errors.description = "Description is required";
-        if (!startDate || new Date(startDate) < new Date()) errors.startDate = "Start date must be in the future";
-        if (!endDate || new Date(endDate) < new Date(startDate)) errors.endDate = "End date is less than start date";
+        if (!startDate || new Date(startDate).getTime() < new Date().getTime()) errors.startDate = "Start date must be in the future";
+        if (!endDate || new Date(endDate).getTime() < new Date(startDate).getTime()) errors.endDate = "End date is less than start date";
+
+        if(Object.keys(errors).length >= 1) {
+            return res.status(400).json({
+                message: "Bad Request",
+                errors
+            })
+        }
+
 
         const event = await Event.findByPk(thisEventId);
 
@@ -438,7 +466,8 @@ router.put('/:eventId', restoreUser, requireAuth, async (req, res, next) => {
             price,
             description,
             startDate,
-            endDate });
+            endDate
+        });
 
 
         res.status(200).json({
@@ -459,6 +488,7 @@ router.put('/:eventId', restoreUser, requireAuth, async (req, res, next) => {
             error.errors.forEach(({ path, message }) => {
                 errors[path] = message;
             });
+            console.log("🚀 ~ router.put ~ errors:", errors)
 
             return res.status(400).json({
                 message: "Bad Request",
@@ -473,7 +503,9 @@ router.put('/:eventId', restoreUser, requireAuth, async (req, res, next) => {
 
 router.put('/:eventId/attendance', requireAuth, async (req, res, next) => {
     try {
-        const { eventId } = req.params;
+        let { eventId } = req.params;
+        eventId = +eventId;
+
         const { userId, status } = req.body;
 
         const event = await Event.findByPk(eventId);
@@ -549,7 +581,8 @@ router.put('/:eventId/attendance', requireAuth, async (req, res, next) => {
 /*          DELETE           */
 router.delete('/:eventId', restoreUser, requireAuth, async (req, res, next) => {
     try {
-        const thisEventId = req.params.eventId;
+        let thisEventId = req.params.eventId;
+        thisEventId = +thisEventId;
 
         const event = await Event.findByPk(thisEventId);
 

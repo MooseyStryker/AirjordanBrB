@@ -10,7 +10,9 @@ const router = express.Router();
 
 router.delete('/:imageId', restoreUser, requireAuth, async (req, res, next) => {
     try {
-      const imageId = req.params.imageId;
+      let imageId = req.params.imageId;
+      imageId = +imageId
+
       const image = await EventImage.findByPk(imageId);
 
       if (!image) {

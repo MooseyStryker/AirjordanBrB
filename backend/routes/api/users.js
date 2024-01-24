@@ -66,20 +66,28 @@ router.post('/', async (req, res) => {
     errors.password = "Password is required";
   }
 
-  const existingUser = await User.findOne({ where: { [Op.or]: [{ email }, { username }]}});
+  if (Object.keys(errors).length > 0) {
+    return res.status(400).json({
+      message: "Bad Request",
+      errors: errors
+    });
+  }
+
+  const existingUser = await User.unscoped().findOne({ where: { [Op.or]: [{ email }, { username }]}});
   if (existingUser) {
     if (existingUser.email === email) {
       errors.email = "User with that email already exists";
     }
     if (existingUser.username === username) {
       errors.username = "User with that username already exists";
+
     }
   }
 
   // If there are errors, return them
   if (Object.keys(errors).length > 0) {
     return res.status(400).json({
-      message: "Bad Request",
+      message: "User already exists",
       errors: errors
     });
   }
@@ -88,7 +96,7 @@ router.post('/', async (req, res) => {
   try {
     const hashedPassword = bcrypt.hashSync(password);
     const user = await User.create({ firstName, lastName, email, username, hashedPassword });
-    console.log('Where are you!!')
+
 
     const safeUser = {
       id: user.id,
@@ -104,7 +112,6 @@ router.post('/', async (req, res) => {
       user: safeUser
     });
   } catch (err) {
-    console.log(err)
     if (err.name === 'SequelizeUniqueConstraintError') {
       const constraintErrors = err.errors.map((error) => error.message);
       return res.status(409).json({

@@ -10,7 +10,9 @@ const router = express.Router();
 router.delete('/:imageId', restoreUser, requireAuth, async (req,res, next) => {
     try{
 
-        const thisImageId = req.params.imageId;
+        let thisImageId = req.params.imageId;
+        thisImageId = +thisImageId;
+
         const image = await GroupImage.findByPk(thisImageId);
 
 
@@ -27,6 +29,7 @@ router.delete('/:imageId', restoreUser, requireAuth, async (req,res, next) => {
 
         const membership = await Membership.findOne({
             where : {
+                userId: req.user.id,
                 groupId: image.groupId
             }
         })

@@ -135,7 +135,9 @@ router.get('/current', restoreUser, requireAuth, async (req, res, next) => {
 
 
 router.get('/:groupId', async (req, res) => {
-    const groupId = req.params.groupId;
+    let groupId = req.params.groupId;
+    groupId = +groupId;
+
     const group = await Group.findByPk(groupId, {
         include: [
             GroupImage,
@@ -210,7 +212,9 @@ router.get('/:groupId', async (req, res) => {
 
 router.get('/:groupId/venues', restoreUser, requireAuth, async (req, res, next) => {
     try {
-        const groupId = req.params.groupId;
+        let groupId = req.params.groupId;
+        groupId = +groupId
+
         const { user } = req;
 
 
@@ -224,7 +228,15 @@ router.get('/:groupId/venues', restoreUser, requireAuth, async (req, res, next) 
         const group = await Group.findByPk(groupId);
         if(!group) return res.status(403).json({"message": "Group couldn't be found"})
 
-        if (group.organizerId !== req.user.id && Membership.status !== 'co-host') {
+        const membership = await Membership.findOne({
+            where:{
+                userId: req.user.id,
+                groupId: groupId
+            }
+        })
+        if(!membership) return res.status(403).json({"message": "Your membership to this group couldn't be found"})
+
+        if (!(group.organizerId === req.user.id || membership.status === 'co-host')) {
             return res.status(403).json({
                 message: "You don't have permission to see this venue"
             });
@@ -257,7 +269,8 @@ router.get('/:groupId/venues', restoreUser, requireAuth, async (req, res, next) 
 
 router.get('/:groupId/events', async (req, res, next) => {
     try{
-        const thisgroupId = req.params.groupId
+        let thisgroupId = req.params.groupId
+        thisgroupId = +thisgroupId
 
         const group = await Group.findByPk(thisgroupId);
 
@@ -354,7 +367,10 @@ router.get('/:groupId/events', async (req, res, next) => {
 
 router.get('/:groupId/members', async (req, res, next) => {
     try {
-        const thisGroupId = req.params.groupId;
+        let thisGroupId = req.params.groupId;
+        thisGroupId = +thisGroupId;
+
+
         const { user } = req;
 
 
@@ -373,6 +389,7 @@ router.get('/:groupId/members', async (req, res, next) => {
                 groupId: thisGroupId
             }
         })
+        console.log("🚀 ~ router.get ~ membership:", membership)
 
 
         if (!group) {
@@ -401,16 +418,14 @@ router.get('/:groupId/members', async (req, res, next) => {
             }
         }));
 
-        // (membership.status)
-        // (req.user.id)
-        // (group.organizerId)
 
-        if (!membership || membership.status === 'co-host' || group.organizerId === req.user.id) {
-            res.json({ Members: formattedMembers });
-        } else {
+        if(!membership || (membership.status !== 'co-host' && group.organizerId !== req.user.id)) {
             const nonPendingMembers = formattedMembers.filter(member => member.Membership.status !== 'pending');
             res.json({ Members: nonPendingMembers });
+        } else {
+            res.json({ Members: formattedMembers });
         }
+
     } catch (error) {
         next(error);
     }
@@ -480,7 +495,8 @@ router.post('/', restoreUser, requireAuth, async (req, res, next) => {
 
 router.post('/:groupId/images', restoreUser, requireAuth, async (req, res, next) => {
     try {
-        const groupId = req.params.groupId;
+        let groupId = req.params.groupId;
+        groupId = +groupId;
         const { url, preview } = req.body
 
         const group = await Group.findByPk(groupId)
@@ -489,7 +505,7 @@ router.post('/:groupId/images', restoreUser, requireAuth, async (req, res, next)
 
         if (group.organizerId !== req.user.id) {
             return res.status(403).json({
-                message: "You don't have permission to create this venue"
+                message: "You don't have permission to add an image to this group"
             });
         }
 
@@ -526,16 +542,24 @@ router.post('/:groupId/images', restoreUser, requireAuth, async (req, res, next)
 
 router.post('/:groupId/venues', restoreUser, requireAuth, async (req, res, next) => {
     try {
-        const thisGroupId = req.params.groupId;
+        let thisGroupId = req.params.groupId;
+        thisGroupId = +thisGroupId;
         const { address, city, state, lat, lng } = req.body
 
         const group = await Group.findByPk(thisGroupId)
-
-
-
         if(!group) return res.status(403).json({"message": "Group couldn't be found"})
 
-        if (group.organizerId !== req.user.id && Membership.status !== 'co-host') {
+        const membership = await Membership.findOne({
+            where:{
+                userId: req.user.id,
+                groupId: thisGroupId
+            }
+        })
+        if(!membership) return res.status(403).json({"message": "Your membership to this group couldn't be found"})
+
+
+
+        if (!(group.organizerId === req.user.id || membership.status === 'co-host')) {
             return res.status(403).json({
                 message: "You don't have permission to create this venue"
             });
@@ -580,18 +604,29 @@ router.post('/:groupId/venues', restoreUser, requireAuth, async (req, res, next)
 
 router.post('/:groupId/events', restoreUser, requireAuth, async (req, res, next) => {
     try {
-        const thisGroupId = req.params.groupId;
+        let thisGroupId = req.params.groupId;
+        thisGroupId = +thisGroupId
+
         const { groupId, venueId, name, type, capacity, price, description, startDate, endDate } = req.body
 
         const group = await Group.findByPk(thisGroupId)
-
-        const venue = await Venue.findByPk(venueId)
-
-        if (!venue) return res.status(400).json({"message": "Venue couldn't be found"})
-
         if(!group) return res.status(403).json({"message": "Group couldn't be found"})
 
-        if (group.organizerId !== req.user.id && Membership.status !== 'co-host') {
+        const venue = await Venue.findByPk(venueId)
+        if (!venue) return res.status(400).json({"message": "Venue couldn't be found"})
+
+
+
+        const membership = await Membership.findOne({
+            where:{
+                userId: req.user.id,
+                groupId: thisGroupId
+            }
+        })
+        if(!membership) return res.status(403).json({"message": "Your membership to this group couldn't be found"})
+
+
+        if (!(group.organizerId === req.user.id || membership.status === 'co-host')) {
             return res.status(403).json({
                 message: "You don't have permission to create this events"
             });
@@ -646,7 +681,9 @@ router.post('/:groupId/events', restoreUser, requireAuth, async (req, res, next)
 router.post('/:groupId/membership', restoreUser, requireAuth, async (req, res) => {
     try {
 
-        const thisGroupId = req.params.groupId
+        let thisGroupId = req.params.groupId
+        thisGroupId = +thisGroupId;
+
         const group = await Group.findByPk(thisGroupId)
 
         if (!group) {
@@ -703,7 +740,8 @@ router.post('/:groupId/membership', restoreUser, requireAuth, async (req, res) =
 
 /*  DELETE   */
 router.delete('/:groupId', restoreUser, requireAuth, async (req, res) => {
-    const thisGroupId = req.params.groupId
+    let thisGroupId = req.params.groupId
+    thisGroupId = +thisGroupId;
 
     const groupDelete = await Group.findByPk(thisGroupId)
     const group = await Group.findByPk(thisGroupId);
@@ -740,7 +778,8 @@ router.delete('/:groupId/membership/:memberId', restoreUser, requireAuth, async 
         }
 
 
-        const user = await Membership.findByPk(memberId);
+        const user = await User.findByPk(memberId);
+
         if (!user) {
             return res.status(404).json({ message: "User couldn't be found" });
         }
@@ -748,15 +787,20 @@ router.delete('/:groupId/membership/:memberId', restoreUser, requireAuth, async 
         const membership = await Membership.findOne({
             where: {
                 groupId: group.id,
-                userId: user.userId
+                userId: user.id
             }
         });
+
+
+        console.log("🚀 ~ router.delete ~ user:", user.id)
+        console.log("🚀 ~ router.delete ~ req.user.id:", req.user.id)
+        console.log("🚀 ~ router.delete ~ group.organizerId:", group.organizerId)
+
 
         if (!membership) {
             return res.status(404).json({ message: "Membership does not exist for this User" });
         }
-
-        if (group.organizerId !== req.user.id && req.user.id != user.userId) {
+        if (req.user.id !== user.id && group.organizerId !== req.user.id) {
             return res.status(403).json({ message: "You don't have permission to delete this membership" });
         }
 
@@ -780,7 +824,9 @@ router.delete('/:groupId/membership/:memberId', restoreUser, requireAuth, async 
 /*       PUT      */
 router.put('/:groupId', restoreUser, requireAuth, async (req, res, next) => {
     try {
-        const groupId = req.params.groupId;
+        let groupId = req.params.groupId;
+        groupId = +groupId;
+
         const { name, about, type, private, city, state } = req.body
 
         const group = await Group.findByPk(groupId);
@@ -831,11 +877,11 @@ router.put('/:groupId', restoreUser, requireAuth, async (req, res, next) => {
 })
 
 
-
 router.put('/:groupId/membership', restoreUser, requireAuth, async (req, res, next) => {
     try {
         let { memberId, status } = req.body
-        const thisGroupId = req.params.groupId
+        let thisGroupId = req.params.groupId
+        thisGroupId = +thisGroupId;
 
         const group = await Group.findByPk(thisGroupId)
         if (!group) {
@@ -855,7 +901,7 @@ router.put('/:groupId/membership', restoreUser, requireAuth, async (req, res, ne
         const existingMembership = await Membership.findOne({
             where:{
                 groupId: group.id,
-                id: memberId
+                userId: memberId
             }
         });
         if(!existingMembership) {
@@ -865,19 +911,24 @@ router.put('/:groupId/membership', restoreUser, requireAuth, async (req, res, ne
         }
 
 
-
         const currentUserMembership = await Membership.findOne({
             where: {
                 groupId: group.id,
                 userId: req.user.id
             }
         })
-        if (!currentUserMembership) {
+        // if (!currentUserMembership) {
+        //     return res.status(404).json({
+        //         message: "You don't have a membership with this group"
+        //     });
+        // }
+
+        if (!currentUserMembership && req.user.id !== group.organizerId) {
             return res.status(404).json({
                 message: "You don't have a membership with this group"
             });
         }
-        console.log("🚀 ~ router.put ~ currentUserMembership:", currentUserMembership)
+
 
 
 
@@ -898,7 +949,17 @@ router.put('/:groupId/membership', restoreUser, requireAuth, async (req, res, ne
 
 
 
-        if (group.organizerId !== req.user.id && currentUserMembership.status !== 'co-host') {
+        // if (group.organizerId !== req.user.id || currentUserMembership.status !== 'co-host') {
+        //     return res.status(403).json({
+        //         message: "You don't have permission to change this membership status"
+        //     });
+        // } else if (existingMembership.status === 'member' && group.organizerId !== req.user.id) {
+        //     return res.status(403).json({
+        //         message: "You don't have permission to change this membership status"
+        //     });
+        // }
+
+        if (group.organizerId !== req.user.id || (currentUserMembership && currentUserMembership.status !== 'co-host')) {
             return res.status(403).json({
                 message: "You don't have permission to change this membership status"
             });
@@ -923,9 +984,6 @@ router.put('/:groupId/membership', restoreUser, requireAuth, async (req, res, ne
         next(err)
     }
 });
-
-
-
 
 
 
