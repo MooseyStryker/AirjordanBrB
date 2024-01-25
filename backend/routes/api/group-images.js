@@ -34,10 +34,6 @@ router.delete('/:imageId', restoreUser, requireAuth, async (req,res, next) => {
             }
         })
 
-        console.log("🚀 ~ router.delete ~ membership:", membership)
-        // console.log("🚀 ~ router.delete ~ membership.status:", membership.status)
-        console.log("🚀 ~ router.delete ~ req.user.id:", req.user.id)
-        console.log("🚀 ~ router.delete ~ group.organizerId:", group.organizerId)
 
 
 

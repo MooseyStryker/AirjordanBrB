@@ -535,7 +535,6 @@ router.put('/:eventId', restoreUser, requireAuth, async (req, res, next) => {
             error.errors.forEach(({ path, message }) => {
                 errors[path] = message;
             });
-            console.log("🚀 ~ router.put ~ errors:", errors)
 
             return res.status(400).json({
                 message: "Bad Request",
@@ -556,17 +555,14 @@ router.put('/:eventId/attendance', requireAuth, async (req, res, next) => {
         const { userId, status } = req.body;
 
         const event = await Event.findByPk(eventId);
-        console.log("🚀 ~ router.put ~ event:", event)
         if (!event) {
             return res.status(404).json({ message: "Event couldn't be found" });
         }
 
         const group = await Group.findByPk(event.groupId)
-        console.log("🚀 ~ router.put ~ group:", group)
 
 
         const user = await User.findByPk(userId);
-        console.log("🚀 ~ router.put ~ user:", user)
         if (!user) {
             return res.status(404).json({ message: "User couldn't be found" });
         }
@@ -577,8 +573,7 @@ router.put('/:eventId/attendance', requireAuth, async (req, res, next) => {
                 eventId,
                 userId
             }
-        });
-        console.log("🚀 ~ router.put ~ attendance:", attendance)
+        })
 
 
         if (!attendance) {
@@ -599,7 +594,7 @@ router.put('/:eventId/attendance', requireAuth, async (req, res, next) => {
                 userId: req.user.id
             }
         });
-        console.log("🚀 ~ router.put ~ membership:", membership)
+
 
         if (req.user.id !== group.organizerId && (!membership || membership.status !== 'co-host')) {
             return res.status(403).json({ message: "You don't have permission to edit this attendance" });

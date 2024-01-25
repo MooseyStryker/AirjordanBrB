@@ -429,7 +429,6 @@ router.get('/:groupId/members', async (req, res, next) => {
                 groupId: thisGroupId
             }
         })
-        console.log("🚀 ~ router.get ~ membership:", membership)
 
 
 
@@ -1000,11 +999,6 @@ router.put('/:groupId/membership', restoreUser, requireAuth, async (req, res, ne
                 userId: req.user.id
             }
         })
-        // if (!currentUserMembership) {
-        //     return res.status(404).json({
-        //         message: "You don't have a membership with this group"
-        //     });
-        // }
 
         if (!currentUserMembership && req.user.id !== group.organizerId) {
             return res.status(403).json({
@@ -1030,17 +1024,6 @@ router.put('/:groupId/membership', restoreUser, requireAuth, async (req, res, ne
             });
         }
 
-
-
-        // if (group.organizerId !== req.user.id || currentUserMembership.status !== 'co-host') {
-        //     return res.status(403).json({
-        //         message: "You don't have permission to change this membership status"
-        //     });
-        // } else if (existingMembership.status === 'member' && group.organizerId !== req.user.id) {
-        //     return res.status(403).json({
-        //         message: "You don't have permission to change this membership status"
-        //     });
-        // }
 
         if (group.organizerId !== req.user.id || (currentUserMembership && currentUserMembership.status !== 'co-host')) {
             return res.status(403).json({
