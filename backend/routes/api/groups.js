@@ -226,7 +226,7 @@ router.get('/:groupId/venues', restoreUser, requireAuth, async (req, res, next) 
         }
 
         const group = await Group.findByPk(groupId);
-        if(!group) return res.status(403).json({"message": "Group couldn't be found"})
+        if(!group) return res.status(404).json({"message": "Group couldn't be found"})
 
         if (group.organizerId === req.user.id){
             const venues = await Venue.findAll({
@@ -538,7 +538,7 @@ router.post('/:groupId/images', restoreUser, requireAuth, async (req, res, next)
 
         const group = await Group.findByPk(groupId)
 
-        if(!group) return res.status(403).json({"message": "Group couldn't be found"})
+        if(!group) return res.status(404).json({"message": "Group couldn't be found"})
 
         if (group.organizerId !== req.user.id) {
             return res.status(403).json({
@@ -584,7 +584,7 @@ router.post('/:groupId/venues', restoreUser, requireAuth, async (req, res, next)
         const { address, city, state, lat, lng } = req.body
 
         const group = await Group.findByPk(thisGroupId)
-        if(!group) return res.status(403).json({"message": "Group couldn't be found"})
+        if(!group) return res.status(404).json({"message": "Group couldn't be found"})
 
 
         if (group.organizerId === req.user.id) {
@@ -988,7 +988,7 @@ router.put('/:groupId/membership', restoreUser, requireAuth, async (req, res, ne
             }
         });
         if(!existingMembership) {
-            return res.status(403).json({
+            return res.status(404).json({
                 message: "Membership between the user and the group does not exist"
             });
         }
