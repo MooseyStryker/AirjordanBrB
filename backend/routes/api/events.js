@@ -52,7 +52,7 @@ router.get('/', async (req, res, next) => {
         const startDate = req.query.startDate;
 
         const isWhere = {};
-        if (name) isWhere.name = { [Op.like]: `%${name}%` };
+        if (name) isWhere.name = { [Op.substring]: `%${name}%` };
         if (type) isWhere.type = type;
         if (startDate) isWhere.startDate = { [Op.gte]: startDate };
 
