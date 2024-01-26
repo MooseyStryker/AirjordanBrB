@@ -39,8 +39,6 @@ const router = express.Router();
 
 // Sign up
 
-// validateSignup,
-
 router.post('/', async (req, res) => {
   const { firstName, lastName, email, password, username } = req.body;
   let errors = {};

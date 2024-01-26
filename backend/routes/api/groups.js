@@ -431,8 +431,6 @@ router.get('/:groupId/members', async (req, res, next) => {
         })
 
 
-
-
         const members = await Membership.findAll({
             where: { groupId: thisGroupId },
             include: [
