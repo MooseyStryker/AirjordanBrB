@@ -213,7 +213,6 @@ router.get('/:groupId/venues', restoreUser, requireAuth, async (req, res, next) 
         }
 
 
-
         const venues = await Venue.findAll({
             where: {
                 groupId: groupId
@@ -228,8 +227,6 @@ router.get('/:groupId/venues', restoreUser, requireAuth, async (req, res, next) 
     } catch (error) {
         next(error)
     }
-
-
 });
 
 
@@ -335,17 +332,6 @@ router.get('/:groupId/members', async (req, res, next) => {
     try {
         let thisGroupId = req.params.groupId;
         thisGroupId = +thisGroupId;
-
-
-        const { user } = req;
-
-
-        if(!user){
-            const err = new Error('Please login or sign up');
-            err.status = 401;
-            err.title = 'User authentication failed';
-            return next(err);
-        }
 
 
         const group = await Group.findByPk(thisGroupId);
