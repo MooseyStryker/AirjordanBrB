@@ -47,39 +47,6 @@ const processGroupData = (groupData) => {
 }
 
 
-const processEventList = (EventList) => {
-    const ensuresThisIsAnArray = Array.isArray(EventList) ? EventList : [EventList]; // Converts findByPk and findOne to array
-
-    const eventList = ensuresThisIsAnArray.map(event => {
-
-        const eventJSON = event.toJSON();
-        // If the event has attendences, counth them, if not set the count to 0.
-        if (event.Attendences){
-            eventJSON.numAttending = event.Attendences.length;
-        } else {
-            eventJSON.numAttending = 0;
-        }
-
-        // If the event has images, find the first one with a url and set it as the preview image
-        if (event.EventImages && event.EventImages.length > 0) {
-            const image = event.EventImages.find(img => img.url);
-
-            if (image) {
-                eventJSON.previewImage = image.url
-            }
-        }
-
-        // Remove membership, eventimages properties
-        delete eventJSON.Attendences;
-        delete eventJSON.EventImages;
-
-
-        return eventJSON
-    })
-    return eventList
-}
-
-
 router.get('/', async (req, res, next) => {
     try {
         const groupData = await Group.findAll({
@@ -214,16 +181,6 @@ router.get('/:groupId/venues', restoreUser, requireAuth, async (req, res, next) 
     try {
         let groupId = req.params.groupId;
         groupId = +groupId
-
-        const { user } = req;
-
-
-        if(!user){
-            const err = new Error('Please login or sign up');
-            err.status = 401;
-            err.title = 'User authentication failed';
-            return next(err);
-        }
 
         const group = await Group.findByPk(groupId);
         if(!group) return res.status(404).json({"message": "Group couldn't be found"})
