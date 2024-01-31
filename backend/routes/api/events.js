@@ -131,17 +131,8 @@ router.get('/:eventId', async (req, res, next) => {
     try{
         let thisEventId = req.params.eventId
         thisEventId = +thisEventId
-        const event = await Event.findByPk(thisEventId)
-        if (!event) {
-            return res.status(404).json({ message: "Event couldn't be found" });
-        }
 
-        const events = await Event.findAll({
-            where: {
-                groupId:
-                // thisEventId
-                event.groupId
-            },
+        const event = await Event.findByPk(thisEventId, {
             include:[
                 {model: Attendence},
                 {model: EventImage.scope('basicInfo')},
@@ -155,62 +146,37 @@ router.get('/:eventId', async (req, res, next) => {
                         }
                     ]
                 },
-
             ]
         });
 
+        if (!event) {
+            return res.status(404).json({ message: "Event couldn't be found" });
+        }
 
         // Needs to keep EventImages
-        const processEventListKeepImages = (EventList) => {
-            const ensuresThisIsAnArray = Array.isArray(EventList) ? EventList : [EventList];
-            const eventList = ensuresThisIsAnArray.map(event => {
-                const eventJSON = event.toJSON();
-                if (event.Attendences){
-                    eventJSON.numAttending = event.Attendences.length;
-                } else {
-                    eventJSON.numAttending = 0;
+        const processEventKeepImages = (event) => {
+            const eventJSON = event.toJSON();
+            eventJSON.numAttending = event.Attendences ? event.Attendences.length : 0;
+            if (event.EventImages && event.EventImages.length > 0) {
+                const image = event.EventImages.find(img => img.url);
+                if (image) {
+                    eventJSON.previewImage = image.url
                 }
-                if (event.EventImages && event.EventImages.length > 0) {
-                    const image = event.EventImages.find(img => img.url);
-
-                    if (image) {
-                        eventJSON.previewImage = image.url
-                    }
-                }
-
-                if (event.Group.Venues && event.Group.Venues.length > 0) {
-                    eventJSON.Venue = event.Group.Venues[0];
-                } else {
-                    eventJSON.Venue = null;
-                }
-
-                delete eventJSON.Attendences;
-                delete eventJSON.Group.Venues;
-                delete eventJSON.previewImage;
-
-                return eventJSON
-            })
-            return eventList
-        }
-
-        if(events.length > 0) {
-            const eventList = processEventListKeepImages(events);
-            if (eventList.length > 0) {
-                res.json(eventList[0]); // Send only the first event object
-            } else {
-                res.status(404).json({
-                    message: "No events found for this group"
-                });
             }
-        } else {
-            res.status(404).json({
-                message: "Group couldn't be found"
-            });
+            eventJSON.Venue = event.Group.Venues && event.Group.Venues.length > 0 ? event.Group.Venues[0] : null;
+            delete eventJSON.Attendences;
+            delete eventJSON.Group.Venues;
+            delete eventJSON.previewImage;
+            return eventJSON;
         }
+
+        const processedEvent = processEventKeepImages(event);
+        res.json(processedEvent);
     } catch (error){
         next(error)
     }
 });
+
 
 
 router.get('/:eventId/attendees', async (req, res, next) => {

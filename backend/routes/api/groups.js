@@ -667,6 +667,22 @@ router.post('/:groupId/events', restoreUser, requireAuth, async (req, res, next)
 
         const { groupId, venueId, name, type, capacity, price, description, startDate, endDate } = req.body
 
+        const errors = {};
+        if (!name || name.length < 5) errors.name = "Name must be at least 5 characters";
+        if (!type || (type !== 'Online' && type !== 'In person')) errors.type = "Type must be 'Online' or 'In Person'";
+        if (!capacity || !Number.isInteger(capacity)) errors.capacity = "Capacity must be an integer";
+        if (!price || isNaN(price)) errors.price = "Price is invalid";
+        if (!description) errors.description = "Description is required";
+        if (!startDate || new Date(startDate).getTime() < new Date().getTime()) errors.startDate = "Start date must be in the future";
+        if (!endDate || new Date(endDate).getTime() < new Date(startDate).getTime()) errors.endDate = "End date is less than start date";
+
+        if(Object.keys(errors).length >= 1) {
+            return res.status(400).json({
+                message: "Bad Request",
+                errors
+            })
+        }
+
         const group = await Group.findByPk(thisGroupId)
         if(!group) return res.status(404).json({"message": "Group couldn't be found"})
 
@@ -808,7 +824,7 @@ router.post('/:groupId/membership', restoreUser, requireAuth, async (req, res) =
                 status: 'pending'
         });
         res.status(200).json({
-            memberId: newMembership.id,
+            memberId: newMembership.userId,
             status: newMembership.status
         });
 
