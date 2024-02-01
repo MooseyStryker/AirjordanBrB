@@ -127,6 +127,56 @@ router.get('/', async (req, res, next) => {
 })
 
 
+// router.get('/:eventId', async (req, res, next) => {
+//     try{
+//         let thisEventId = req.params.eventId
+//         thisEventId = +thisEventId
+
+//         const event = await Event.findByPk(thisEventId, {
+//             include:[
+//                 {model: Attendence},
+//                 {model: EventImage.scope('basicInfo')},
+//                 {
+//                     model: Group,
+//                     attributes: ['id','name','city','state','private'],
+//                     include: [
+//                         {
+//                             model:Venue,
+//                             attributes:['id', 'address', 'city', 'state', 'lat', 'lng']
+//                         }
+//                     ]
+//                 },
+//             ]
+//         });
+
+//         if (!event) {
+//             return res.status(404).json({ message: "Event couldn't be found" });
+//         }
+
+//         // Needs to keep EventImages
+//         const processEventKeepImages = (event) => {
+//             const eventJSON = event.toJSON();
+//             eventJSON.numAttending = event.Attendences ? event.Attendences.length : 0;
+//             if (event.EventImages && event.EventImages.length > 0) {
+//                 const image = event.EventImages.find(img => img.url);
+//                 if (image) {
+//                     eventJSON.previewImage = image.url
+//                 }
+//             }
+//             eventJSON.Venue = event.Group.Venues && event.Group.Venues.length > 0 ? event.Group.Venues[0] : null;
+//             delete eventJSON.Attendences;
+//             delete eventJSON.Group.Venues;
+//             delete eventJSON.previewImage;
+//             return eventJSON;
+//         }
+
+//         const processedEvent = processEventKeepImages(event);
+//         res.json(processedEvent);
+//     } catch (error){
+//         next(error)
+//     }
+// });
+
 router.get('/:eventId', async (req, res, next) => {
     try{
         let thisEventId = req.params.eventId
@@ -137,14 +187,12 @@ router.get('/:eventId', async (req, res, next) => {
                 {model: Attendence},
                 {model: EventImage.scope('basicInfo')},
                 {
+                    model:Venue,
+                    attributes:['id', 'address', 'city', 'state', 'lat', 'lng']
+                },
+                {
                     model: Group,
-                    attributes: ['id','name','city','state','private'],
-                    include: [
-                        {
-                            model:Venue,
-                            attributes:['id', 'address', 'city', 'state', 'lat', 'lng']
-                        }
-                    ]
+                    attributes: ['id','name','city','state','private']
                 },
             ]
         });
