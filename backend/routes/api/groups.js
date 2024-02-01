@@ -380,17 +380,6 @@ router.get('/:groupId/members', async (req, res, next) => {
         thisGroupId = +thisGroupId;
 
 
-        const { user } = req;
-
-
-        if(!user){
-            const err = new Error('Please login or sign up');
-            err.status = 401;
-            err.title = 'User authentication failed';
-            return next(err);
-        }
-
-
         const group = await Group.findByPk(thisGroupId);
         if (!group) {
             return res.status(404).json({ message: "Group couldn't be found" });
