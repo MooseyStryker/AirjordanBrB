@@ -31,6 +31,9 @@ const processEventList = (EventList) => {
         }
 
 
+        delete eventJSON.description;
+        delete eventJSON.price;
+        delete eventJSON.capacity;
         delete eventJSON.Attendences;
         delete eventJSON.EventImages;
 
@@ -148,6 +151,7 @@ router.get('/:eventId', async (req, res, next) => {
             ]
         });
 
+
         if (!event) {
             return res.status(404).json({ message: "Event couldn't be found" });
         }
@@ -162,9 +166,9 @@ router.get('/:eventId', async (req, res, next) => {
                     eventJSON.previewImage = image.url
                 }
             }
-            eventJSON.Venue = event.Group.Venues && event.Group.Venues.length > 0 ? event.Group.Venues[0] : null;
+            eventJSON.Venue = event.Venue ? event.Venue : [];
             delete eventJSON.Attendences;
-            delete eventJSON.Group.Venues;
+            // delete eventJSON.Group.Venues;
             delete eventJSON.previewImage;
             return eventJSON;
         }

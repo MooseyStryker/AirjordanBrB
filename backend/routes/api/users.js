@@ -55,8 +55,12 @@ router.post('/', async (req, res) => {
   }
 
   if (!email) {
-    errors.email = "Email is required";
+    errors.email = "Invalid email";
   }
+
+  if (email.length > 6) {
+    errors.email = 'Password must be 6 characters or more.';
+   }
 
   if (!username) {
     errors.username = "Username is required";

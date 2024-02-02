@@ -660,7 +660,7 @@ router.post('/:groupId/events', restoreUser, requireAuth, async (req, res, next)
         if (!name || name.length < 5) errors.name = "Name must be at least 5 characters";
         if (!type || (type !== 'Online' && type !== 'In person')) errors.type = "Type must be 'Online' or 'In Person'";
         if (!capacity || !Number.isInteger(capacity)) errors.capacity = "Capacity must be an integer";
-        if (!price || isNaN(price)) errors.price = "Price is invalid";
+        if (!price || isNaN(price) || (price < 0)) errors.price = "Price is invalid";
         if (!description) errors.description = "Description is required";
         if (!startDate || new Date(startDate).getTime() < new Date().getTime()) errors.startDate = "Start date must be in the future";
         if (!endDate || new Date(endDate).getTime() < new Date(startDate).getTime()) errors.endDate = "End date is less than start date";
