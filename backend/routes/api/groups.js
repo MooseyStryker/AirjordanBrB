@@ -845,7 +845,7 @@ router.delete('/:groupId', restoreUser, requireAuth, async (req, res) => {
 
     if (group.organizerId !== req.user.id) {
         return res.status(403).json({
-            message: "You don't have permission to edit this group"
+            message: "You don't have permission to delete this group"
         });
     }
 

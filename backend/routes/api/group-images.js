@@ -40,7 +40,7 @@ router.delete('/:imageId', restoreUser, requireAuth, async (req,res, next) => {
         if (group.organizerId !== req.user.id) {
             if (!membership || membership.status !== 'co-host') {
                 return res.status(403).json({
-                    message: "You don't have permission to create this events"
+                    message: "You don't have permission to delete this image"
                 });
             }
         }
