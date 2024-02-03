@@ -206,7 +206,7 @@ router.get('/:groupId', async (req, res) => {
 
     if (group) {
         const groupList = getDetailsOfGroupById(group);
-        console.log("🚀 ~ router.get ~ groupList:", groupList)
+
 
         return res.json(Array.isArray(groupList) && groupList.length === 1 ? groupList[0] : groupList);
     } else {
@@ -269,6 +269,11 @@ router.get('/:groupId/venues', restoreUser, requireAuth, async (req, res, next) 
                 groupId: groupId
             },
             attributes: ["id","groupId","address","city","state","lat","lng"]
+        });
+
+        venues.forEach(venue => {
+            venue.lat = parseFloat(venue.lat)
+            venue.lng = parseFloat(venue.lng)
         });
 
         res.json({
