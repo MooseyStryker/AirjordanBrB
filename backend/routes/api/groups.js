@@ -245,6 +245,11 @@ router.get('/:groupId/venues', restoreUser, requireAuth, async (req, res, next) 
                 attributes: ["id","groupId","address","city","state","lat","lng"]
             });
 
+            venues.forEach(venue => {
+                venue.lat = parseFloat(venue.lat)
+                venue.lng = parseFloat(venue.lng)
+            });
+
             return res.json({
                 Venues: venues
             })
