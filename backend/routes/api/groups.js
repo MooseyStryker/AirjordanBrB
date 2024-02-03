@@ -1,6 +1,7 @@
 const express = require('express');
 const Sequelize = require('sequelize');
 const { Op } = require('sequelize');
+const moment = require('moment');
 
 const { restoreUser, requireAuth } = require('../../utils/auth');
 
@@ -654,7 +655,7 @@ router.post('/:groupId/events', restoreUser, requireAuth, async (req, res, next)
         let thisGroupId = req.params.groupId;
         thisGroupId = +thisGroupId
 
-        const { groupId, venueId, name, type, capacity, price, description, startDate, endDate } = req.body
+        let { groupId, venueId, name, type, capacity, price, description, startDate, endDate } = req.body
 
         const errors = {};
         if (!name || name.length < 5) errors.name = "Name must be at least 5 characters";
@@ -691,7 +692,8 @@ router.post('/:groupId/events', restoreUser, requireAuth, async (req, res, next)
                 endDate
             });
 
-
+            startDate = moment(event.startDate).format('YYYY-MM-DD HH:mm:ss');
+            endDate = moment(event.endDate).format('YYYY-MM-DD HH:mm:ss');
 
             return res.json({
                 id: event.id,
@@ -702,8 +704,10 @@ router.post('/:groupId/events', restoreUser, requireAuth, async (req, res, next)
                 capacity: event.capacity,
                 price: event.price,
                 description: event.description,
-                startDate: event.startDate,
-                endDate: event.endDate
+                // startDate: event.startDate,
+                // endDate: event.endDate
+                startDate,
+                endDate
             })
         }
 
@@ -736,9 +740,10 @@ router.post('/:groupId/events', restoreUser, requireAuth, async (req, res, next)
             endDate
         });
 
+        startDate = moment(event.startDate).format('YYYY-MM-DD HH:mm:ss');
+        endDate = moment(event.endDate).format('YYYY-MM-DD HH:mm:ss');
 
-
-        res.json({
+        return res.json({
             id: event.id,
             groupId: thisGroupId,
             venueId: venue.id,
@@ -747,8 +752,8 @@ router.post('/:groupId/events', restoreUser, requireAuth, async (req, res, next)
             capacity: event.capacity,
             price: event.price,
             description: event.description,
-            startDate: event.startDate,
-            endDate: event.endDate
+            startDate,
+            endDate
         })
     } catch (error) {
         if (error.name === 'SequelizeValidationError') {

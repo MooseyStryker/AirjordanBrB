@@ -246,109 +246,6 @@ router.get('/:eventId/attendees', async (req, res, next) => {
 
 /*          POST         */
 
-// router.post('/:eventId/images', restoreUser, requireAuth, async (req, res, next) => {
-//     try{
-
-//         let thisEventId = req.params.eventId;
-//         thisEventId = +thisEventId
-//         const{ url, preview } = req.body;
-
-//         const event = await Event.findByPk(thisEventId);
-//         if(!event || event.groupId === null) return res.status(404).json({"message": "Event couldn't be found"})
-
-
-//         const group = await Group.findByPk(event.groupId);
-//         if(!group){
-//             return res.status(404).json({"message": "Group couldn't be found"})
-//         }
-//         if (group.organizerId === req.user.id){
-//             const image = await EventImage.create({
-//                 eventId: thisEventId,
-//                 url,
-//                 preview
-//             })
-
-//             return res.json({
-//                 id: image.id,
-//                 url: image.url,
-//                 preview: image.preview
-//             })
-//         }
-
-//         const attend = await Attendence.findOne({
-//             where: {
-//                 eventId: thisEventId,
-//                 userId: req.user.id
-//             }
-//         })
-//         if(!attend){
-//             return res.status(403).json({"message": "You must be attending this event to share images"})
-//         }
-//         if (attend.status === 'attending') {
-//             const image = await EventImage.create({
-//                 eventId: thisEventId,
-//                 url,
-//                 preview
-//             })
-
-//             return res.json({
-//                 id: image.id,
-//                 url: image.url,
-//                 preview: image.preview
-//             })
-//         }
-
-//         const membership = await Membership.findOne({
-//             where: {
-//                 userId: req.user.id,
-//                 groupId: event.groupId
-//             }
-//         });
-//         if(!membership){
-//             return res.status(404).json({"message": "Membership couldn't be found"})
-//         }
-//         if (membership.status === 'co-host'){
-//             const image = await EventImage.create({
-//                 eventId: thisEventId,
-//                 url,
-//                 preview
-//             })
-
-//             return res.json({
-//                 id: image.id,
-//                 url: image.url,
-//                 preview: image.preview
-//             })
-//         }
-
-
-
-//         if (group.organizerId !== req.user.id
-//             && (!membership || (membership.status !== 'co-host'
-//             && attend.status !== 'attending'))
-//         ) {
-//             return res.status(403).json({
-//                 message: "You don't have permission to add an image to this event"
-//             });
-//         }
-
-//         const image = await EventImage.create({
-//             eventId: thisEventId,
-//             url,
-//             preview
-//         })
-
-//         res.json({
-//             id: image.id,
-//             url: image.url,
-//             preview: image.preview
-//         })
-
-//     } catch (e) {
-//         next(e)
-//     }
-// })
-
 
 router.post('/:eventId/images', restoreUser, requireAuth, async (req, res, next) => {
     try {
@@ -483,7 +380,6 @@ router.post('/:eventId/attendance', requireAuth, restoreUser, async (req, res, n
 
 /*          Edit             */
 router.put('/:eventId', restoreUser, requireAuth, async (req, res, next) => {
-
     try {
         let thisEventId = req.params.eventId;
         thisEventId = +thisEventId;
