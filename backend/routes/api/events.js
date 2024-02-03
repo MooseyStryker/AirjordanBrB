@@ -2,6 +2,7 @@ const express = require('express');
 const Sequelize = require('sequelize');
 const { Op } = require('sequelize');
 const { restoreUser, requireAuth } = require('../../utils/auth');
+const moment = require('moment');
 
 const { User, Group, Membership, GroupImage, Venue, Event, EventImage, Attendence } = require('../../db/models');
 
@@ -36,6 +37,11 @@ const processEventList = (EventList) => {
         delete eventJSON.capacity;
         delete eventJSON.Attendences;
         delete eventJSON.EventImages;
+
+        eventJSON.createdAt = moment(event.createdAt).format('YYYY-MM-DD HH:mm:ss');
+        eventJSON.updatedAt = moment(event.updatedAt).format('YYYY-MM-DD HH:mm:ss');
+        eventJSON.startDate = moment(event.updatedAt).format('YYYY-MM-DD HH:mm:ss');
+        eventJSON.endDate = moment(event.updatedAt).format('YYYY-MM-DD HH:mm:ss');
 
 
         return eventJSON
@@ -170,6 +176,10 @@ router.get('/:eventId', async (req, res, next) => {
             delete eventJSON.Attendences;
             // delete eventJSON.Group.Venues;
             delete eventJSON.previewImage;
+
+            eventJSON.startDate = moment(event.updatedAt).format('YYYY-MM-DD HH:mm:ss');
+            eventJSON.endDate = moment(event.updatedAt).format('YYYY-MM-DD HH:mm:ss');
+
             return eventJSON;
         }
 
@@ -443,8 +453,10 @@ router.put('/:eventId', restoreUser, requireAuth, async (req, res, next) => {
             capacity: event.capacity,
             price: event.price,
             description: event.description,
-            startDate: event.startDate,
-            endDate: event.endDate
+            // startDate: event.startDate,
+            // endDate: event.endDate
+            startDate: moment(event.startDate).format('YYYY-MM-DD HH:mm:ss'),
+            endDate: moment(event.endDate).format('YYYY-MM-DD HH:mm:ss')
         });
     } catch (error) {
         if (error instanceof Sequelize.ValidationError) {

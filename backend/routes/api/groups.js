@@ -187,6 +187,8 @@ router.get('/:groupId', async (req, res) => {
 
             delete groupJSON.previewImage;
 
+            groupJSON.createdAt = moment(groupJSON.createdAt).format('YYYY-MM-DD HH:mm:ss');
+            groupJSON.updatedAt = moment(groupJSON.updatedAt).format('YYYY-MM-DD HH:mm:ss');
 
             if (groupJSON.Venues) {
                 groupJSON.Venues.forEach(venue => {
@@ -204,6 +206,7 @@ router.get('/:groupId', async (req, res) => {
 
     if (group) {
         const groupList = getDetailsOfGroupById(group);
+        console.log("🚀 ~ router.get ~ groupList:", groupList)
 
         return res.json(Array.isArray(groupList) && groupList.length === 1 ? groupList[0] : groupList);
     } else {
@@ -338,6 +341,9 @@ router.get('/:groupId/events', async (req, res, next) => {
                 } else {
                     eventJSON.Venue = null;
                 }
+
+                eventJSON.startDate = moment(event.updatedAt).format('YYYY-MM-DD HH:mm:ss');
+                eventJSON.endDate = moment(event.updatedAt).format('YYYY-MM-DD HH:mm:ss');
 
                 delete eventJSON.Attendences;
                 delete eventJSON.EventImages;
@@ -954,9 +960,15 @@ router.put('/:groupId', restoreUser, requireAuth, async (req, res, next) => {
         group.city = city !== undefined ? city : group.city;
         group.state = state !== undefined ? state : group.state;
 
+
+        const groupJSON = group.toJSON();
+
+        groupJSON.createdAt = moment(group.createdAt).format('YYYY-MM-DD HH:mm:ss');
+        groupJSON.updatedAt = moment(group.updatedAt).format('YYYY-MM-DD HH:mm:ss');
+
         await group.save();
 
-        res.json(group)
+        res.json(groupJSON)
 
 
     } catch (error) {
