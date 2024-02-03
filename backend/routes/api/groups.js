@@ -37,6 +37,9 @@ const processGroupData = (groupData) => {
             }
         }
 
+        groupJSON.createdAt = moment(group.createdAt).format('YYYY-MM-DD HH:mm:ss');
+        groupJSON.updatedAt = moment(group.updatedAt).format('YYYY-MM-DD HH:mm:ss');
+
         // Remove membership, groupimages properties
         delete groupJSON.Memberships;
         delete groupJSON.GroupImages;
@@ -494,7 +497,14 @@ router.post('/', restoreUser, requireAuth, async (req, res, next) => {
             city,
             state
         })
-        res.status(201).json(newGroup)
+
+        const newGroupJSON = newGroup.toJSON();
+
+
+        newGroupJSON.createdAt = moment(newGroup.createdAt).format('YYYY-MM-DD HH:mm:ss');
+        newGroupJSON.updatedAt = moment(newGroup.updatedAt).format('YYYY-MM-DD HH:mm:ss');
+
+        res.status(201).json(newGroupJSON)
     } catch (error) {
 
         if (error instanceof Sequelize.ValidationError) {
@@ -514,8 +524,6 @@ router.post('/', restoreUser, requireAuth, async (req, res, next) => {
           });
 
     }
-
-
 })
 
 
@@ -592,8 +600,8 @@ router.post('/:groupId/venues', restoreUser, requireAuth, async (req, res, next)
                 address: venue.address,
                 city: venue.city,
                 state: venue.state,
-                lat: venue.lat,
-                lng: venue.lng
+                lat: +venue.lat,
+                lng: +venue.lng
             })
         }
 
