@@ -602,8 +602,8 @@ router.post('/:groupId/venues', restoreUser, requireAuth, async (req, res, next)
                 state: venue.state,
                 // lat: venue.lat,
                 // lng: venue.lng
-                lat: parseInt(venue.lat),
-                lng: parseInt(venue.lng)
+                lat: parseFloat(venue.lat),
+                lng: parseFloat(venue.lng)
             })
         }
 
@@ -640,8 +640,8 @@ router.post('/:groupId/venues', restoreUser, requireAuth, async (req, res, next)
             state: venue.state,
             // lat: venue.lat,
             // lng: venue.lng
-            lat: parseInt(venue.lat),
-            lng: parseInt(venue.lng)
+            lat: parseFloat(venue.lat),
+            lng: parseFloat(venue.lng)
         })
     } catch (error) {
         if (error.name === 'SequelizeValidationError') {
