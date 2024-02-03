@@ -184,6 +184,10 @@ router.get('/:eventId', async (req, res, next) => {
         }
 
         const processedEvent = processEventKeepImages(event);
+
+        processedEvent.price = parseFloat(processedEvent.price)
+
+
         res.json(processedEvent);
     } catch (error){
         next(error)

@@ -726,11 +726,9 @@ router.post('/:groupId/events', restoreUser, requireAuth, async (req, res, next)
                 venueId: venue.id,
                 name: event.name,
                 type: event.type,
-                capacity: event.capacity,
-                price: event.price,
+                capacity: parseInt(event.capacity),
+                price: parseFloat(event.price),
                 description: event.description,
-                // startDate: event.startDate,
-                // endDate: event.endDate
                 startDate,
                 endDate
             })
@@ -774,8 +772,8 @@ router.post('/:groupId/events', restoreUser, requireAuth, async (req, res, next)
             venueId: venue.id,
             name: event.name,
             type: event.type,
-            capacity: event.capacity,
-            price: event.price,
+            capacity: parseInt(event.capacity),
+            price: parseFloat(event.price),
             description: event.description,
             startDate,
             endDate
