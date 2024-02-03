@@ -194,6 +194,8 @@ router.get('/:groupId', async (req, res) => {
                 groupJSON.Venues.forEach(venue => {
                     delete venue.createdAt;
                     delete venue.updatedAt;
+                    venue.lat = parseFloat(venue.lat)
+                    venue.lng = parseFloat(venue.lng)
                 });
             }
 
