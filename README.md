@@ -316,6 +316,12 @@ Returns all the groups.
     }
     ```
 
+* REACT Notes
+  * Method: GET
+  *  Navigation-bonus
+
+
+
 ### Get details of a Group from an id
 
 Returns the details of a group specified by its id.

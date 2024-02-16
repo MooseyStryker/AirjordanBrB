@@ -21,14 +21,14 @@ function Navigation({ isLoaded }) {
             buttonText="Log In"
             modalComponent={<LoginFormModal />}
           />
-          {/* <NavLink to="/login">Log In</NavLink> */}
+          <NavLink to="/login">Log In</NavLink>
         </li>
         <li>
           <OpenModalButton
             buttonText="Sign Up"
             modalComponent={<SignupFormModal />}
           />
-          {/* <NavLink to="/signup">Sign Up</NavLink> */}
+          <NavLink to="/signup">Sign Up</NavLink>
         </li>
       </>
     );
