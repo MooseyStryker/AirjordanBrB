@@ -10,11 +10,11 @@ export const getAllGroups = () => async(dispatch) => {
 
     const data = await res.json();
     console.log("🚀 ~ getAllGroups ~ data:", data)
-    dispatch(allGroups(data.groups))
+    dispatch(allGroups(data))
 }
 
 
-const initialState = { groups: null };
+const initialState = { groups: {} };
 
 function groupReducer(state = initialState, action) {
     switch (action.type) {
