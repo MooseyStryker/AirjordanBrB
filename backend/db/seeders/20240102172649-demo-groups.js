@@ -24,6 +24,7 @@ module.exports = {
           city: "Tucson",
           state: "Az"
         },
+        
         {
           organizerId: 2,
           name: "aquariums",
