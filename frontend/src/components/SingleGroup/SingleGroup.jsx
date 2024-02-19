@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import { getSingleGroup } from "../../store/groups"
 import './SingleGroup.css'
@@ -8,12 +8,27 @@ export default function OneGroup() {
     const {groupid: id} = useParams()
     const dispatch = useDispatch()
     let group = useSelector(state => state.groups.groups[id])
+    const user = useSelector(state => state.session.user)
+    const navigate = useNavigate()
+
 
     useEffect(() => {
         dispatch(getSingleGroup(id))
+
     }, [dispatch, id])
 
     const previewImage = group?.GroupImages?.find(image => image.preview)
+
+    const areYouMaster = () => {
+        if (group && user){
+            return group.organizerId === user.id ? true : false
+        }
+    }
+
+    const handleEdit = () => {
+        navigate(`/groups/${id}/edit`)
+    }
+
 
     return (
         <div className='singlegroup'>
@@ -31,6 +46,19 @@ export default function OneGroup() {
                     </div>
                 </li>
             </ul>
+            <div>
+                {areYouMaster() &&
+                    <div>
+                            <button onClick={handleEdit}>
+                                Edit
+                            </button>
+
+                            {/* <button onClick={handleEdit}>
+                                Delete
+                            </button> */}
+                    </div>
+                }
+            </div>
         </div>
     );
 }

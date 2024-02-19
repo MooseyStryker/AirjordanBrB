@@ -4,8 +4,11 @@ import Cookies from "js-cookie";
 
 
 const GROUPS = '/groups'
-const SINGLE_GROUP = '/groups/:groupid'
+const SINGLE_GROUP = '/groups/:groupId'
 const ADD_GROUP ='/groups/new'
+const EDIT_GROUP = '/groups/:groupId/edit'
+const REMOVE_GROUP = '/groups/:groupId'
+
 
 const allGroups = (groups) => ({
     type: GROUPS,
@@ -20,6 +23,17 @@ const addGroup = (group) => ({
     type: ADD_GROUP,
     payload: group
 })
+const editGroup = (group) => ({
+    type: EDIT_GROUP,
+    payload: group
+})
+const removeGroup = (group) => ({
+    type: REMOVE_GROUP,
+    payload: group
+})
+
+
+
 
 
 
@@ -39,8 +53,6 @@ export const getSingleGroup = (id) => async(dispatch) => {
 }
 
 
-
-// If left too long it throws errors
 export const submitNewGroup = (payload) => async(dispatch) => {
     const getCookie = () => {
         return Cookies.get("XSRF-TOKEN");
@@ -61,11 +73,50 @@ export const submitNewGroup = (payload) => async(dispatch) => {
         }
         throw new Error('Failed to submit new group')
     }
-
     const data  = await res.json()
     dispatch(addGroup(data))
     return data
 }
+
+
+export const editThisGroup = (payload, id) => async(dispatch) => {
+    console.log("🚀 ~ editThisGroup ~ id:", id)
+    const getCookie = () => {
+        return Cookies.get("XSRF-TOKEN");
+    };
+
+    const res = await fetch(`/api/groups/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'XSRF-TOKEN': getCookie()
+        },
+        body: JSON.stringify(payload)
+    })
+    if (!res.ok) {
+        const data = await res.json()
+        if (data?.errors) {
+            throw new Error('Failed to submit new group')
+        }
+        throw new Error('Failed to submit new group')
+    }
+    const data  = await res.json()
+    dispatch(editGroup(data))
+    return data
+}
+
+export const deleteReport = ({ id }) => {
+    return async (dispatch) => {
+      const response = await fetch(`/api/groups/${id}`, {
+        method: 'DELETE'
+      })
+      if (response.ok) {
+        dispatch(removeGroup(id))
+      } else {
+        throw new Error('Failed to delete new group')
+      }
+    }
+  }
 
 
 const initialState = { groups: {} };
@@ -86,6 +137,18 @@ function groupReducer(state = initialState, action) {
                 ...state,
                 groups: {...state.groups, [action.payload.id]: action.payload}
             }
+        case EDIT_GROUP:
+            return {
+                ...state,
+                groups: {
+                    ...state.groups, [action.payload.id]: action.payload
+                }
+            }
+            case REMOVE_GROUP: {
+                const newState = { ...state };
+                delete newState.groups[action.reportId];
+                return newState;
+              }
       default:
         return state;
     }

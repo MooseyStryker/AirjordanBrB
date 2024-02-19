@@ -9,6 +9,7 @@ import { Modal } from './context/Modal';
 import GetAllGroups from './components/SeeAllGroups';
 import OneGroup from './components/SingleGroup/SingleGroup';
 import CreateGroup from './components/CreateGroup/CreateGroup';
+import UpdateGroup from './components/UpdateGroup/UpdateGroup';
 
 function Layout() {
   const dispatch = useDispatch();
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
       {
         path: '/groups/:groupid',
         element: <OneGroup />
+      },
+      {
+        path: '/groups/:groupid/edit',
+        element: <UpdateGroup />
       },
       {
         path: 'signup',
