@@ -1,16 +1,70 @@
+import Cookies from "js-cookie";
+
+
+
+
 const GROUPS = '/groups'
+const SINGLE_GROUP = '/groups/:groupid'
+const ADD_GROUP ='/groups/new'
 
 const allGroups = (groups) => ({
     type: GROUPS,
     payload: groups
 })
+const singleGroup = (group) => ({
+    type: SINGLE_GROUP,
+    payload: group
+})
+
+const addGroup = (group) => ({
+    type: ADD_GROUP,
+    payload: group
+})
+
+
 
 export const getAllGroups = () => async(dispatch) => {
     const res = await fetch('/api/groups')
 
     const data = await res.json();
-    console.log("🚀 ~ getAllGroups ~ data:", data)
     dispatch(allGroups(data))
+}
+
+export const getSingleGroup = (id) => async(dispatch) => {
+    const res = await fetch(`/api/groups/${id}`)
+
+    const data = await res.json()
+
+    dispatch(singleGroup(data))
+}
+
+
+
+// If left too long it throws errors
+export const submitNewGroup = (payload) => async(dispatch) => {
+    const getCookie = () => {
+        return Cookies.get("XSRF-TOKEN");
+    };
+
+    const res = await fetch('/api/groups', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'XSRF-TOKEN': getCookie()
+        },
+        body: JSON.stringify(payload)
+    })
+    if (!res.ok) {
+        const data = await res.json()
+        if (data?.errors) {
+            throw new Error('Failed to submit new group')
+        }
+        throw new Error('Failed to submit new group')
+    }
+
+    const data  = await res.json()
+    dispatch(addGroup(data))
+    return data
 }
 
 
@@ -18,11 +72,23 @@ const initialState = { groups: {} };
 
 function groupReducer(state = initialState, action) {
     switch (action.type) {
-      case GROUPS:
-        return { ...state, groups: action.payload };
+        case GROUPS:
+            return { ...state, groups: action.payload };
+        case SINGLE_GROUP:
+         return {
+            ...state,
+            groups: {
+                ...state.groups, [action.payload.id]: action.payload
+            }
+         }
+        case ADD_GROUP:
+            return {
+                ...state,
+                groups: {...state.groups, [action.payload.id]: action.payload}
+            }
       default:
         return state;
     }
-  }
+}
 
   export default groupReducer;

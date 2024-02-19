@@ -22,22 +22,22 @@ module.exports = {
         },
         {
           groupId: 2,
-          url: 'https://example.com/image2.jpg',
-          preview: false
+          url: 'https://upload.wikimedia.org/wikipedia/commons/9/94/Underwater_Walk_of_Sea_Life_London_Aquarium.jpg',
+          preview: true
         },
         {
           groupId: 3,
-          url: 'https://example.com/image3.jpg',
+          url: 'https://upload.wikimedia.org/wikipedia/commons/2/26/Escursionismo_sulle_Alpi.jpg',
           preview: true
         },
         {
           groupId: 4,
-          url: 'https://example.com/image4.jpg',
-          preview: false
+          url: 'https://upload.wikimedia.org/wikipedia/commons/0/0c/Photography_by_Victor_Albert_Grigas_%281919-2017%29_00232_Old_Town_Art_Fair_Chicago_1968_%2823705070328%29.jpg',
+          preview: true
         },
         {
           groupId: 5,
-          url: 'https://example.com/image5.jpg',
+          url: 'https://th.bing.com/th/id/OSK.HERODIt05JpThF_HzF2BZz3IKIbjZYoqO3qlASRXAm15mDk?rs=1&pid=ImgDetMain',
           preview: true
         },
         {

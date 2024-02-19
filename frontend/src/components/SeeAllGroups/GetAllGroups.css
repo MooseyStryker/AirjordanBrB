@@ -1,4 +1,3 @@
-
 .groups {
     display: flex;
     flex-direction: column;
@@ -15,6 +14,11 @@
     margin: 10px;
     padding: 10px;
     width: 300px;
+    transition: transform .2s; /* Animation */
+}
+
+.groups li:hover {
+    transform: scale(1.1); /* Zoom on hover */
 }
 
 .groups img {
@@ -23,11 +27,11 @@
 }
 
 .groups h2 {
-    color: #333;
+    color: rgb(230, 230, 230);
     font-size: 1.5em;
 }
 
 .groups p {
-    color: #666;
+    color: darkgray;
     font-size: 1em;
 }

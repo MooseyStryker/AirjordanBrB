@@ -7,6 +7,8 @@ import Navigation from './components/Navigation/Navigation-bonus';
 import * as sessionActions from './store/session';
 import { Modal } from './context/Modal';
 import GetAllGroups from './components/SeeAllGroups';
+import OneGroup from './components/SingleGroup/SingleGroup';
+import CreateGroup from './components/CreateGroup/CreateGroup';
 
 function Layout() {
   const dispatch = useDispatch();
@@ -42,6 +44,14 @@ const router = createBrowserRouter([
       {
         path: '/groups',
         element: <GetAllGroups />
+      },
+      {
+        path: '/groups/new',
+        element: <CreateGroup />
+      },
+      {
+        path: '/groups/:groupid',
+        element: <OneGroup />
       },
       {
         path: 'signup',
