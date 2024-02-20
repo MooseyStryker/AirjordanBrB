@@ -10,6 +10,7 @@ import GetAllGroups from './components/SeeAllGroups';
 import OneGroup from './components/SingleGroup/SingleGroup';
 import CreateGroup from './components/CreateGroup/CreateGroup';
 import UpdateGroup from './components/UpdateGroup/UpdateGroup';
+import AllEvents from './components/GetAllEvents';
 
 function Layout() {
   const dispatch = useDispatch();
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
       {
         path: '/groups/:groupid/edit',
         element: <UpdateGroup />
+      },
+      {
+        path: '/events',
+        element: <AllEvents />
       },
       {
         path: 'signup',

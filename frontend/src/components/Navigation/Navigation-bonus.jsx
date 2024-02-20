@@ -15,6 +15,9 @@ function Navigation({ isLoaded }) {
         <NavLink to="/groups">See All Groups</NavLink>
       </li>
       <li>
+        <NavLink to="/events">See All Events!</NavLink>
+      </li>
+      <li>
         <NavLink to="/groups/new">Create a Group!</NavLink>
       </li>
       {isLoaded && (
