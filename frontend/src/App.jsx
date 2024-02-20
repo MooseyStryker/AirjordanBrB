@@ -12,6 +12,7 @@ import CreateGroup from './components/Groups/CreateGroup/CreateGroup';
 import UpdateGroup from './components/Groups/UpdateGroup/UpdateGroup';
 import AllEvents from './components/Events/GetAllEvents';
 import OneEvent from './components/Events/GetSingleEvent/GetSingleEvent';
+import CreateEvent from './components/Events/CreateEvents/CreateEvents';
 
 
 function Layout() {
@@ -70,8 +71,8 @@ const router = createBrowserRouter([
         element: <OneEvent />
       },
       {
-        path: '/events/:eventid/new',
-        element: <OneEvent />
+        path: 'groups/:groupid/event/new',
+        element: <CreateEvent />
       },
       {
         path: 'signup',
