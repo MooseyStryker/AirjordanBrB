@@ -105,10 +105,18 @@ export const editThisGroup = (payload, id) => async(dispatch) => {
     return data
 }
 
-export const deleteReport = ({ id }) => {
+export const deleteGroup = ({ id }) => {
+    const getCookie = () => {
+        return Cookies.get("XSRF-TOKEN");
+    }
+
     return async (dispatch) => {
       const response = await fetch(`/api/groups/${id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'XSRF-TOKEN': getCookie()
+        },
       })
       if (response.ok) {
         dispatch(removeGroup(id))

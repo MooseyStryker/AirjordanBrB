@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
-import { getSingleGroup } from "../../store/groups"
+import { deleteGroup, getSingleGroup } from "../../store/groups"
 import './SingleGroup.css'
 
 export default function OneGroup() {
@@ -29,6 +29,11 @@ export default function OneGroup() {
         navigate(`/groups/${id}/edit`)
     }
 
+    const handleDelete = () => {
+        dispatch(deleteGroup(group))
+        navigate(`/groups`)
+    }
+
 
     return (
         <div className='singlegroup'>
@@ -53,9 +58,9 @@ export default function OneGroup() {
                                 Edit
                             </button>
 
-                            {/* <button onClick={handleEdit}>
+                            <button onClick={handleDelete}>
                                 Delete
-                            </button> */}
+                            </button>
                     </div>
                 }
             </div>

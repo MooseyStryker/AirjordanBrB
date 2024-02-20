@@ -5,6 +5,7 @@ import { editThisGroup, getSingleGroup } from "../../store/groups"
 
 export default function UpdateGroup() {
     const {groupid: id} = useParams()
+    const user = useSelector(state => state.session.user)
     const group = useSelector(state => state.groups.groups[id])
     const [name, setName] = useState('')
     const [about, setAbout] = useState('')
@@ -17,6 +18,12 @@ export default function UpdateGroup() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const areYouMaster = () => {
+        if (group && user){
+            return group.organizerId === user.id ? true : false
+        }
+    }
+
     useEffect(() => {
         const errors = {};
         if (!name) errors.name = 'Name field is required';
@@ -26,7 +33,13 @@ export default function UpdateGroup() {
         if (!city) errors.city = 'City is required';
         if (!state) errors.state = 'State is required';
 
+
+
         setErrors(errors);
+        const isMaster = areYouMaster()
+        if (isMaster === false){
+            navigate('/groups')
+        }
       }, [name, about, type, privateGroup, city, state]);
 
     useEffect(() => {
@@ -125,7 +138,7 @@ export default function UpdateGroup() {
       </label>
      {errors.state && <p style={{ color: 'red', fontSize: '12px'}}>{errors.state}</p>}
 
-            <button type="submit">Update Group</button>
+            {areYouMaster() && <button type="submit">Update Group</button>}
         </form>
     )
 }
