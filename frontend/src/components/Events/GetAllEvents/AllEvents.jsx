@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { getAllEvents } from '../../store/events';
+import { getAllEvents } from '../../../store/events';
 import './AllEvents.css'
 
 
@@ -21,17 +21,17 @@ export default function AllEventsOnPage() {
     return (
         <div className='events'>
             <ul>
-                {events && events.map( events => (
+                {events && events.map( event => (
                     <li
-                        key={events.id}
-                        onClick={() => navigate(`/events/${events.id}`)}
+                        key={event.id}
+                        onClick={() => navigate(`/events/${event.id}`)}
                     >
-                        <img src={events.previewImage}></img>
-                        <h2>{events.name}</h2>
-                        <p>{`${events.startDate}, ${events.endDate}`}</p>
-                        <p>{events.type}</p>
-                        <p>{events.about}</p>
-                        <p>{events.numAttending} attendees</p>
+                        <img src={event.previewImage}></img>
+                        <h2>{event.name}</h2>
+                        <p>{`${event.startDate}, ${event.endDate}`}</p>
+                        <p>{event.type}</p>
+                        <p>{event.about}</p>
+                        <p>{event.numAttending} attendees</p>
                     </li>
                 ))}
             </ul>

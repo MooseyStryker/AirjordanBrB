@@ -6,11 +6,13 @@ import SignupFormPage from './components/SignupFormPage';
 import Navigation from './components/Navigation/Navigation-bonus';
 import * as sessionActions from './store/session';
 import { Modal } from './context/Modal';
-import GetAllGroups from './components/SeeAllGroups';
-import OneGroup from './components/SingleGroup/SingleGroup';
-import CreateGroup from './components/CreateGroup/CreateGroup';
-import UpdateGroup from './components/UpdateGroup/UpdateGroup';
-import AllEvents from './components/GetAllEvents';
+import GetAllGroups from './components/Groups/SeeAllGroups';
+import OneGroup from './components/Groups/SingleGroup/SingleGroup';
+import CreateGroup from './components/Groups/CreateGroup/CreateGroup';
+import UpdateGroup from './components/Groups/UpdateGroup/UpdateGroup';
+import AllEvents from './components/Events/GetAllEvents';
+import OneEvent from './components/Events/GetSingleEvent/GetSingleEvent';
+
 
 function Layout() {
   const dispatch = useDispatch();
@@ -62,6 +64,14 @@ const router = createBrowserRouter([
       {
         path: '/events',
         element: <AllEvents />
+      },
+      {
+        path: '/events/:eventid',
+        element: <OneEvent />
+      },
+      {
+        path: '/events/:eventid/new',
+        element: <OneEvent />
       },
       {
         path: 'signup',

@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react'
-import { getAllGroups } from '../../store/groups';
+import { getAllGroups } from '../../../store/groups';
 import { useNavigate } from 'react-router-dom';
 import './GetAllGroups.css'
 

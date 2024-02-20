@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { submitNewGroup } from '../../store/groups';
+import { submitNewGroup } from '../../../store/groups';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 

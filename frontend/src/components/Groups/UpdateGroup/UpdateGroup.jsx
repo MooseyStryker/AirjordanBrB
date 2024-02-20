@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
-import { editThisGroup, getSingleGroup } from "../../store/groups"
+import { editThisGroup, getSingleGroup } from '../../../store/groups';
 
 export default function UpdateGroup() {
     const {groupid: id} = useParams()
@@ -40,7 +40,7 @@ export default function UpdateGroup() {
         if (isMaster === false){
             navigate('/groups')
         }
-      }, [name, about, type, privateGroup, city, state]);
+      }, [name, about, type, privateGroup, city, state. areYouMaster, navigate]);
 
     useEffect(() => {
         dispatch(getSingleGroup(id))

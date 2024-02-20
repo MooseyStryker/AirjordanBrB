@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteGroup, getSingleGroup } from "../../store/groups"
+import { deleteGroup, getSingleGroup } from "../../../store/groups"
 import './SingleGroup.css'
 
 export default function OneGroup() {
@@ -23,6 +23,9 @@ export default function OneGroup() {
         if (group && user){
             return group.organizerId === user.id ? true : false
         }
+    }
+    const hnadleCreateEvent = () => {
+        navigate(`/groups/${id}/event/new`)
     }
 
     const handleEdit = () => {
@@ -54,6 +57,10 @@ export default function OneGroup() {
             <div>
                 {areYouMaster() &&
                     <div>
+                            <button onClick={hnadleCreateEvent}>
+                                Create an Event!
+                            </button>
+
                             <button onClick={handleEdit}>
                                 Edit
                             </button>
