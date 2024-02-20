@@ -2,7 +2,12 @@ import { useState } from "react"
 import { useEffect } from "react"
 import { createAnEvent } from "../../../store/events"
 import { useDispatch } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import {
+    // useNavigate,
+    useParams } from 'react-router-dom';
+import { useSelector } from "react-redux";
+import { getSingleGroup } from "../../../store/groups";
+import './CreateEvent.css'
 
 
 
@@ -22,7 +27,10 @@ export default function CreateEvent(){
     const [ errors, setErrors ] = useState({})
 
     const dispatch = useDispatch();
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
+
+    const group = useSelector(state => state.groups.groups[id])
+    console.log("🚀 ~ CreateEvent ~ group:", group)
 
     useEffect(() => {
         const errors = {};
@@ -34,8 +42,10 @@ export default function CreateEvent(){
         if (new Date(startDate) <= new Date()) errors.startDate = 'Start date must be in the future';
         if (new Date(endDate) < new Date(startDate)) errors.endDate = 'End date is less than start date';
 
+
+        dispatch(getSingleGroup(id))
         setErrors(errors);
-    }, [name, eventType, price, description, startDate, endDate]);
+    }, [name, eventType, price, description, startDate, endDate, id, dispatch]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -44,21 +54,26 @@ export default function CreateEvent(){
         const newEvent = {
           name,
           type: eventType,
-          visibility,
-          price,
+        //   visibility,
+          price: parseInt(price),
           startDate,
           endDate,
-          imageUrl,
+        //   imageUrl,
           description,
-          capacity
+          capacity: parseInt(capacity)
         }
 
-        const submittedGroup = await dispatch(createAnEvent(newEvent))
+        await dispatch(createAnEvent(newEvent,id))
+        console.log("🚀 ~ This is our new event being sent", newEvent)
 
-        navigate(`/groups/${id}`)
+        // navigate(`/groups/${id}`)
       };
 
       return (
+        <div>
+
+            {<h2>Create an event for: {group?.name} </h2>}
+
         <form onSubmit={handleSubmit}>
             <label>
                 Event Name
@@ -100,7 +115,7 @@ export default function CreateEvent(){
             <label>
                 Start Date
                 <input
-                    type="date"
+                    type="datetime-local"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
                 />
@@ -110,7 +125,7 @@ export default function CreateEvent(){
             <label>
                 End Date
                 <input
-                    type="date"
+                    type="datetime-local"
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
                 />
@@ -137,6 +152,7 @@ export default function CreateEvent(){
 
             <button type="submit">Create Event</button>
         </form>
+        </div>
     );
 
 }

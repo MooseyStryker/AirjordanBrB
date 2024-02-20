@@ -47,6 +47,8 @@ export const getSingleEvent = (id) => async(dispatch) => {
 }
 
 export const createAnEvent = (payload, id) => async(dispatch) => {
+    console.log("🚀 ~ inside createAnEvent payload:", payload)
+    console.log("🚀 ~ createAnEvent ~ id:", id)
     const getCookie = () => {
         return Cookies.get("XSRF-TOKEN");
     };
@@ -61,6 +63,7 @@ export const createAnEvent = (payload, id) => async(dispatch) => {
     })
 
     const data = await res.json()
+    console.log("🚀 ~ createAnEvent ~ data:", data)
     dispatch(addEvent(data))
     return data
 }
