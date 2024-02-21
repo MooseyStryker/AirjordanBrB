@@ -39,10 +39,15 @@ function Navigation({ isLoaded }) {
 
 
       {isLoaded && sessionUser &&
-        <div>
-        (<ProfileButton user={sessionUser} />)
-        </div>
+  
+        <ProfileButton user={sessionUser} />
+
         }
+      {/* {isLoaded && sessionUser &&
+        <div>
+        <ProfileButton user={sessionUser} />
+        </div>
+        } */}
 
     </div>
   );

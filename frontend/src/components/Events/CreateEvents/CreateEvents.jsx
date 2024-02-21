@@ -162,7 +162,7 @@ export default function CreateEvent(){
             </label>
             {errors.description && <p className="errors" style={{ color: 'red', fontSize: '12px'}}>{errors.description}</p>}
 
-            <button type="submit">Create Event</button>
+            <button className="createeventbutton" type="submit">Create Event</button>
         </form>
         </div>
     );

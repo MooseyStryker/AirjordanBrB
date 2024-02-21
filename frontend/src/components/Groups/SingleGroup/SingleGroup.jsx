@@ -68,15 +68,15 @@ export default function OneGroup() {
                 <div>
                     {areYouMaster() &&
                         <div>
-                                <button onClick={hnadleCreateEvent}>
+                                <button className='groupbuttons' onClick={hnadleCreateEvent}>
                                     Create an Event!
                                 </button>
 
-                                <button onClick={handleEdit}>
+                                <button className='groupbuttons' onClick={handleEdit}>
                                     Edit
                                 </button>
 
-                                <button onClick={handleGroupDelete}>
+                                <button className='groupbuttons' onClick={handleGroupDelete}>
                                     Delete
                                 </button>
                         </div>
