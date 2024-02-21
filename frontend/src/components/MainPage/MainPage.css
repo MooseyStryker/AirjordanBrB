@@ -1,0 +1,21 @@
+.main-page {
+    text-align: center;
+}
+
+.how-it-works {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+}
+
+.how-it-works img {
+    width: 100%;
+    height: auto;
+    max-width: 600px;
+    max-height: 400px;
+}
+
+
+.step img {
+    width: 100px;
+}

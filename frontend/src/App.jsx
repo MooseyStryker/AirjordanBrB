@@ -13,6 +13,7 @@ import UpdateGroup from './components/Groups/UpdateGroup/UpdateGroup';
 import AllEvents from './components/Events/GetAllEvents';
 import OneEvent from './components/Events/GetSingleEvent/GetSingleEvent';
 import CreateEvent from './components/Events/CreateEvents/CreateEvents';
+import MainPage from './components/MainPage/MainPage';
 
 
 function Layout() {
@@ -40,7 +41,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <h1>Welcome!</h1>
+        element: <MainPage />
       },
       {
         path: 'login',
