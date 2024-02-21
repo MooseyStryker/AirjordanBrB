@@ -16,13 +16,13 @@ module.exports = {
       await EventImage.bulkCreate([
         {
           eventId: 1,
-          url: 'https://example.com/image1.jpg',
+          url: 'https://upload.wikimedia.org/wikipedia/commons/5/53/Mendel_II_073_v.jpg',
           preview: true
         },
         {
           eventId: 2,
-          url: 'https://example.com/image2.jpg',
-          preview: false
+          url: 'https://upload.wikimedia.org/wikipedia/commons/a/a8/Amaterske_akvarium.jpg',
+          preview: true
         },
         {
           eventId: 3,

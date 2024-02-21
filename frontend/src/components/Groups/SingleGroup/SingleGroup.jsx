@@ -22,7 +22,6 @@ export default function OneGroup() {
     }, [dispatch, id, events?.groupId])
 
     const groupPreviewImage = group?.GroupImages?.find(image => image.preview)
-    // const eventPreviewImage = events?.EventImages?.find(image => image.preview)
 
 
     const areYouMaster = () => {
