@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
+import { useCallback } from 'react';
 import { editThisGroup, getSingleGroup } from '../../../store/groups';
 
 export default function UpdateGroup() {
@@ -18,11 +19,11 @@ export default function UpdateGroup() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const areYouMaster = () => {
-        if (group && user){
-            return group.organizerId === user.id ? true : false
-        }
-    }
+    const areYouMaster = useCallback(() => {
+      if (group && user){
+          return group.organizerId === user.id ? true : false
+      }
+  }, [group, user]);
 
     useEffect(() => {
         const errors = {};

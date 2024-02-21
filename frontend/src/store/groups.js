@@ -39,13 +39,19 @@ const removeGroup = (group) => ({
 
 export const getAllGroups = () => async(dispatch) => {
     const res = await fetch('/api/groups')
-
+    if (!res.ok) {
+        throw new Error('Failed to getAllGroups')
+    }
     const data = await res.json();
     dispatch(allGroups(data))
 }
 
 export const getSingleGroup = (id) => async(dispatch) => {
     const res = await fetch(`/api/groups/${id}`)
+
+    if (!res.ok) {
+        throw new Error('Failed to getSingleGroup')
+    }
 
     const data = await res.json()
 

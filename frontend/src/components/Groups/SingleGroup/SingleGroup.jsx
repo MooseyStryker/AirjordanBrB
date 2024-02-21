@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteGroup, getSingleGroup } from "../../../store/groups"
-import { getAllEventsByGroupId } from '../../../store/events';
+import { deleteThisEvent, getAllEventsByGroupId } from '../../../store/events';
 import './SingleGroup.css'
 
 export default function OneGroup() {
@@ -12,7 +12,6 @@ export default function OneGroup() {
     const user = useSelector(state => state.session.user)
 
     const events = useSelector(state => state.events.events.Events)
-    console.log("🚀 ~ OneGroup ~ events:", events)
     const navigate = useNavigate()
 
 
@@ -33,13 +32,18 @@ export default function OneGroup() {
         navigate(`/groups/${id}/event/new`)
     }
 
-    const handleEdit = () => {
+    const handleEdit = (id) => {
         navigate(`/groups/${id}/edit`)
     }
 
-    const handleDelete = () => {
+    const handleGroupDelete = () => {
         dispatch(deleteGroup(group))
         navigate(`/groups`)
+    }
+
+    const handleEventDelete = (id) => {
+        console.log("🚀 ~ handleEventDelete ~ id:", id)
+        dispatch(deleteThisEvent(id))
     }
 
 
@@ -72,7 +76,7 @@ export default function OneGroup() {
                                     Edit
                                 </button>
 
-                                <button onClick={handleDelete}>
+                                <button onClick={handleGroupDelete}>
                                     Delete
                                 </button>
                         </div>
@@ -106,7 +110,7 @@ export default function OneGroup() {
                                         Edit
                                     </button>
 
-                                    <button onClick={() => handleDelete(event.id)}>
+                                    <button onClick={() => handleEventDelete(event.id)}>
                                         Delete
                                     </button>
                                 </div>
