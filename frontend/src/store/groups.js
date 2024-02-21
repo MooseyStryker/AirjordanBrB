@@ -80,7 +80,6 @@ export const submitNewGroup = (payload) => async(dispatch) => {
 
 
 export const editThisGroup = (payload, id) => async(dispatch) => {
-    console.log("🚀 ~ editThisGroup ~ id:", id)
     const getCookie = () => {
         return Cookies.get("XSRF-TOKEN");
     };

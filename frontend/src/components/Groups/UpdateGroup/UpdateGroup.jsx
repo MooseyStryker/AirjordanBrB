@@ -40,7 +40,7 @@ export default function UpdateGroup() {
         if (isMaster === false){
             navigate('/groups')
         }
-      }, [name, about, type, privateGroup, city, state. areYouMaster, navigate]);
+      }, [name, about, type, privateGroup, city, state, areYouMaster, navigate]);
 
     useEffect(() => {
         dispatch(getSingleGroup(id))

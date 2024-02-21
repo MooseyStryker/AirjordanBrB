@@ -3,17 +3,17 @@ import { useEffect } from "react"
 import { createAnEvent } from "../../../store/events"
 import { useDispatch } from 'react-redux';
 import {
-    // useNavigate,
+    useNavigate,
     useParams } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { getSingleGroup } from "../../../store/groups";
 import './CreateEvent.css'
+import { addEventImage } from "../../../store/eventimages";
 
 
 
 export default function CreateEvent(){
     const {groupid: id} = useParams()
-    console.log("🚀 ~ CreateEvent ~ id:", id)
 
     const [ name, setName ] = useState('')
     const [ eventType, setEventType ] = useState("In person")
@@ -23,14 +23,15 @@ export default function CreateEvent(){
     const [ endDate, setEndDate ] = useState('')
     const [ imageUrl, setImageUrl ] = useState('')
     const [ description, setDescription ] = useState('')
-    const capacity = parseInt(0)
     const [ errors, setErrors ] = useState({})
 
+    let capacity = parseInt(0)
+    let preview = true
     const dispatch = useDispatch();
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const group = useSelector(state => state.groups.groups[id])
-    console.log("🚀 ~ CreateEvent ~ group:", group)
+
 
     useEffect(() => {
         const errors = {};
@@ -47,26 +48,37 @@ export default function CreateEvent(){
         setErrors(errors);
     }, [name, eventType, price, description, startDate, endDate, id, dispatch]);
 
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrors({})
 
         const newEvent = {
-          name,
-          type: eventType,
-        //   visibility,
-          price: parseInt(price),
-          startDate,
-          endDate,
-        //   imageUrl,
-          description,
-          capacity: parseInt(capacity)
+            groupId: id,
+            name,
+            type: eventType,
+            //   visibility,
+            price: parseInt(price),
+            startDate,
+            endDate,
+            description,
+            capacity: parseInt(capacity)
         }
 
-        await dispatch(createAnEvent(newEvent,id))
-        console.log("🚀 ~ This is our new event being sent", newEvent)
+        const createEvent = await dispatch(createAnEvent(newEvent,id))
+        const eventId = createEvent.id
+        console.log("🚀 ~ handleSubmit ~ eventId:", eventId)
 
-        // navigate(`/groups/${id}`)
+        const imageUploaded = {
+            url: imageUrl,
+            preview
+        }
+
+        await dispatch(addEventImage(imageUploaded, eventId))
+
+
+        navigate(`/groups/${id}`)
       };
 
       return (

@@ -7,7 +7,6 @@ import './AllEvents.css'
 
 export default function AllEventsOnPage() {
     let events = useSelector(state => {
-        console.log("🚀 ~ events ~ state:", state.events.events.Events)
         return state.events.events.Events
     })
 

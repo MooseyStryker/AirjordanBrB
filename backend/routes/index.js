@@ -12,8 +12,6 @@ router.get('/hello/world', function(req, res) {
 // Add a XSRF-TOKEN cookie
 router.get("/api/csrf/restore", (req, res) => {
     const csrfToken = req.csrfToken();
-    console.log("🚀 ~ router.get ~ csrfToken:", csrfToken)
-
     res.cookie("XSRF-TOKEN", csrfToken);
     res.status(200).json({
       'XSRF-Token': csrfToken
@@ -48,7 +46,6 @@ if (process.env.NODE_ENV === 'production') {
 if (process.env.NODE_ENV !== 'production') {
   router.get("/api/csrf/restore", (req, res) => {
     const csrfToken = req.csrfToken();
-    console.log("🚀 ~ router.get ~ csrfToken:", csrfToken)
     res.cookie("XSRF-TOKEN", csrfToken);
     res.status(200).json({
       'XSRF-Token': csrfToken

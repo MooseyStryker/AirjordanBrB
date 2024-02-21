@@ -684,7 +684,7 @@ router.post('/:groupId/events', restoreUser, requireAuth, async (req, res, next)
     try {
         let thisGroupId = req.params.groupId;
         thisGroupId = +thisGroupId
-        console.log("🚀 ~ router.post ~ thisGroupId:", thisGroupId)
+
 
         let { groupId, venueId, name, type, capacity, price, description, startDate, endDate } = req.body
 
@@ -809,132 +809,6 @@ router.post('/:groupId/events', restoreUser, requireAuth, async (req, res, next)
     }
 });
 
-// router.post('/:groupId/events', restoreUser, requireAuth, async (req, res, next) => {
-//     try {
-//         let thisGroupId = req.params.groupId;
-//         thisGroupId = +thisGroupId
-//         console.log("🚀 ~ router.post ~ thisGroupId:", thisGroupId)
-
-//         let { groupId, venueId, name, type, capacity, price, description, startDate, endDate } = req.body
-//         console.log("🚀 ~ router.post ~ price:", price)
-//         console.log("🚀 ~ router.post ~ capacity:", capacity)
-
-//         const errors = {};
-//         if (!name || name.length < 5) errors.name = "Name must be at least 5 characters";
-//         if (!type || (type !== 'Online' && type !== 'In person')) errors.type = "Type must be 'Online' or 'In Person'";
-//         // if (
-//         //     !capacity ||
-//         //     !Number.isInteger(capacity)
-//         //     ) errors.capacity = "Capacity must be an integer";
-//         // if (!price || isNaN(price) || (price < 0)) errors.price = "Price is invalid";
-//         if (!description) errors.description = "Description is required";
-//         if (!startDate || new Date(startDate).getTime() < new Date().getTime()) errors.startDate = "Start date must be in the future";
-//         if (!endDate || new Date(endDate).getTime() < new Date(startDate).getTime()) errors.endDate = "End date is less than start date";
-
-//         if(Object.keys(errors).length >= 1) {
-//             return res.status(400).json({
-//                 message: "Bad Request",
-//                 errors
-//             })
-//         }
-
-//         const group = await Group.findByPk(thisGroupId)
-//         if(!group) return res.status(404).json({"message": "Group couldn't be found"})
-
-//         const venue = await Venue.findByPk(venueId)
-//         if (!venue) return res.status(404).json({"message": "Venue couldn't be found"})
-
-//         if (group.organizerId === req.user.id) {
-//             const event = await Event.create({
-//                 groupId: thisGroupId,
-//                 venueId: venue.id,
-//                 name,
-//                 type,
-//                 capacity,
-//                 price,
-//                 description,
-//                 startDate,
-//                 endDate
-//             });
-
-//             startDate = moment(event.startDate).format('YYYY-MM-DD HH:mm:ss');
-//             endDate = moment(event.endDate).format('YYYY-MM-DD HH:mm:ss');
-
-//             return res.json({
-//                 id: event.id,
-//                 groupId: thisGroupId,
-//                 venueId: venue.id,
-//                 name: event.name,
-//                 type: event.type,
-//                 capacity: parseInt(event.capacity),
-//                 price: parseFloat(event.price),
-//                 description: event.description,
-//                 startDate,
-//                 endDate
-//             })
-//         }
-
-
-//         const membership = await Membership.findOne({
-//             where:{
-//                 userId: req.user.id,
-//                 groupId: thisGroupId
-//             }
-//         })
-//         if(!membership) return res.status(403).json({"message": "Your membership to this group couldn't be found"})
-
-
-//         if (!(group.organizerId === req.user.id || membership.status === 'co-host')) {
-//             return res.status(403).json({
-//                 message: "You don't have permission to create this events"
-//             });
-//         }
-
-
-//         const event = await Event.create({
-//             groupId: thisGroupId,
-//             venueId: venue.id,
-//             name,
-//             type,
-//             capacity,
-//             price,
-//             description,
-//             startDate,
-//             endDate
-//         });
-
-//         startDate = moment(event.startDate).format('YYYY-MM-DD HH:mm:ss');
-//         endDate = moment(event.endDate).format('YYYY-MM-DD HH:mm:ss');
-
-//         return res.json({
-//             id: event.id,
-//             groupId: thisGroupId,
-//             venueId: venue.id,
-//             name: event.name,
-//             type: event.type,
-//             capacity: parseInt(event.capacity),
-//             price: parseFloat(event.price),
-//             description: event.description,
-//             startDate,
-//             endDate
-//         })
-//     } catch (error) {
-//         if (error.name === 'SequelizeValidationError') {
-//             const errors = error.errors.reduce((acc, curr) => {
-//                 acc[curr.path] = curr.message;
-//                 return acc;
-//             }, {});
-
-
-//             res.status(400).json({
-//                 message: 'Bad Request',
-//                 errors
-//             });
-//         } else {
-//             next(error);
-//         }
-//     }
-// });
 
 
 router.post('/:groupId/membership', restoreUser, requireAuth, async (req, res) => {

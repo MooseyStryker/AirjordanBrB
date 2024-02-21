@@ -3,6 +3,7 @@ import Cookies from "js-cookie";
 
 
 const EVENTS = '/events'
+const ALL_EVENTS_VIA_GROUP = 'groups/:groupId/events'
 const SINGLE_EVENT = '/events/:eventId'
 const CREATE_EVENT = 'groups/:groupId/events'
 
@@ -10,6 +11,10 @@ const CREATE_EVENT = 'groups/:groupId/events'
 
 const allEvents = (events) => ({
     type: EVENTS,
+    payload: events
+})
+const allEventsViaGroupId = (events) => ({
+    type: ALL_EVENTS_VIA_GROUP,
     payload: events
 })
 
@@ -37,6 +42,14 @@ export const getAllEvents = () => async(dispatch) => {
 
 }
 
+export const getAllEventsByGroupId = (id) => async(dispatch) => {
+    const res = await fetch(`/api/groups/${id}/events`)
+
+    const data = await res.json()
+    dispatch(allEventsViaGroupId(data))
+    return data
+}
+
 export const getSingleEvent = (id) => async(dispatch) => {
     const res = await fetch(`/api/events/${id}`)
 
@@ -47,8 +60,7 @@ export const getSingleEvent = (id) => async(dispatch) => {
 }
 
 export const createAnEvent = (payload, id) => async(dispatch) => {
-    console.log("🚀 ~ inside createAnEvent payload:", payload)
-    console.log("🚀 ~ createAnEvent ~ id:", id)
+
     const getCookie = () => {
         return Cookies.get("XSRF-TOKEN");
     };
@@ -76,6 +88,9 @@ function eventReducer(state = initialState, action) {
         case EVENTS:
             return { ...state, events: action.payload}
 
+        case ALL_EVENTS_VIA_GROUP:
+            return { ...state, events: action.payload}
+
         case SINGLE_EVENT:
             return {
                 ...state,
@@ -83,6 +98,14 @@ function eventReducer(state = initialState, action) {
                     ...state.events, [action.payload.id]: action.payload
                 }
             }
+
+        case CREATE_EVENT:
+        return{
+            ...state,
+            events: {
+                ...state.events, [action.payload.id]:action.payload
+            }
+        }
 
     default:
         return state
