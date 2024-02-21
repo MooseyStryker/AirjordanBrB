@@ -14,6 +14,7 @@ function Navigation({ isLoaded }) {
 
   return (
     <div className='navbar'>
+
       <div>
         <NavLink to="/">
           <img src={logo} alt="Home" className='nav-logo' style={{width: '100px'}}/>
@@ -21,23 +22,28 @@ function Navigation({ isLoaded }) {
       </div>
 
       <div className='finduser'>
-  <OpenModalButton
-    buttonText="Log In"
-    modalComponent={<LoginFormModal />}
-  />
-  <OpenModalButton
-    buttonText="Sign Up"
-    modalComponent={<SignupFormModal />}
-  />
-</div>
+        {!sessionUser &&
+          <div>
+            <OpenModalButton
+              buttonText="Log In"
+              modalComponent={<LoginFormModal />}
+            />
+            <OpenModalButton
+              buttonText="Sign Up"
+              modalComponent={<SignupFormModal />}
+            />
+          </div>
+        }
+      </div>
 
 
 
-      <div>
-        {isLoaded && sessionUser && (
-          <ProfileButton user={sessionUser} />
-          )}
-       </div>
+      {isLoaded && sessionUser &&
+        <div>
+        (<ProfileButton user={sessionUser} />)
+        </div>
+        }
+
     </div>
   );
 }

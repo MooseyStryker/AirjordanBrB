@@ -1,0 +1,6 @@
+.login-form-container {
+    width: 400px; /* Adjust as needed */
+    height: auto;
+    display: flex;
+    justify-content: center;
+  }

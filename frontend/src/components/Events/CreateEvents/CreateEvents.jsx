@@ -104,7 +104,7 @@ export default function CreateEvent(){
                     <option value="Online">Online</option>
                 </select>
             </label>
-            {errors.eventType && <p style={{ color: 'red', fontSize: '12px'}}>{errors.eventType}</p>}
+            {errors.eventType && <p className="errors" style={{ color: 'red', fontSize: '12px'}}>{errors.eventType}</p>}
 
             <label>
                 Visibility
@@ -122,7 +122,7 @@ export default function CreateEvent(){
                     onChange={(e) => setPrice(e.target.value)}
                 />
             </label>
-            {errors.price && <p style={{ color: 'red', fontSize: '12px'}}>{errors.price}</p>}
+            {errors.price && <p className="errors" style={{ color: 'red', fontSize: '12px'}}>{errors.price}</p>}
 
             <label>
                 Start Date
@@ -132,7 +132,7 @@ export default function CreateEvent(){
                     onChange={(e) => setStartDate(e.target.value)}
                 />
             </label>
-            {errors.startDate && <p style={{ color: 'red', fontSize: '12px'}}>{errors.startDate}</p>}
+            {errors.startDate && <p className="errors" style={{ color: 'red', fontSize: '12px'}}>{errors.startDate}</p>}
 
             <label>
                 End Date
@@ -142,7 +142,7 @@ export default function CreateEvent(){
                     onChange={(e) => setEndDate(e.target.value)}
                 />
             </label>
-            {errors.endDate && <p style={{ color: 'red', fontSize: '12px'}}>{errors.endDate}</p>}
+            {errors.endDate && <p className="errors" style={{ color: 'red', fontSize: '12px'}}>{errors.endDate}</p>}
 
             <label>
                 Image URL
@@ -160,7 +160,7 @@ export default function CreateEvent(){
                     onChange={(e) => setDescription(e.target.value)}
                 />
             </label>
-            {errors.description && <p style={{ color: 'red', fontSize: '12px'}}>{errors.description}</p>}
+            {errors.description && <p className="errors" style={{ color: 'red', fontSize: '12px'}}>{errors.description}</p>}
 
             <button type="submit">Create Event</button>
         </form>

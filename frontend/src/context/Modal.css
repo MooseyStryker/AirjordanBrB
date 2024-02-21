@@ -18,7 +18,12 @@
   background-color: rgba(0, 0, 0, 0.7);
 }
 
-#modal-content {
+/* #modal-content {
   position: absolute;
   background-color:white;
+} */
+
+#modal-content {
+  background-color:white;
+  z-index: 1;
 }
