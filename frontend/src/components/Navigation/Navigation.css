@@ -33,3 +33,78 @@ li a:hover {
 .ProfileButton {
   float: right;
 }
+
+
+
+
+/* navigationbonus.css */
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar > div {
+  display: flex;
+  flex-direction: row;
+}
+
+
+
+.finduser > div {
+  padding: 20px;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  /* display: flex; */
+  /* background-color: #333; */
+}
+
+li {
+  display: flex;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+li a:hover {
+  background-color: #111;
+}
+
+/* .ProfileButton {
+  display: flex;
+}
+.profile-dropdown {
+  display: flex;
+  flex-direction: column;
+} */
+
+/* Kinda works, it needs to be a more permanent fix */
+.ProfileButton {
+  position: relative;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: 9%; /* Position it right below the button */
+  right: 6px; /* Align it to the left edge of the button */
+}
+
+
+
+.nav-logo {
+  width: 30px;
+}
+
+.hidden {
+  display: none;
+}

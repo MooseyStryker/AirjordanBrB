@@ -5,12 +5,20 @@ import SignupFormModal from '../SignupFormModal';
 import { useSelector } from 'react-redux';
 import ProfileButton from './ProfileButton-bonus';
 import logo from '../../images/navigation/logo.jpg'
-
-// import './Navigation.css';
-import './navigationbonus.css'
+import './Navigation-Bonus.css'
+import { useModal } from '../../context/Modal';
 
 function Navigation({ isLoaded }) {
   const sessionUser = useSelector(state => state.session.user);
+
+  const { setModalContent } = useModal();
+
+  const loginModal = () => {
+    setModalContent(<LoginFormModal />)
+  }
+  const signupModal = () => {
+    setModalContent(<SignupFormModal />)
+  }
 
   return (
     <div className='navbar'>
@@ -23,15 +31,31 @@ function Navigation({ isLoaded }) {
 
       <div className='finduser'>
         {!sessionUser &&
-          <div>
-            <OpenModalButton
-              buttonText="Log In"
-              modalComponent={<LoginFormModal />}
-            />
-            <OpenModalButton
-              buttonText="Sign Up"
-              modalComponent={<SignupFormModal />}
-            />
+          <div className='userdiv'>
+
+
+            <div className="Login-button" onClick={loginModal}>
+            Log In
+            </div>
+
+            <div className="signup-button" onClick={loginModal}>
+            Sign Up!
+            </div>
+
+
+              {/* <OpenModalButton
+                buttonText="Log In"
+                modalComponent={<LoginFormModal />}
+              /> */}
+
+            {/* <div className='signup-button'>
+              <OpenModalButton
+                buttonText="Sign Up"
+                modalComponent={<SignupFormModal />}
+              />
+            </div> */}
+
+
           </div>
         }
       </div>
@@ -39,7 +63,7 @@ function Navigation({ isLoaded }) {
 
 
       {isLoaded && sessionUser &&
-  
+
         <ProfileButton user={sessionUser} />
 
         }

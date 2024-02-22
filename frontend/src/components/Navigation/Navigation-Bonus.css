@@ -1,4 +1,4 @@
-/* navigationbonus.css */
+/* navigation.css */
 
 .navbar {
   display: flex;
@@ -14,16 +14,10 @@
 
 
 .finduser > div {
+  display: flex;
   padding: 20px;
 }
 
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  /* display: flex; */
-  /* background-color: #333; */
-}
 
 li {
   display: flex;
@@ -68,4 +62,10 @@ li a:hover {
 
 .hidden {
   display: none;
+}
+
+.userdiv {
+  border: 1p solid red;
+  display: flex;
+  justify-content: space-between;
 }
