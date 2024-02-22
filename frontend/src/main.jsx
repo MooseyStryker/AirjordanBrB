@@ -18,11 +18,7 @@ if (import.meta.env.MODE !== "production") {
   window.sessionActions = sessionActions;
 }
 
-// const Carrot = () => (
-//   <div style={{ color: "orange", fontSize: "100px" }}>
-//     <i className="fas fa-carrot"></i>
-//   </div>
-// );
+
 
 // Wrap the application with the Modal provider and render the Modal component
 // after the App component so that all the Modal content will be layered as
@@ -32,7 +28,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <ModalProvider>
       <Provider store={store}>
         <App />
-        {/* <Carrot /> */}
         <Modal />
       </Provider>
     </ModalProvider>

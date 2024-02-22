@@ -17,6 +17,15 @@ import MainPage from './components/MainPage/MainPage';
 
 
 function Layout() {
+  //  const sessionUser = useSelector((state) => state.session.user);
+  /*
+      useEffect(() => {
+        if (!sessionUser) {
+          navigate('/)
+        }
+      })
+  */
+
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -54,6 +63,7 @@ const router = createBrowserRouter([
       {
         path: '/groups/new',
         element: <CreateGroup />
+         // Needs session user checked
       },
       {
         path: '/groups/:groupid',
@@ -62,6 +72,7 @@ const router = createBrowserRouter([
       {
         path: '/groups/:groupid/edit',
         element: <UpdateGroup />
+        // Needs session user checked
       },
       {
         path: '/events',
@@ -74,6 +85,7 @@ const router = createBrowserRouter([
       {
         path: 'groups/:groupid/event/new',
         element: <CreateEvent />
+         // Needs session user checked
       },
       {
         path: 'signup',
