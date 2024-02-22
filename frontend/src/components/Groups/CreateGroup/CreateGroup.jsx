@@ -3,8 +3,10 @@ import { useDispatch } from 'react-redux';
 import { submitNewGroup } from '../../../store/groups';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 function CreateGroup() {
+  const sessionUser = useSelector((state) => state.session.user);
   const [name, setName] = useState("");
   const [about, setAbout] = useState("");
   const [type, setType] = useState("In person");
@@ -21,6 +23,10 @@ function CreateGroup() {
 
 
   useEffect(() => {
+    if(!sessionUser) {
+      navigate('/')
+    }
+
     const errors = {};
     if (!name) errors.name = 'Name field is required';
     if (name.length > 60) errors.name = 'Name must be 60 characters or less'
@@ -30,7 +36,7 @@ function CreateGroup() {
     if (!state) errors.state = 'State is required';
 
     setErrors(errors);
-  }, [name, about, type, privateGroup, city, state]);
+  }, [name, about, type, privateGroup, city, state, sessionUser]);
 
 
   const handleSubmit = async (e) => {

@@ -13,6 +13,8 @@ import { addEventImage } from "../../../store/eventimages";
 
 
 export default function CreateEvent(){
+    const sessionUser = useSelector((state) => state.session.user);
+
     const {groupid: id} = useParams()
 
     const [ name, setName ] = useState('')
@@ -27,6 +29,7 @@ export default function CreateEvent(){
 
     let capacity = parseInt(0)
     let preview = true
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -34,6 +37,10 @@ export default function CreateEvent(){
 
 
     useEffect(() => {
+        if(!sessionUser) {
+            navigate('/')
+          }
+
         const errors = {};
         if (!name || name.length < 5) errors.name = 'Name must be at least 5 characters';
         if (name.length > 60) errors.name = 'Name must be 60 characters or less';
@@ -46,7 +53,7 @@ export default function CreateEvent(){
 
         dispatch(getSingleGroup(id))
         setErrors(errors);
-    }, [name, eventType, price, description, startDate, endDate, id, dispatch]);
+    }, [name, eventType, price, description, startDate, endDate, id, dispatch, sessionUser]);
 
 
 

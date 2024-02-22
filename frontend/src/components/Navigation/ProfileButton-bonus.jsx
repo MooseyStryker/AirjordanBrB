@@ -4,6 +4,7 @@ import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
+import profilePic from '../../images/navigation/profile.png'
 import './ProfileButton.css'
 
 function ProfileButton({ user }) {
@@ -42,17 +43,23 @@ function ProfileButton({ user }) {
 
   return (
     <>
-      <button onClick={toggleMenu}>
+      {/* <button onClick={toggleMenu}>
         <i className="fas fa-user-circle" />
-      </button>
+      </button> */}
+       <div className='profileBox' style={{display: 'flex', alignItems: 'center'}} onClick={toggleMenu}>
+        <img src={profilePic} style={{width:'50px'}}></img>
+        <div style={{marginLeft:'10px'}}>
+          <i className={`fas fa-caret-${showMenu ? "up" : "down"}`} style={{fontSize: '24px'}}></i>
+        </div>
+      </div>
+
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
           <div className='profilemenu'>
-            <li>Hello,{user.username}!</li>
-            <li>{user.firstName} {user.lastName}</li>
-            <li>{user.email}</li>
-            <li>
-              <button onClick={logout}>Log Out</button>
+            <li className='greetings' >Hello, {user.username}!</li>
+            <li className='emailmenu'>{user.email}</li>
+            <li className='logoutspace' onClick={logout}>
+              <p >Log Out</p>
             </li>
           </div>
         ) : (

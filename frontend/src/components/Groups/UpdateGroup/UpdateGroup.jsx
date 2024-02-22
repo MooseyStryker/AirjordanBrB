@@ -26,6 +26,9 @@ export default function UpdateGroup() {
   }, [group, user]);
 
     useEffect(() => {
+      if(!user) {
+        navigate('/')
+      }
         const errors = {};
         if (!name) errors.name = 'Name field is required';
         if (name.length > 60) errors.name = 'Name must be 60 characters or less'
@@ -41,7 +44,7 @@ export default function UpdateGroup() {
         if (isMaster === false){
             navigate('/groups')
         }
-      }, [name, about, type, privateGroup, city, state, areYouMaster, navigate]);
+      }, [name, about, type, privateGroup, city, state, areYouMaster, navigate, user]);
 
     useEffect(() => {
         dispatch(getSingleGroup(id))

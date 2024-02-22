@@ -6,10 +6,13 @@ import { useSelector } from 'react-redux';
 import ProfileButton from './ProfileButton-bonus';
 import logo from '../../images/navigation/logo.jpg'
 import { useModal } from '../../context/Modal';
+import { useNavigate } from 'react-router-dom';
 import './Navigation-Bonus.css'
 
 function Navigation({ isLoaded }) {
   const sessionUser = useSelector(state => state.session.user);
+
+  const navigate = useNavigate()
 
   const { setModalContent } = useModal();
 
@@ -18,6 +21,10 @@ function Navigation({ isLoaded }) {
   }
   const signupModal = () => {
     setModalContent(<SignupFormModal />)
+  }
+
+  const handleCreateGroup = () => {
+    navigate('/groups/new')
   }
 
   return (
@@ -50,7 +57,13 @@ function Navigation({ isLoaded }) {
 
       {isLoaded && sessionUser &&
 
-        <ProfileButton user={sessionUser} />
+        <>
+          <div>
+            <p className='creatinggrouptag' style={{color:'teal'}} onClick={handleCreateGroup} >Start a new group</p>
+            <ProfileButton user={sessionUser} />
+          </div>
+        </>
+
 
         }
 

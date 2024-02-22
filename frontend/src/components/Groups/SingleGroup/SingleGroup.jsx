@@ -7,18 +7,20 @@ import './SingleGroup.css'
 
 export default function OneGroup() {
     const {groupid: id} = useParams()
-    const dispatch = useDispatch()
-    let group = useSelector(state => state.groups.groups[id])
+    const group = useSelector(state => state.groups.groups[id])
     const user = useSelector(state => state.session.user)
-
     const events = useSelector(state => state.events.events.Events)
+
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
 
     useEffect(() => {
         dispatch(getSingleGroup(id))
         dispatch(getAllEventsByGroupId(id))
     }, [dispatch, id, events?.groupId])
+
+    
 
     const groupPreviewImage = group?.GroupImages?.find(image => image.preview)
 
@@ -32,7 +34,7 @@ export default function OneGroup() {
         navigate(`/groups/${id}/event/new`)
     }
 
-    const handleEdit = (id) => {
+    const handleEdit = () => {
         navigate(`/groups/${id}/edit`)
     }
 
@@ -42,7 +44,6 @@ export default function OneGroup() {
     }
 
     const handleEventDelete = (id) => {
-        console.log("🚀 ~ handleEventDelete ~ id:", id)
         dispatch(deleteThisEvent(id))
     }
 

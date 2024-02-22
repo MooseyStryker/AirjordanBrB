@@ -58,8 +58,8 @@ li a:hover {
 
 .profile-dropdown {
   position: absolute;
-  top: 9%;
-  right: 6px;
+  top: 10%;
+  right: 20px;
 }
 
 
@@ -70,4 +70,9 @@ li a:hover {
 
 .hidden {
   display: none;
+}
+
+.creatinggrouptag{
+  cursor: pointer;
+  padding: 20px;
 }
