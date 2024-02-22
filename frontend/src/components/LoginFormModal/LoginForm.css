@@ -1,6 +1,35 @@
 .login-form-container {
-    width: 400px; /* Adjust as needed */
-    height: auto;
-    display: flex;
-    justify-content: center;
-  }
+  width: 400px;
+  height: auto;
+  display: flex;
+  flex-direction: column; /* Stack the children vertically */
+  justify-content: center; /* Center children vertically */
+  align-items: center; /* Center children horizontally */
+}
+
+
+.login-form-container form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.loginbuttontime {
+  background-color: #008CBA;
+  width: 300px;
+  color: white;
+  padding: 14px 20px;
+  margin-top: 8px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: bold;
+  box-shadow: 5px 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.loginbuttontime:hover {
+  background-color: #005f6b;
+}
