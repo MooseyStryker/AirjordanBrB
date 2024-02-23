@@ -1,7 +1,49 @@
+/* GetAllGroups.css */
+
+.allcontents {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* height: 100vh;  */
+}
+
+
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.top-section {
+    position: relative;
+    top: 20px;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+    width: 860px;
+}
+
+
 .groups {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 900px;
+}
+
+.outofnames {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.all-events-groups {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-around;
+    font-size: xx-large;
 }
 
 .groups ul {
@@ -10,24 +52,41 @@
 }
 
 .groups li {
-    border: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #ccc;
     margin: 10px;
     padding: 10px;
-    width: 300px;
-    transition: transform .2s; /* Animation */
+    width: auto;
+    /* width: 700px; */
+    transition: transform .2s;
 }
 
 .groups li:hover {
-    transform: scale(1.1); /* Zoom on hover */
+    transform: scale(1.1);
+}
+
+.groupimagebox {
+    flex: 1;
+}
+
+
+.groups h2, .groups p {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding-left: 10px;
 }
 
 .groups img {
-    width: 100%;
+    width: 400px;
     height: auto;
 }
 
 .groups h2 {
-    color: rgb(230, 230, 230);
+    margin-top: 0;
+    color: rgb(0, 0, 0);
     font-size: 1.5em;
 }
 

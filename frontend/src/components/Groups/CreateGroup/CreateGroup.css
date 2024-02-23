@@ -1,0 +1,53 @@
+/* CreateGroup.css */
+/* .organizer-title, .locationdiv, .group-name-div, .group-description, .final-steps {
+    border-bottom: 1px solid gray;
+} */
+
+/* General form styling */
+.group-form {
+    font-family: Arial, sans-serif;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f8f8;
+    border-radius: 5px;
+  }
+
+  /* Styling for each section of the form */
+  .organizer-title, .locationdiv, .group-name-div, .group-description, .final-steps {
+    border-bottom: 1px solid gray;
+    /* padding: 20px 0; */
+  }
+
+  .ptagthing{
+    color: #00525E;
+  }
+
+  /* Styling for the form title */
+  .form-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  /* Styling for the form description */
+  .form-description {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+
+
+
+  .create-group-label {
+    font-size: 16px;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+
+  .create-group-input{
+    width: 300px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+  }

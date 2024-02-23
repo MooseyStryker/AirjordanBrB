@@ -36,10 +36,22 @@ export default function CreateEvent(){
     const group = useSelector(state => state.groups.groups[id])
 
 
+
     useEffect(() => {
         if(!sessionUser) {
             navigate('/')
           }
+
+          dispatch(getSingleGroup(id))
+        }, [dispatch, sessionUser]);
+
+
+
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setErrors({})
 
         const errors = {};
         if (!name || name.length < 5) errors.name = 'Name must be at least 5 characters';
@@ -49,17 +61,19 @@ export default function CreateEvent(){
         if (!description || description.length < 30) errors.description = 'Description needs 30 or more characters';
         if (new Date(startDate) <= new Date()) errors.startDate = 'Start date must be in the future';
         if (new Date(endDate) < new Date(startDate)) errors.endDate = 'End date is less than start date';
+        if (!imageUrl)  errors.imageUrl = 'Image Url is required';
 
-
-        dispatch(getSingleGroup(id))
+        if (imageUrl) {
+            const fileExtension = imageUrl.split('.').pop().toLowerCase();
+            if (!['jpg', 'jpeg', 'png'].includes(fileExtension)) {
+              errors.imageUrl = 'Group image must be a .jpg, .jpeg, or .png file';
+            }
+          }
         setErrors(errors);
-    }, [name, eventType, price, description, startDate, endDate, id, dispatch, sessionUser]);
 
-
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setErrors({})
+        if (Object.keys(errors).length > 0) {
+            return;
+        }
 
         const newEvent = {
             groupId: id,
@@ -75,7 +89,7 @@ export default function CreateEvent(){
 
         const createEvent = await dispatch(createAnEvent(newEvent,id))
         const eventId = createEvent.id
-        console.log("🚀 ~ handleSubmit ~ eventId:", eventId)
+
 
         const imageUploaded = {
             url: imageUrl,
@@ -88,89 +102,138 @@ export default function CreateEvent(){
         navigate(`/groups/${id}`)
       };
 
+
+
       return (
-        <div>
+        <div className="form-container">
 
-            {<h2>Create an event for: {group?.name} </h2>}
 
-        <form onSubmit={handleSubmit}>
-            <label>
-                Event Name
-                <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                />
-            </label>
-            {errors.name && <p style={{ color: 'red', fontSize: '12px'}}>{errors.name}</p>}
+            <div className="backgroundcolordiv">
+                <div className="create-event-form">
 
-            <label>
-                Event Type
-                <select value={eventType} onChange={(e) => setEventType(e.target.value)} >
-                    <option value="In person">In person</option>
-                    <option value="Online">Online</option>
-                </select>
-            </label>
-            {errors.eventType && <p className="errors" style={{ color: 'red', fontSize: '12px'}}>{errors.eventType}</p>}
 
-            <label>
-                Visibility
-                <select value={visibility} onChange={(e) => setVisibility(e.target.value)} >
-                    <option value="Private">Private</option>
-                    <option value="Public">Public</option>
-                </select>
-            </label>
+                    <div className="event-title">
+                        {<h2>Create an event for {group?.name} </h2>}
+                    </div>
 
-            <label>
-                Price
-                <input
-                    type="text"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                />
-            </label>
-            {errors.price && <p className="errors" style={{ color: 'red', fontSize: '12px'}}>{errors.price}</p>}
+                    <form className="event-form" onSubmit={handleSubmit}>
 
-            <label>
-                Start Date
-                <input
-                    type="datetime-local"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                />
-            </label>
-            {errors.startDate && <p className="errors" style={{ color: 'red', fontSize: '12px'}}>{errors.startDate}</p>}
+                        <div className='firstEventDiv'>
 
-            <label>
-                End Date
-                <input
-                    type="datetime-local"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                />
-            </label>
-            {errors.endDate && <p className="errors" style={{ color: 'red', fontSize: '12px'}}>{errors.endDate}</p>}
 
-            <label>
-                Image URL
-                <input
-                    type="text"
-                    value={imageUrl}
-                    onChange={(e) => setImageUrl(e.target.value)}
-                />
-            </label>
+                            <div>
+                                <label className='create-event-label'>
+                                What is the name of your event?
+                                    </label>
+                                    <input
+                                    className='create-event-input'
+                                    type="text"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    />
+                                {errors.name && <p style={{ color: 'red', fontSize: '12px', marginTop: '0'}}>{errors.name}</p>}
+                            </div>
 
-            <label>
-                Description
-                <textarea
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                />
-            </label>
-            {errors.description && <p className="errors" style={{ color: 'red', fontSize: '12px'}}>{errors.description}</p>}
+                        </div>
 
-            <button className="createeventbutton" type="submit">Create Event</button>
-        </form>
+
+
+                        <div style={{borderTop: '1px solid grey'}}>
+                            <label className='create-event-label' style={{marginTop:'15px', marginBottom:'10px'}}>
+                                Is this an in person or online event?
+                            </label>
+                            <select className='create-event-input-smaller' value={eventType} onChange={(e) => setEventType(e.target.value)}>
+                                <option value="In person">In person</option>
+                                <option value="Online">Online</option>
+                            </select>
+                            {errors.eventType && <p className="errors" style={{ color: 'red', fontSize: '12px', marginTop: '0'}}>{errors.eventType}</p>}
+                        </div>
+
+
+
+                        <label className='create-event-label'>
+                            Is this event private or public?
+                        </label>
+                        <select className='create-event-input-smaller' value={visibility} onChange={(e) => setVisibility(e.target.value)} >
+                            <option value="Private">Private</option>
+                            <option value="Public">Public</option>
+                        </select>
+
+
+
+
+                        <label className='create-event-label'>
+                            What is the price for your event?
+                        </label>
+                            <input
+                            className='create-event-input-smaller'
+                                type="text"
+                                value={price}
+                                onChange={(e) => setPrice(e.target.value)}
+                                />
+                        {errors.price && <p className="errors" style={{ color: 'red', fontSize: '12px', marginTop: '0'}}>{errors.price}</p>}
+
+
+                        <div style={{borderTop: '1px solid grey'}}>
+                            <label className='create-event-label' style={{marginTop: '15px'}}>
+                                When does your event start?
+                            </label>
+                                <input
+                                    className='create-event-date-input'
+                                    type="datetime-local"
+                                    value={startDate}
+                                    onChange={(e) => setStartDate(e.target.value)}
+                                />
+                            {errors.startDate && <p className="errors" style={{ color: 'red', fontSize: '12px'}}>{errors.startDate}</p>}
+                        </div>
+
+
+
+                        <label className='create-event-label'>
+                            When does your event end?
+                        </label>
+                            <input
+                                style={{marginBottom: '17px'}}
+                                className='create-event-date-input'
+                                type="datetime-local"
+                                value={endDate}
+                                onChange={(e) => setEndDate(e.target.value)}
+                            />
+                        {errors.endDate && <p className="errors" style={{ color: 'red', fontSize: '12px'}}>{errors.endDate}</p>}
+
+
+
+                        <div style={{borderTop: '1px solid grey'}} >
+                            <label className='create-event-label'>
+                                Please add in image url for your event below:
+                            </label>
+                                <input
+                                    className='create-event-input'
+                                    type="text"
+                                    value={imageUrl}
+                                    onChange={(e) => setImageUrl(e.target.value)}
+                                />
+                            {errors.imageUrl && <p className="errors" style={{ color: 'red', fontSize: '12px', marginTop: '0'}}>{errors.imageUrl}</p>}
+                        </div>
+
+                        <div style={{borderTop: '1px solid grey'}} >
+                            <label className='create-event-label'>
+                                Please describe your event:
+                            </label>
+                                <textarea
+                                    rows="10"
+                                    cols="58"
+                                    value={description}
+                                    onChange={(e) => setDescription(e.target.value)}
+                                />
+                            {errors.description && <p className="errors" style={{ color: 'red', fontSize: '12px', marginTop: '0'}}>{errors.description}</p>}
+                        </div>
+
+                        <button className="signupButton" type="submit">Create Event</button>
+                    </form>
+                </div>
+            </div>
+
         </div>
     );
 

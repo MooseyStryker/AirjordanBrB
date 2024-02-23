@@ -17,7 +17,7 @@ module.exports = {
       await GroupImage.bulkCreate([
         {
           groupId: 1,
-          url: 'https://upload.wikimedia.org/wikipedia/commons/e/ec/Cementerio%2C_Tulc%C3%A1n%2C_Ecuador%2C_2015-07-21%2C_DD_60.JPG',
+          url: 'https://upload.wikimedia.org/wikipedia/commons/b/b8/Sheffield_Park_Gardens%2C_Fletching%2C_Sussex_-_geograph.org.uk_-_1582535.jpg',
           preview: true
         },
         {
