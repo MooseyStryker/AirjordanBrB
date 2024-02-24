@@ -46,6 +46,9 @@ function SignupFormModal() {
       <h1 className='signupbigtitle'>Sign Up</h1>
       <div className='form-container'>
         <form className='signup-form' onSubmit={handleSubmit}>
+        {Object.values(errors).map((error, index) => (
+          <p key={index} style={{ color: 'red', fontSize: '12px', marginTop: '0' }}>{error}</p>
+        ))}
           <label>
             First Name
           </label>
@@ -56,7 +59,7 @@ function SignupFormModal() {
               onChange={(e) => setFirstName(e.target.value)}
               required
             />
-          {errors.firstName && <p>{errors.firstName}</p>}
+          {/* {errors.firstName && <p style={{ color: 'red', fontSize: '12px', marginTop: '0' }}>{errors.firstName}</p>} */}
           <label>
             Last Name
           </label>
@@ -67,7 +70,7 @@ function SignupFormModal() {
               onChange={(e) => setLastName(e.target.value)}
               required
             />
-          {errors.lastName && <p>{errors.lastName}</p>}
+          {/* {errors.lastName && <p style={{ color: 'red', fontSize: '12px', marginTop: '0' }}>{errors.lastName}</p>} */}
           <label style={{marginTop:'20px'}}>
             Email
           </label>
@@ -78,7 +81,7 @@ function SignupFormModal() {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-          {errors.email && <p>{errors.email}</p>}
+          {/* {errors.email && <p style={{ color: 'red', fontSize: '12px', marginTop: '0' }}>{errors.email}</p>} */}
           <label>
             Username
           </label>
@@ -89,7 +92,7 @@ function SignupFormModal() {
               onChange={(e) => setUsername(e.target.value)}
               required
             />
-          {errors.username && <p>{errors.username}</p>}
+          {/* {errors.username && <p style={{ color: 'red', fontSize: '12px', marginTop: '0' }}>{errors.username}</p>} */}
           <label style={{marginTop:'20px'}}>
             Password
           </label>
@@ -100,7 +103,7 @@ function SignupFormModal() {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-          {errors.password && <p>{errors.password}</p>}
+          {/* {errors.password && <p style={{ color: 'red', fontSize: '12px', marginTop: '0' }}>{errors.password}</p>} */}
           <label>
             Confirm Password
           </label>
@@ -111,9 +114,9 @@ function SignupFormModal() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
-          {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
+          {/* {errors.confirmPassword && <p style={{ color: 'red', fontSize: '12px', marginTop: '0' }}>{errors.confirmPassword}</p>} */}
         </form>
-          <button className='signupButton' type="submit">Sign Up</button>
+          <button onClick={handleSubmit} className='signupButton' type="submit">Sign Up</button>
       </div>
     </>
   );

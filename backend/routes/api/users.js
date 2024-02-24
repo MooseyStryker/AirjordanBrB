@@ -54,17 +54,26 @@ router.post('/', async (req, res) => {
     errors.lastName = "Last Name is required";
   }
 
-  if (email.length < 6) {
-    errors.email = 'Password must be 6 characters or more.';
+  if (!password) {
+    errors.password = "Password is required";
+  }
+
+  if (password.length < 6) {
+    errors.password = 'Password must be 6 characters or more.';
    }
 
   if (!username) {
     errors.username = "Username is required";
   }
 
-  if (!password) {
-    errors.password = "Password is required";
+  if (username.length < 6) {
+    errors.username = "Username needs to be longer than 6 characters";
   }
+
+  if (!email.includes('@')) {
+    errors.email = 'Invalid email';
+  }
+
 
   if (Object.keys(errors).length > 0) {
     return res.status(400).json({
