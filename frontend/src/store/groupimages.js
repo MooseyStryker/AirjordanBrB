@@ -37,6 +37,24 @@ export const addGroupImage = (payload, groupId) => async(dispatch) => {
     return data
 }
 
+export const editGroupImage = (payload, groupId) => async(dispatch) => {
+    const getCookie = () => {
+        return Cookies.get("XSRF-TOKEN");
+    };
+
+    const res = await fetch(`/api/groups/${groupId}/images`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'XSRF-TOKEN': getCookie()
+        },
+        body: JSON.stringify(payload)
+    })
+
+    const data = await res.json()
+    dispatch(updateImage(data))
+    return data
+}
 
 
 const initialState = { eventimages: {} }

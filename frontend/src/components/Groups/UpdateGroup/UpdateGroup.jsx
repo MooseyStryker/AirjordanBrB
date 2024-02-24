@@ -16,8 +16,8 @@ export default function UpdateGroup() {
     const [privateGroup, setPrivateGroup] = useState("Private");
     const [location, setLocation] = useState('');
     const [groupImage, setGroupImage] = useState('')
-    const [city, setCity] = useState('')
-    const [state, setState] = useState('')
+    const [city] = useState('')
+    const [state] = useState('')
     const [errors, setErrors] = useState({});
 
 
@@ -88,8 +88,8 @@ export default function UpdateGroup() {
       <form className='group-form' onSubmit={handleSubmit}>
 
       <div className='organizer-title'>
-        <p className='ptagthing'>UPDATE YOUR GROUP'S INFORMATION</p>
-        <h2>We&apos;ll walk you through a few steps to update your group's information</h2>
+        <p className='ptagthing'>UPDATE YOUR GROUP&apos;S INFORMATION</p>
+        <h2>We&apos;ll walk you through a few steps to update your group&apos;s information</h2>
       </div>
 
       <div className='locationdiv'>
