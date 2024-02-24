@@ -3,7 +3,112 @@ body {
     background-color: #f0f0f0;
 }
 
-.singlegroup, .singleEvent {
+.backtogroup {
+    cursor: pointer;
+    font-size: small;
+}
+
+.arrow {
+    color: black;
+}
+
+.group-text {
+    color: teal;
+    text-decoration: underline;
+}
+
+.fullcontainer{
+
+    width: 100%;
+}
+
+.singlegroupcontainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width:100%
+}
+
+.singlegroupdetails{
+    /* border: 1px solid blue; */
+    width: 80%;
+    margin-top: 60px;
+}
+
+
+
+.groupdetails {
+    display: flex;
+    flex-direction: row;
+    padding-left: 0;
+}
+
+.groupdetails li {
+    display: flex;
+    flex-direction: row;
+}
+
+.groupinfo{
+    display: flex;
+    flex-direction: column;
+}
+
+.groupimagesizing{
+    width: 700px;
+    height: auto;
+}
+
+.groupinforcontainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    margin-left: 30px;
+}
+
+.Idontknow{
+    display: flex;
+    align-items: flex-end;
+}
+
+.groupbuttons {
+
+    margin-bottom: 20px;
+    margin-top: 5px;
+    background-color: #008CBA;
+    color: white;
+    padding: 14px 20px;
+    margin-right: 12px;
+    margin-bottom: 0px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    box-shadow: 5px 8px 15px rgba(0, 0, 0, 0.1);
+
+}
+
+.groupsandeventdetails-ingroup{
+    background-color: rgba(211, 211, 211, 0.752);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.eventandgroup-container{
+    width: 80%;
+}
+
+.event-box{
+    display:flex;
+    flex-direction: column;
+}
+
+.singleEventContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -12,51 +117,27 @@ body {
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
     padding: 20px;
     max-width: 600px;
-    margin: 20px auto;
 }
 
-.singlegroup ul, .singleEvent ul {
-    list-style-type: none;
-    padding: 0;
+#topBox{
+    display: flex;
+    flex-direction: row;
+}
+
+#imageDiv-sg {
     width: 100%;
 }
 
-.singlegroup li, .singleEvent li {
+#eventinfo-ingroup {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    width: 100%;
+    align-items: flex-start;
+    width: 50%;
+}
+#eventdateandtimep{
+margin-top: 0;
 }
 
-.singlegroup img, .singleEvent img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    object-fit: cover;
-}
-
-.groupname h2, .eventname h2 {
-    color: #333;
-    font-size: 24px;
-    margin-bottom: 10px;
-}
-
-.singlegroup p, .singleEvent p {
-    color: #666;
-    line-height: 1.6;
-}
-
-.groupbuttons {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    border: none;
-    color: white;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
+#eventnamep {
+    margin-top: 0;
 }

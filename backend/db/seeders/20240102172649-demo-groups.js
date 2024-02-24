@@ -17,14 +17,14 @@ module.exports = {
 
         {
           organizerId: 1,
-          name: "gardening",
+          name: "Gardening Group Name With WordWrapping As Needed",
           about: "This group is dedicated to the art and science of gardening, focusing on planting flowers and growing vegetables.",
           type: "In person",
           private: false,
           city: "Tucson",
           state: "Az"
         },
-        
+
         {
           organizerId: 2,
           name: "aquariums",

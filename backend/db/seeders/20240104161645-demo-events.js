@@ -17,8 +17,8 @@ module.exports = {
         {
           venueId: 1,
           groupId: 1,
-          name: 'Event 1',
-          description: 'This is a description for Event 1',
+          name: 'This is an event based on Gardening! This should look good!',
+          description: 'This is an event based on Gardening! This should look good! This is an event based on Gardening! This should look good! Gardening in its ornamental sense needs a certain level of civilization before it can flourish. Wherever that level has been attained, in all parts of the world and at all periods, people have made efforts to shape their environment into an attractive display. The instinct and even enthusiasm for gardening thus appear to arise from some primitive response to nature, engendering a wish to produce growth and harmony in a creative partnership with it.',
           type: 'Online',
           capacity: 100,
           price: 50,

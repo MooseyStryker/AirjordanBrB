@@ -1,6 +1,6 @@
 /* SignUp.css */
 
-h1 {
+.signupbigtitle {
     text-align: center;
   }
 
@@ -17,11 +17,9 @@ h1 {
   align-items: center;
 }
 
-input {
-  margin-bottom: 10px;
-}
 
 .inputbox {
+  margin-bottom: 10px;
   width: 300px;
 }
 
