@@ -1,18 +1,23 @@
+.login-modal-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .login-form-container {
   width: 400px;
   height: auto;
   display: flex;
   flex-direction: column; /* Stack the children vertically */
-  justify-content: center; /* Center children vertically */
-  align-items: center; /* Center children horizontally */
+  justify-content: flex-start;
+  align-items: center;
 }
 
 
 .login-form-container form {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: ceflex-startnter;
 }
 
 .loginbuttontime {

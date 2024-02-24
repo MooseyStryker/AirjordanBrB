@@ -1,6 +1,5 @@
 import { useSelector } from 'react-redux';
 import { useModal } from '../../context/Modal';
-// import OpenModalButton from '../OpenModalButton';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
 import './PermissionModal.css';

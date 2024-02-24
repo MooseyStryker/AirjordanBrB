@@ -44,7 +44,7 @@ export default function CreateEvent(){
           }
 
           dispatch(getSingleGroup(id))
-        }, [dispatch, sessionUser]);
+        }, [dispatch, sessionUser, navigate, id]);
 
 
 

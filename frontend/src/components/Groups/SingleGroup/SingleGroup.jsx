@@ -133,7 +133,7 @@ export default function OneGroup() {
 
                         <div className='event-box'>
                             <div>
-                                {events?.length === 0 ? <h2>There's no events for this group yet!</h2> : <h2>Upcoming Events: {events?.length}</h2>}
+                                {events?.length === 0 ? <h2>There&apos;s no events for this group yet!</h2> : <h2>Upcoming Events: {events?.length}</h2>}
 
                             </div>
                                 {events && events.map(event => (

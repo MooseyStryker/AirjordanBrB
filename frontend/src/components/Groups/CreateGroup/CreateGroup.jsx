@@ -50,7 +50,7 @@ function CreateGroup() {
     }
 
     setErrors(errors);
-  }, [name, about, type, privateGroup, sessionUser, location, groupImage]);
+  }, [name, about, type, privateGroup, sessionUser, location, groupImage,navigate]);
 
 
 

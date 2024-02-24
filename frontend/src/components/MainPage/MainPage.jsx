@@ -4,7 +4,7 @@ import groupImage from '../../images/mainpage/groups.jpg'
 import eventImage from '../../images/mainpage/events.jpg'
 import createGroupImage from '../../images/mainpage/createGroup.jpg'
 import './MainPage.css';
-import NotLoggedInModal from '../PermssionModal/PermissionModal';
+import NotLoggedInModal from '../PermissionModal/PermissionModal';
 import { useModal } from '../../context/Modal';
 import SignupFormModal from '../SignupFormModal';
 
