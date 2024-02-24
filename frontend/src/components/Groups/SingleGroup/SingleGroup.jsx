@@ -55,9 +55,6 @@ export default function OneGroup() {
         navigate(`/groups`)
     }
 
-    // const handleEventDelete = (id) => {
-    //     dispatch(deleteThisEvent(id))
-    // }
 
 
     return isLoading ? <div>Loading...</div> : (
@@ -94,7 +91,7 @@ export default function OneGroup() {
                                             </button>
 
                                             <button className='groupbuttons' onClick={handleEdit}>
-                                                Edit
+                                                Update
                                             </button>
 
                                             <button className='groupbuttons' onClick={handleGroupDelete}>
@@ -181,16 +178,4 @@ export default function OneGroup() {
     );
 }
 
-                                {/* <div>
-                                    {areYouMaster() &&
-                                        <div>
-                                            <button onClick={() => handleEdit(event.id)}>
-                                                Edit
-                                            </button>
 
-                                            <button onClick={() => handleEventDelete(event.id)}>
-                                                Delete
-                                            </button>
-                                        </div>
-                                    }
-                                </div> */}

@@ -121,7 +121,7 @@ function CreateGroup() {
               value={location}
               onChange={(e) => setLocation(e.target.value)}
             />
-          {errors.location && <p className='errors' style={{ color: 'red', fontSize: '12px'}}>Location is required</p>}
+          {errors.location && <p className='errors' style={{ color: 'red', fontSize: '12px'}}>{errors.location}</p>}
         </div>
       </div>
 
@@ -138,7 +138,7 @@ function CreateGroup() {
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-        {errors.name && <p className='errors' style={{ color: 'red', fontSize: '12px'}}>Name is required</p>}
+        {errors.name && <p className='errors' style={{ color: 'red', fontSize: '12px'}}>{errors.name}</p>}
       </div>
 
 
@@ -158,7 +158,7 @@ function CreateGroup() {
             value={about}
             onChange={(e) => setAbout(e.target.value)}
           />
-        {errors.about && <p className='errors' style={{ color: 'red', fontSize: '12px'}}>Description must be at least 30 characters long</p>}
+        {errors.about && <p className='errors' style={{ color: 'red', fontSize: '12px'}}>{errors.about}</p>}
 
       </div>
 
@@ -172,7 +172,7 @@ function CreateGroup() {
             <option value="In person">In person</option>
             <option value="Online">Online</option>
           </select>
-        {errors.type && <p className='errors' style={{ color: 'red', fontSize: '12px'}}>Group Type is required</p>}
+        {errors.type && <p className='errors' style={{ color: 'red', fontSize: '12px'}}>{errors.type}</p>}
 
         <label className='create-group-label'>
           Is this private or public?
@@ -182,7 +182,7 @@ function CreateGroup() {
             <option value="Public">Public</option>
         </select>
 
-        {errors.visibility && <p className='errors' style={{ color: 'red', fontSize: '12px'}}>Visibility Type is required</p>}
+        {errors.visibility && <p className='errors' style={{ color: 'red', fontSize: '12px'}}>{errors.visibility}</p>}
 
         <label className='create-group-label'>
           Please add an image URL for your group below:

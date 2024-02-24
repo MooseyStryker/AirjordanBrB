@@ -2,6 +2,7 @@ import Cookies from "js-cookie";
 
 
 const ADD_IMAGE = '/groups/:groupId/images'
+const UPDATE_IMAGE = 'UPDATE_IMAGE';
 
 
 
@@ -10,14 +11,14 @@ const addImage = (image) => ({
     type: ADD_IMAGE,
     payload: image
 })
-
+const updateImage = (image) => ({
+    type: UPDATE_IMAGE,
+    payload: image
+});
 
 
 
 export const addGroupImage = (payload, groupId) => async(dispatch) => {
-console.log("🚀 ~ addEventImage ~ eventId:", groupId)
-console.log("🚀 ~ addEventImage ~ payload:", payload)
-
     const getCookie = () => {
         return Cookies.get("XSRF-TOKEN");
     };
@@ -48,11 +49,17 @@ function groupImageReducer(state = initialState, action) {
                 eventimages: {
                     ...state.eventimages, [action.payload.id]: action.payload
                 }
-            }
-
+            };
+        case UPDATE_IMAGE:
+            return {
+                ...state,
+                eventimages: {
+                    ...state.eventimages, [action.payload.id]: action.payload
+                }
+            };
         default:
-            return state
+            return state;
     }
 }
 
-export default groupImageReducer
+export default groupImageReducer;
