@@ -57,7 +57,7 @@ export default function MainPage() {
 
             </div>
 
-            <button className='Joinusalready' type="button" onClick={signupModal}>Join Meetup</button>
+            {!sessionUser && <button className='Joinusalready' type="button" onClick={signupModal}>Join Meetup</button>}
         </div>
     );
 }

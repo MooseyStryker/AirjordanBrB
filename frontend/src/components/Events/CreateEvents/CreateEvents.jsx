@@ -29,6 +29,7 @@ export default function CreateEvent(){
 
     let capacity = parseInt(0)
     let preview = true
+    let venueId = 1
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -77,6 +78,7 @@ export default function CreateEvent(){
 
         const newEvent = {
             groupId: id,
+            venueId,
             name,
             type: eventType,
             //   visibility,
@@ -86,6 +88,7 @@ export default function CreateEvent(){
             description,
             capacity: parseInt(capacity)
         }
+        console.log("🚀 ~ handleSubmit ~ newEvent:", newEvent)
 
         const createEvent = await dispatch(createAnEvent(newEvent,id))
         const eventId = createEvent.id

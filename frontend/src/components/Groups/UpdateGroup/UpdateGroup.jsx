@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import { useCallback } from 'react';
 import { editThisGroup, getSingleGroup } from '../../../store/groups';
+import { addGroupImage } from '../../../store/groupimages';
 
 export default function UpdateGroup() {
     const {groupid: id} = useParams()
@@ -19,6 +20,7 @@ export default function UpdateGroup() {
     const [city] = useState('')
     const [state] = useState('')
     const [errors, setErrors] = useState({});
+    const preview = true
 
 
     const dispatch = useDispatch();
@@ -79,6 +81,15 @@ export default function UpdateGroup() {
         }
 
         const submittedGroup = await dispatch(editThisGroup(edittedGroup, id))
+
+        const groupId = submittedGroup.id
+
+        const groupImageUpload = {
+          url: groupImage,
+          preview
+        }
+
+        await dispatch(addGroupImage(groupImageUpload, groupId))
 
         navigate(`/groups/${submittedGroup.id}`)
 

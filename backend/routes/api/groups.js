@@ -715,12 +715,12 @@ router.post('/:groupId/events', restoreUser, requireAuth, async (req, res, next)
         }
 
             )
-        if (!venue) return res.status(404).json({"message": "Venue couldn't be found"})
+        // if (!venue) return res.status(404).json({"message": "Venue couldn't be found"})
 
         if (group.organizerId === req.user.id) {
             const event = await Event.create({
                 groupId: thisGroupId,
-                venueId: venue.id,
+                // venueId: venue.id,
                 name,
                 type,
                 capacity,
@@ -736,7 +736,7 @@ router.post('/:groupId/events', restoreUser, requireAuth, async (req, res, next)
             return res.json({
                 id: event.id,
                 groupId: thisGroupId,
-                venueId: venue.id,
+                // venueId: venue.id,
                 name: event.name,
                 type: event.type,
                 capacity: parseInt(event.capacity),

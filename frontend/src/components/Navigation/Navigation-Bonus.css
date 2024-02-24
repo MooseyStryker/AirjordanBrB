@@ -56,9 +56,10 @@ li a:hover {
   position: relative;
 }
 
+
 .profile-dropdown {
   position: absolute;
-  top: 7%;
+  top: 5%;
   right: 20px;
 }
 
