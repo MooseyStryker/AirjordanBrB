@@ -91,7 +91,7 @@ body {
 }
 
 .groupsandeventdetails-ingroup{
-    background-color: rgba(211, 211, 211, 0.752);
+    background-color: rgba(211, 211, 211, 0.333);
     width: 100%;
     display: flex;
     flex-direction: column;

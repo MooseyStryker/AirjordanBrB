@@ -100,13 +100,37 @@ export default function OneEvent() {
                                         <p>{`START ${event?.startDate}`}</p>
                                         <p>END {event?.endDate}</p>
                                         {event?.price === 0 ? <p>FREE</p> : <p>${event?.price}</p>}
+
+                                        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                            <p>{event?.type}</p>
+
+                                            {areYouMaster() &&
+                                            <div>
+                                                <button className='groupbuttons' onClick={handleDelete}>
+                                                    Delete
+                                                </button>
+
+                                                <button className='groupbuttons' onClick={handleEdit}>
+                                                    Edit
+                                                </button>
+                                            </div>
+
+                                            }
+                                        </div>
                                     </div>
 
                                 </div>
 
                             </li>
                         </ul>
-                                        <p>{event?.description}</p>
+
+                     <div className='descriptionContainer'>
+                        <div className='descriptionOfEvent'>
+                            <h2 style={{marginBottom:'0'}}>Details</h2>
+                            <p style={{ lineHeight: '1.5' }}>{event?.description}</p>
+
+                        </div>
+                     </div>
 
 
                 </div>
