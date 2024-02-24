@@ -82,16 +82,16 @@ export default function OneEvent() {
 
                                 <div className='Event-details-container'>
 
-                                    <div className='firstBox-groupNameimage'>
+                                    <div onClick={() => navigate(`/groups/${group.id}`)} className='firstBox-groupNameimage'>
                                         <div style={{marginRight:'10px'}} className='groupImageforsomereason'>
                                             {groupPreviewImage && <img style={{width:'100%'}} className='groupimagesizing' src={groupPreviewImage.url} alt="Group" />}
                                         </div>
                                         <div>
                                             <div>
-                                                <h5>{group?.name}</h5>
+                                                <h3>{group?.name}</h3>
                                             </div>
                                             <div>
-                                                {group?.private === false ? <h6 style={{color:'silver'}}>Public</h6> : <h6 style={{color:'silver'}}>Private</h6>}
+                                                {group?.private === false ? <h4 style={{color:'silver'}}>Public</h4> : <h4 style={{color:'silver'}}>Private</h4>}
                                             </div>
                                         </div>
                                     </div>

@@ -1,8 +1,57 @@
 # SocialDistanceUp
+## Salutations!
+This is a full-stack project, in progress clone of the website Meetup. This project has CRUD of several website features, Groups, Events, and there associated images.
+
+## Backend
+- Express
+- Express-Validator
+- Sequelize
+- JWT
+
+## Frontend
+- React
+- React Router
+- Redux
+- CSS
+- Font Awesome
+
+## Launch Instructions
+
+1. Open your terminal or command prompt.
+
+2. Navigate to the project directory using the `cd` command followed by the path to your backend directory. For example, if your backend directory is in a folder named "project" on your desktop, you would type `cd ~/SocialDistanceUp/project/backend`.
+
+3. Once you're in the backend directory, create a new file named `.env` using the command `touch .env`.
+
+4. Open the `.env` file in a text editor of your choice. In this file, you'll need to initialize several variables:
+    ```
+    PORT=8000
+    DB_FILE=db/dev.db
+    JWT_SECRET=<XXXXXXXX>
+    JWT_EXPIRES_IN=604800
+    ```
+    Replace `<XXXXXXXX>` with a secret key of your choosing. This will be used for JSON Web Token (JWT) authentication.
+
+5. Save and close the `.env` file.
+
+6. Now, you'll need to install the necessary dependencies for both the frontend and backend. In your terminal, make sure you're still in the backend directory and run `npm install`. Then, navigate to the frontend directory by typing `cd ../frontend` and run `npm install` again.
+
+7. After the installations are complete, navigate back to the backend directory (`cd ../backend`) and run `npm run dbreset`. This command will create a new database and populate it with seed data.
+
+8. To start the backend server, stay in the backend directory and run `npm start`.
+
+9. Open a new terminal window or tab, navigate to the frontend directory, and run `npm run dev` to start the frontend server.
+
+10. Once the frontend server is running, press "o" in the terminal. This will open a new tab in your default web browser and display the rendered webpage.
+
+11. Have fun running or changing this project to your liking!
+
+
+
 
 ## Database Schema Design
 
-![(images/meetup-db-schema.png)](images/meetup-db-schema.png)
+![(backend/meetup-schema/meetup-db-schema.png)](backend/meetup-schema/meetup-db-schema.png)
 
 ## API Documentation
 
