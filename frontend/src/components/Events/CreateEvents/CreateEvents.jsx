@@ -12,6 +12,7 @@ import { addEventImage } from "../../../store/eventimages";
 
 
 
+
 export default function CreateEvent(){
     const sessionUser = useSelector((state) => state.session.user);
 
@@ -26,6 +27,7 @@ export default function CreateEvent(){
     const [ imageUrl, setImageUrl ] = useState('')
     const [ description, setDescription ] = useState('')
     const [ errors, setErrors ] = useState({})
+    const [displayStartDate, setDisplayStartDate] = useState('');
 
     let capacity = parseInt(0)
     let preview = true
@@ -38,6 +40,8 @@ export default function CreateEvent(){
 
 
 
+
+
     useEffect(() => {
         if(!sessionUser) {
             navigate('/')
@@ -47,7 +51,10 @@ export default function CreateEvent(){
         }, [dispatch, sessionUser, navigate, id]);
 
 
-
+    useEffect(() => {
+        const formattedStartDate = startDate.replace('T', ' ');
+        setDisplayStartDate(formattedStartDate);
+    }, [startDate]);
 
 
     const handleSubmit = async (e) => {
@@ -181,34 +188,14 @@ export default function CreateEvent(){
 
 
 
-                        {/* <div style={{borderTop: '1px solid grey'}}>
-                            <label className='create-event-label' style={{marginTop: '15px'}}>
-                                When does your event start?
-                            </label>
-                                <input
-                                    className='create-event-date-input'
-                                    type="datetime-local"
-                                    placeholder="MM/DD/YYYY, HH/mm AM"
-                                    value={startDate}
-                                    onChange={(e) => setStartDate(e.target.value)}
-                                    />
-                            {errors.startDate && <p className="errors" style={{ color: 'red', fontSize: '12px'}}>{errors.startDate}</p>}
-                        </div> */}
 
 
 
-                        {/* <label className='create-event-label'>
-                            When does your event end?
-                        </label>
-                            <input
-                                style={{marginBottom: '17px'}}
-                                className='create-event-date-input'
-                                type="datetime-local"
-                                placeholder="MM/DD/YYYY, HH/mm PM"
-                                value={endDate}
-                                onChange={(e) => setEndDate(e.target.value)}
-                            />
-                        {errors.endDate && <p className="errors" style={{ color: 'red', fontSize: '12px'}}>{errors.endDate}</p>} */}
+
+
+
+
+
 
                         <div style={{borderTop: '1px solid grey'}}>
                             <label className='create-event-label' style={{marginTop: '15px'}}>
@@ -220,7 +207,7 @@ export default function CreateEvent(){
                                 placeholder="MM/DD/YYYY, HH/MM AM"
                                 onFocus={(e) => e.target.type = 'datetime-local'}
                                 onBlur={(e) => e.target.type = 'text'}
-                                value={startDate}
+                                value={displayStartDate}
                                 onChange={(e) => setStartDate(e.target.value)}
                             />
                             {errors.startDate && <p className="errors" style={{ color: 'red', fontSize: '12px'}}>{errors.startDate}</p>}
@@ -240,6 +227,20 @@ export default function CreateEvent(){
                             onChange={(e) => setEndDate(e.target.value)}
                         />
                         {errors.endDate && <p className="errors" style={{ color: 'red', fontSize: '12px'}}>{errors.endDate}</p>}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
                         <div style={{borderTop: '1px solid grey'}} >

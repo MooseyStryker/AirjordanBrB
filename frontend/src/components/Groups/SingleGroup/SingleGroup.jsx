@@ -4,7 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getSingleGroup } from "../../../store/groups"
 import {
     // deleteThisEvent,
-    getAllEventsByGroupId } from '../../../store/events';
+    getSingleEvent,
+    getAllEventsByGroupId,
+} from '../../../store/events';
 import { deleteGroup } from '../../../store/groups';
 import { useModal } from '../../../context/Modal';
 import './SingleGroup.css'
@@ -16,6 +18,12 @@ export default function OneGroup() {
     const group = useSelector(state => state.groups.groups[id])
     const user = useSelector(state => state.session.user)
     const events = useSelector(state => state.events.events.Events)
+    console.log("🚀 ~ OneGroup ~ events:", events)
+
+    const [eventDescriptions, setEventDescriptions] = useState({});
+
+    console.log("🚀 ~ OneGroup ~ eventDescriptions:", eventDescriptions)
+
 
 
 
@@ -28,17 +36,38 @@ export default function OneGroup() {
 
     const [isLoading, setIsLoading] = useState(true)
 
+
     useEffect(() => {
         const fetchData = async () => {
-            await dispatch(getSingleGroup(id))
-            await dispatch(getAllEventsByGroupId(id))
+            await dispatch(getSingleGroup(id));
+            const allEvents = await dispatch(getAllEventsByGroupId(id));
 
-            setIsLoading(false)
+            if (allEvents && allEvents.Events) {
+                const descriptions = {};
+                for (let event of allEvents.Events) {
+                    const eventDetails = await dispatch(getSingleEvent(event.id));
+                    descriptions[eventDetails.id] = eventDetails.description;
+                }
+                setEventDescriptions(descriptions);
+            }
+
+            setIsLoading(false);
         }
 
-        fetchData()
-    }, [dispatch, id, events?.groupId])
+        fetchData();
+    }, [dispatch, id]);
 
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         await dispatch(getSingleGroup(id))
+    //         await dispatch(getAllEventsByGroupId(id))
+    //         // await dispatch(getSingleEvent(events?.id))
+
+    //         setIsLoading(false)
+    //     }
+
+    //     fetchData()
+    // }, [dispatch, id, events?.groupId])
 
 
     const groupPreviewImage = group?.GroupImages?.find(image => image.preview)
@@ -66,7 +95,6 @@ export default function OneGroup() {
             }, 500);
         } catch (error) {
             console.error('Failed to delete group:', error);
-            // Provide feedback to the user...
         }
     }
 
@@ -98,8 +126,6 @@ export default function OneGroup() {
                                 <div className='groupinfo'>
                                     <h1 style={{marginTop: '0px', marginBottom:'8px'}}>{group?.name}</h1>
                                     <p style={{marginTop: '0px'}}>{`${group?.city}, ${group?.state}`}</p>
-                                    {/* <p>{group?.type}</p> */}
-                                    {/* <p>{group?.numMembers} members</p> */}
                                     <p style={{marginTop: '0px'}}>{`${events?.length} events · ${group?.private ? 'Private' : 'Public'}`}</p>
                                     {group && <p style={{marginTop: '0px'}}> Organized by {group?.Organizer?.firstName} {group?.Organizer?.lastName}</p>}
                                 </div>
@@ -157,13 +183,13 @@ export default function OneGroup() {
 
                         <div className='event-box'>
                             <div>
-                            {events?.length === 0 ?
-                                <h2 style={{ marginBottom: 0 }}>There&apos;s no events for this group yet!</h2>
-                                :
-                                <h2 style={{ marginBottom: 0 }}>Upcoming Events: ({events?.length})</h2>
-                            }
-
+                                {events?.length === 0 ?
+                                    <h2 style={{ marginBottom: 0 }}>There&apos;s no events for this group yet!</h2>
+                                    :
+                                    <h2 style={{ marginBottom: 0 }}>Upcoming Events: ({events?.length})</h2>
+                                }
                             </div>
+
                                 {events && events.map(event => (
                                     <ul onClick={() => navigate(`/events/${event.id}`)} style={{paddingLeft:'0px', cursor:'pointer'}} key={event.id}>
                                         <li className='Full container'>
@@ -182,10 +208,13 @@ export default function OneGroup() {
                                                             <p id='eventnamep'>{event.name}</p>
                                                         </div>
                                                         <div>
-                                                            <p>{event.description}</p>
                                                             <p>{`${group?.city}, ${group?.state}`}</p>
                                                         </div>
                                                     </div>
+                                                </div>
+
+                                                <div id='bottomBox-eventDescription'>
+                                                    <p>{eventDescriptions[event.id]}</p>
                                                 </div>
 
 
@@ -194,7 +223,7 @@ export default function OneGroup() {
 
                                     </ul>
                                 ))}
-                            </div>
+                        </div>
 
                     </div>
                 </div>

@@ -62,7 +62,7 @@ export default function OneEvent() {
 
 
     const handleEdit = () => {
-        navigate(`/groups/${id}/edit`)
+        alert("This feature is coming soon!")
     }
 
     const handleEventDelete = () => {

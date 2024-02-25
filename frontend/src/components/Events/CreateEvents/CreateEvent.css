@@ -6,6 +6,7 @@
 }
 
 .backgroundcolordiv{
+    margin-top: 20px;
     display: flex;
     justify-content: center;
     background-color: #f8f8f8;
@@ -48,4 +49,3 @@ textarea{
 .create-event-input-smaller{
     width: 100px;
 }
-

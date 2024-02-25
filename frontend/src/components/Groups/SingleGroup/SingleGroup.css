@@ -106,7 +106,7 @@ body {
 }
 
 .groupsandeventdetails-ingroup{
-    height: 100vh;
+    min-height: 100vh;
     background-color: rgba(211, 211, 211, 0.333);
     width: 100%;
     display: flex;
