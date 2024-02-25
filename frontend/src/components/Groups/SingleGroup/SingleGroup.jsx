@@ -28,7 +28,7 @@ export default function OneGroup() {
     const { setModalContent } = useModal();
 
 
-      // Setting the Date and Time
+// Setting the Date and Time
     //   const startDate = new Date();
       const endDate = new Date();
       endDate.setHours(endDate.getHours() + 2);
@@ -37,7 +37,7 @@ export default function OneGroup() {
     //   const startTime = startDate.toLocaleTimeString('en-US', options);
     //   const startDateString = startDate.toLocaleDateString('en-US');
 
-      const eventDatesAndTimes = events.map((event, index) => {
+      const eventDatesAndTimes = events?.map((event, index) => {
         const startDate = new Date();
         startDate.setDate(startDate.getDate() + index);
 
@@ -50,6 +50,7 @@ export default function OneGroup() {
 
         return { startDateString, startTime };
     });
+// This will be erased when actual times are in the events
 
 
     const navigate = useNavigate()
