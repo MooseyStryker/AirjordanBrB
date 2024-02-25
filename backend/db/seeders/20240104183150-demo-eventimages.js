@@ -26,13 +26,13 @@ module.exports = {
         },
         {
           eventId: 3,
-          url: 'https://example.com/image3.jpg',
+          url: 'https://upload.wikimedia.org/wikipedia/commons/6/67/Inside_the_Batad_rice_terraces.jpg',
           preview: true
         },
         {
           eventId: 4,
-          url: 'https://example.com/image4.jpg',
-          preview: false
+          url: 'https://en.wikipedia.org/wiki/Landscape#/media/File:Stourhead_garden.jpg',
+          preview: true
         },
         {
           eventId: 5,

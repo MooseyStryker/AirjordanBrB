@@ -26,6 +26,39 @@ module.exports = {
           endDate: new Date(2024, 1, 2)
       },
       {
+        venueId: 1,
+        groupId: 1,
+        name: 'Future Gardening Event',
+        description: 'This is an upcoming event about gardening. Stay tuned for more updates!',
+        type: 'Online',
+        capacity: 100,
+        price: 50,
+        startDate: new Date(2024, 3, 1),
+        endDate: new Date(2024, 3, 2)
+      },
+      {
+        venueId: 1,
+        groupId: 1,
+        name: 'Present Gardening Event',
+        description: 'This is an ongoing event about gardening. Join us to learn and have fun!',
+        type: 'Online',
+        capacity: 90,
+        price: 45,
+        startDate: new Date(2024, 2, 23),
+        endDate: new Date(2024, 2, 24)
+      },
+      {
+        venueId: 1,
+        groupId: 1,
+        name: 'Past Gardening Event',
+        description: 'This was a wonderful event about gardening. We learned a lot and had fun!',
+        type: 'Online',
+        capacity: 80,
+        price: 40,
+        startDate: new Date(2023, 11, 1),
+        endDate: new Date(2023, 11, 2)
+      },
+      {
           venueId: 2,
           groupId: 2,
           name: 'Event 2',
