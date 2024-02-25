@@ -36,7 +36,7 @@ export default function AllEventsOnPage() {
                         </div>
 
                         <div className='events-textbeneath'>
-                            <p style={{color: 'grey'}}>Groups in Meetup</p>
+                            <p style={{color: 'grey'}}>Groups in MeetUpThatWay</p>
                         </div>
                     </div>
 

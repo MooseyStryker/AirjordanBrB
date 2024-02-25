@@ -95,32 +95,31 @@ export default function OneGroup() {
                                 <div className='actonbuttons-groups'>
                                     <div className='Idontknow'>
                                         {areYouMaster() ?
-                                        <div>
-                                            <button className='groupbuttons' onClick={hnadleCreateEvent}>
-                                                Create Event
-                                            </button>
+                                            <div>
+                                                <button className='groupbuttons' onClick={hnadleCreateEvent}>
+                                                    Create Event
+                                                </button>
 
-                                            <button className='groupbuttons' onClick={handleEdit}>
-                                                Update
-                                            </button>
+                                                <button className='groupbuttons' onClick={handleEdit}>
+                                                    Update
+                                                </button>
 
-                                            <button className='groupbuttons' onClick={
-                                                deleteModal
-                                                // handleGroupDelete
-                                            }>
-                                                Delete
-                                            </button>
-                                        </div>
-                                        :
-                                        <div>
-                                            <button className='groupbuttons' onClick={() => alert("Feature coming soon!")}>
-                                                Join this group!
-                                            </button>
-                                        </div>
-
+                                                <button className='groupbuttons' onClick={deleteModal}>
+                                                    Delete
+                                                </button>
+                                            </div>
+                                            :
+                                            (user ?
+                                                <div>
+                                                    <button className='groupbuttons' onClick={() => alert("Feature coming soon!")}>
+                                                        Join this group!
+                                                    </button>
+                                                </div>
+                                                :
+                                               null
+                                            )
                                         }
                                     </div>
-
                                 </div>
 
                             </div>
@@ -146,7 +145,11 @@ export default function OneGroup() {
 
                         <div className='event-box'>
                             <div>
-                                {events?.length === 0 ? <h2>There&apos;s no events for this group yet!</h2> : <h2>Upcoming Events: {events?.length}</h2>}
+                            {events?.length === 0 ?
+                                <h2 style={{ marginBottom: 0 }}>There&apos;s no events for this group yet!</h2>
+                                :
+                                <h2 style={{ marginBottom: 0 }}>Upcoming Events: ({events?.length})</h2>
+                            }
 
                             </div>
                                 {events && events.map(event => (

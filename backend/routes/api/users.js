@@ -66,8 +66,8 @@ router.post('/', async (req, res) => {
     errors.username = "Username is required";
   }
 
-  if (username.length < 6) {
-    errors.username = "Username needs to be longer than 6 characters";
+  if (username.length < 4) {
+    errors.username = "Username needs to be longer than 4 characters";
   }
 
   if (!email.includes('@')) {

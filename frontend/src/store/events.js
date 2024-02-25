@@ -90,6 +90,8 @@ export const createAnEvent = (payload, id) => async(dispatch) => {
     return data
 }
 
+
+
 export const deleteThisEvent = (id) => async(dispatch) => {
     const getCookie = () => {
         return Cookies.get("XSRF-TOKEN");

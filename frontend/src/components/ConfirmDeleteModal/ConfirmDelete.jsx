@@ -38,7 +38,7 @@ function ConfirmDelete({ onDelete }) {
 
       <div className='buttonBox'>
         <div>
-          <button className='Joinusalready' type="button" onClick={onDelete}>Yes, Delete!</button>
+        <button className='Joinusalready' type="button" style={{backgroundColor:'red'}} onClick={() => { onDelete(); closeModal(); }}>Yes, Delete!</button>
         </div>
 
         <button className='Joinusalready' type="button" onClick={() => closeModal()}>No, do not delete this.</button>

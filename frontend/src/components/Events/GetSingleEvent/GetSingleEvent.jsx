@@ -4,7 +4,11 @@ import {
     useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import { getSingleEvent } from '../../../store/events';
-import { deleteGroup, getSingleGroup } from '../../../store/groups';
+import { getSingleGroup } from '../../../store/groups';
+import { deleteThisEvent } from '../../../store/events';
+import { useModal } from '../../../context/Modal';
+import ConfirmDelete from '../../ConfirmDeleteModal/ConfirmDelete';
+
 import './GetSingleEvent.css'
 
 
@@ -19,6 +23,8 @@ export default function OneEvent() {
     console.log("🚀 ~ OneEvent ~ group:", group)
     const user = useSelector(state => state.session.user)
     const navigate = useNavigate()
+
+    const { setModalContent } = useModal();
 
 
     useEffect(() => {
@@ -41,10 +47,14 @@ export default function OneEvent() {
         navigate(`/groups/${id}/edit`)
     }
 
-    const handleDelete = () => {
-        dispatch(deleteGroup(group))
-        navigate(`/groups`)
+    const handleEventDelete = () => {
+        dispatch(deleteThisEvent(id))
+        navigate(`/groups/${group.id}`)
     }
+
+    const deleteModal = () => {
+        setModalContent(<ConfirmDelete onDelete={handleEventDelete} />);
+      }
 
 
 
@@ -106,12 +116,12 @@ export default function OneEvent() {
 
                                             {areYouMaster() &&
                                             <div>
-                                                <button className='groupbuttons' onClick={handleDelete}>
-                                                    Delete
-                                                </button>
-
                                                 <button className='groupbuttons' onClick={handleEdit}>
-                                                    Edit
+                                                    Update
+                                                </button>
+                                                
+                                                <button className='groupbuttons' onClick={deleteModal}>
+                                                    Delete
                                                 </button>
                                             </div>
 

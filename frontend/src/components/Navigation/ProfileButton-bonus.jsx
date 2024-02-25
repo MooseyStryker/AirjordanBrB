@@ -42,6 +42,17 @@ function ProfileButton({ user }) {
     navigate('/')
   };
 
+  const goToGroups = (e) => {
+    e.preventDefault();
+    navigate('/groups');
+    closeMenu();
+  }
+  const goToEvents = (e) => {
+    e.preventDefault();
+    navigate('/events');
+    closeMenu();
+  }
+
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
   return (
@@ -61,6 +72,14 @@ function ProfileButton({ user }) {
           <div className='profilemenu'>
             <li className='greetings' >Hello, {user.firstName}!</li>
             <li className='emailmenu'>{user.email}</li>
+            <li
+            onClick={goToGroups} style={{marginTop:'10px', marginBottom:'10px', cursor:'pointer'}}>
+              View Groups!
+            </li>
+            <li
+            onClick={goToEvents} style={{marginTop:'10px', marginBottom:'10px', cursor:'pointer'}}>
+              View Events!
+            </li>
             <li className='logoutspace' onClick={logout}>
               <p >Log Out</p>
             </li>

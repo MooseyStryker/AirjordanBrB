@@ -31,7 +31,7 @@ export default function GetAllGroups() {
                         </div>
 
                         <div className='textbeneath'>
-                            <p style={{color: 'grey'}}>Groups in Meetup</p>
+                            <p style={{color: 'grey'}}>Groups in MeetUpThatWay</p>
                         </div>
                     </div>
 
@@ -45,6 +45,7 @@ export default function GetAllGroups() {
                                 className='groupbox'
                                 key={group.id}
                                 onClick={() => navigate(`/groups/${group.id}`)}
+                                style={{cursor:'pointer'}}
                             >
                                 <div className='groupimagebox'>
                                     <img className='imageingroups' src={group.previewImage}></img>

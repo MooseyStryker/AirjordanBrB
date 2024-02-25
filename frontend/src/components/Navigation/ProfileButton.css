@@ -23,7 +23,7 @@
   .profilemenu .emailmenu {
     color: #777;
     padding: 10px 0;
-    border-bottom: 1px solid #ddd;
+
   }
 
   .profilemenu button {
@@ -40,11 +40,10 @@
     background-color: #45a049;
   }
 
-  .emailmenu{
-      border-bottom: 1px solid #ddd;
-    }
 
-    .logoutspace{
+
+  .logoutspace{
+      border-top: 1px solid #ddd;
       cursor: pointer;
 
   }

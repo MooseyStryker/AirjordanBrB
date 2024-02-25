@@ -18,7 +18,6 @@ body {
 }
 
 .fullcontainer{
-
     width: 100%;
 }
 
@@ -91,12 +90,12 @@ body {
 }
 
 .groupsandeventdetails-ingroup{
+    height: 100vh;
     background-color: rgba(211, 211, 211, 0.333);
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
 }
 
 .eventandgroup-container{
