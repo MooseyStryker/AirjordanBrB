@@ -58,7 +58,6 @@ export const getSingleGroup = (id) => async(dispatch) => {
     dispatch(singleGroup(data))
 }
 
-
 export const submitNewGroup = (payload) => async(dispatch) => {
     const getCookie = () => {
         return Cookies.get("XSRF-TOKEN");

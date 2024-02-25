@@ -25,9 +25,31 @@ export default function OneGroup() {
     console.log("🚀 ~ OneGroup ~ eventDescriptions:", eventDescriptions)
 
 
-
-
     const { setModalContent } = useModal();
+
+
+      // Setting the Date and Time
+    //   const startDate = new Date();
+      const endDate = new Date();
+      endDate.setHours(endDate.getHours() + 2);
+
+    //   const options = { hour: '2-digit', minute: '2-digit' };
+    //   const startTime = startDate.toLocaleTimeString('en-US', options);
+    //   const startDateString = startDate.toLocaleDateString('en-US');
+
+      const eventDatesAndTimes = events.map((event, index) => {
+        const startDate = new Date();
+        startDate.setDate(startDate.getDate() + index);
+
+        const endDate = new Date();
+        endDate.setHours(endDate.getHours() + index);
+
+        const options = { hour: '2-digit', minute: '2-digit' };
+        const startTime = startDate.toLocaleTimeString('en-US', options);
+        const startDateString = startDate.toLocaleDateString('en-US');
+
+        return { startDateString, startTime };
+    });
 
 
     const navigate = useNavigate()
@@ -56,18 +78,6 @@ export default function OneGroup() {
 
         fetchData();
     }, [dispatch, id]);
-
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         await dispatch(getSingleGroup(id))
-    //         await dispatch(getAllEventsByGroupId(id))
-    //         // await dispatch(getSingleEvent(events?.id))
-
-    //         setIsLoading(false)
-    //     }
-
-    //     fetchData()
-    // }, [dispatch, id, events?.groupId])
 
 
     const groupPreviewImage = group?.GroupImages?.find(image => image.preview)
@@ -190,7 +200,8 @@ export default function OneGroup() {
                                 }
                             </div>
 
-                                {events && events.map(event => (
+                            {/* {events && events.map(event => ( */}
+                                {events && events.map((event, index) => (
                                     <ul onClick={() => navigate(`/events/${event.id}`)} style={{paddingLeft:'0px', cursor:'pointer'}} key={event.id}>
                                         <li className='Full container'>
                                             <div className='singleEventContainer'>
@@ -201,7 +212,9 @@ export default function OneGroup() {
 
                                                     <div id='eventinfo-ingroup'>
                                                         <div id='eventdateandtime'>
-                                                            <p id='eventdateandtimep'>{`${event.startDate}`}</p>
+                                                            {/* <p id='eventdateandtimep'>{`${event.startDate} * ${event.time}`}</p> */}
+                                                            {/* <p style={{marginTop:'0'}}>{startDateString} · {startTime}</p> */}
+                                                            <p style={{marginTop:'0'}}>{eventDatesAndTimes[index].startDateString} · {eventDatesAndTimes[index].startTime}</p>
                                                         </div>
 
                                                         <div id='eventnamecontainer'>
@@ -213,8 +226,8 @@ export default function OneGroup() {
                                                     </div>
                                                 </div>
 
-                                                <div id='bottomBox-eventDescription'>
-                                                    <p>{eventDescriptions[event.id]}</p>
+                                                <div style={{display:'flex', justifyContent:'flex-start'}} id='bottomBox-eventDescription'>
+                                                    <p style={{textAlign:'left'}}>{eventDescriptions[event.id]}</p>
                                                 </div>
 
 

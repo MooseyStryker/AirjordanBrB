@@ -122,15 +122,6 @@ function eventReducer(state = initialState, action) {
         case ALL_EVENTS_VIA_GROUP:
             return { ...state, events: action.payload}
 
-        // case ALL_EVENTS_VIA_GROUP:
-        //     return {
-        //         ...state,
-        //         events: {
-        //             ...state.events,
-        //             [action.payload.groupId]: action.payload.events
-        //         }
-        //     }
-
         case SINGLE_EVENT:
             return {
                 ...state,

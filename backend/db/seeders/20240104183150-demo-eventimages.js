@@ -31,7 +31,7 @@ module.exports = {
         },
         {
           eventId: 4,
-          url: 'https://en.wikipedia.org/wiki/Landscape#/media/File:Stourhead_garden.jpg',
+          url: 'https://upload.wikimedia.org/wikipedia/commons/e/e4/Stourhead_garden.jpg',
           preview: true
         },
         {
