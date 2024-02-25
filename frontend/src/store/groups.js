@@ -125,6 +125,7 @@ export const deleteGroup = ({ id }) => {
       })
       if (response.ok) {
         dispatch(removeGroup(id))
+        dispatch(getAllGroups());
       } else {
         throw new Error('Failed to delete new group')
       }
@@ -159,7 +160,8 @@ function groupReducer(state = initialState, action) {
             }
             case REMOVE_GROUP: {
                 const newState = { ...state };
-                delete newState.groups[action.reportId];
+                delete newState.groups[action.payload];
+                // delete newState.groups[action.id];
                 return newState;
               }
       default:

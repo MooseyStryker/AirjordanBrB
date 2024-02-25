@@ -9,7 +9,7 @@ export default function AllEventsOnPage() {
     let events = useSelector(state => {
         return state.events.events.Events
     })
-    console.log("🚀 ~ events ~ events:", events)
+
 
     const dispatch = useDispatch();
     const navigate = useNavigate();

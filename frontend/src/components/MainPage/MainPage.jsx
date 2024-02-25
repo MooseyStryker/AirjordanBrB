@@ -65,9 +65,11 @@ export default function MainPage() {
                     <p>Find an event that way!</p>
                 </div>
 
-                <div className="creategroup" onClick={createGroup}>
+                <div className="creategroup"
+                    style={!sessionUser ? { pointerEvents: "none", opacity: "0.4" } : { color: 'initial' }}
+                    onClick={createGroup}>
                     <img src={createGroupImage} alt="Start a new group" />
-                    <p style={{ color: !sessionUser ? 'grey' : 'initial' }}>Start a new introvert binge</p>
+                    <p>Start a new introvert binge</p>
                 </div>
 
             </div>

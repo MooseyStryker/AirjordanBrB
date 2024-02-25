@@ -18,6 +18,7 @@ export default function OneGroup() {
     const events = useSelector(state => state.events.events.Events)
 
 
+
     const { setModalContent } = useModal();
 
 
@@ -57,9 +58,16 @@ export default function OneGroup() {
     }
 
 
-    const handleGroupDelete = () => {
-        dispatch(deleteGroup(group))
-        navigate(`/groups`)
+    const handleGroupDelete = async () => {
+        try {
+            await dispatch(deleteGroup(group));
+            setTimeout(() => {
+                navigate('/groups');
+            }, 500);
+        } catch (error) {
+            console.error('Failed to delete group:', error);
+            // Provide feedback to the user...
+        }
     }
 
     const deleteModal = () => {
@@ -80,16 +88,20 @@ export default function OneGroup() {
 
                 <div className='singlegroup'>
                     <ul className='groupdetails'>
-                        <li key={group?.id}>
-                            {groupPreviewImage && <img className='groupimagesizing' src={groupPreviewImage.url} alt="Group" />}
+
+                        <li className='listofgroupdets' key={group?.id}>
+                            <div className='groupimagesizingcontainer'>
+                                {groupPreviewImage && <img className='groupimagesizing' src={groupPreviewImage.url} alt="Group" />}
+                            </div>
+
                             <div className='groupinforcontainer'>
                                 <div className='groupinfo'>
-                                    <h2 style={{marginTop: '0px'}}>{group?.name}</h2>
-                                    <p>{`${group?.city}, ${group?.state}`}</p>
-                                    <p>{group?.type}</p>
-                                    <p>{group?.numMembers} members</p>
-                                    <p>{`${events?.length} events * ${group?.private ? 'Private' : 'Public'}`}</p>
-                                    {group && <p> Organized by {group?.Organizer?.firstName} {group?.Organizer?.lastName}</p>}
+                                    <h1 style={{marginTop: '0px', marginBottom:'8px'}}>{group?.name}</h1>
+                                    <p style={{marginTop: '0px'}}>{`${group?.city}, ${group?.state}`}</p>
+                                    {/* <p>{group?.type}</p> */}
+                                    {/* <p>{group?.numMembers} members</p> */}
+                                    <p style={{marginTop: '0px'}}>{`${events?.length} events · ${group?.private ? 'Private' : 'Public'}`}</p>
+                                    {group && <p style={{marginTop: '0px'}}> Organized by {group?.Organizer?.firstName} {group?.Organizer?.lastName}</p>}
                                 </div>
 
                                 <div className='actonbuttons-groups'>

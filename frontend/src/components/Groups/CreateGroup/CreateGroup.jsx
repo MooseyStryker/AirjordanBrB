@@ -68,7 +68,6 @@ function CreateGroup() {
       setPrivateGroup(false)
     }
 
-      console.log("🚀 ~ CreateGroup ~ privateGroup:", privateGroup)
 
     const newGroup = {
       name,

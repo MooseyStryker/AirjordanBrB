@@ -15,8 +15,7 @@ const addImage = (image) => ({
 
 
 export const addEventImage = (payload, eventId) => async(dispatch) => {
-console.log("🚀 ~ addEventImage ~ eventId:", eventId)
-console.log("🚀 ~ addEventImage ~ payload:", payload)
+
 
 
     const getCookie = () => {

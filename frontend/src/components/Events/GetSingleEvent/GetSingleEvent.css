@@ -25,6 +25,7 @@
 
 
 
+
 .eventDetails-singleEvent {
     list-style-type: none;
     padding: 0;
@@ -51,10 +52,11 @@
     width: 50%;
 }
 
-.groupimagesizing{
+/* .groupimagesizing{
     border-radius: 10px;
     min-width: 100px;
-}
+    max-width: 900px;
+} */
 
 
 
@@ -114,4 +116,9 @@
     display: flex;
     flex-direction: column;
     max-width: 1360px;
+}
+
+.groupdetails {
+    display: flex;
+    justify-content: center;
 }

@@ -18,9 +18,7 @@ export default function OneEvent() {
 
     const dispatch = useDispatch()
     const event = useSelector(state => state.events.events[id])
-    console.log("🚀 ~ OneEvent ~ event:", event)
     const group = useSelector(state => state.groups.groups[event?.groupId])
-    console.log("🚀 ~ OneEvent ~ group:", group)
     const user = useSelector(state => state.session.user)
     const navigate = useNavigate()
 
@@ -63,7 +61,7 @@ export default function OneEvent() {
             <div className='topBarContainerplease'>
 
                 <div className='topBar-singleEvent'>
-                    <div className='backtogroup' onClick={() => navigate('/groups/')}>
+                    <div className='backtogroup' onClick={() => navigate('/events')}>
                         <span style={{marginRight: '8px'}} className='arrow'>{'<'}</span>
                         <span className='group-text'>Events</span>
                     </div>
@@ -119,7 +117,7 @@ export default function OneEvent() {
                                                 <button className='groupbuttons' onClick={handleEdit}>
                                                     Update
                                                 </button>
-                                                
+
                                                 <button className='groupbuttons' onClick={deleteModal}>
                                                     Delete
                                                 </button>

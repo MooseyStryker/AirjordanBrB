@@ -88,7 +88,7 @@ export default function CreateEvent(){
             description,
             capacity: parseInt(capacity)
         }
-        console.log("🚀 ~ handleSubmit ~ newEvent:", newEvent)
+
 
         const createEvent = await dispatch(createAnEvent(newEvent,id))
         const eventId = createEvent.id

@@ -31,7 +31,6 @@ function LoginFormModal() {
     .then(closeModal)
     .catch(async (res) => {
       const data = await res.json();
-      console.log("🚀 ~ handleSubmit ~ data:", data)
       if (data && data.message) {
         setErrors(data.message);
       }

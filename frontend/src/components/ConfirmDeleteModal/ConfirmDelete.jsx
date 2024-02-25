@@ -6,9 +6,8 @@ import { useParams } from 'react-router-dom';
 
 
 function ConfirmDelete({ onDelete }) {
-  console.log("🚀 ~ ConfirmDelete ~ onDelete:", onDelete)
   const {groupid: id} = useParams()
-  console.log("🚀 ~ ConfirmDelete ~ d:", id)
+
   const group = useSelector(state => state.groups.groups[id])
   const user = useSelector(state => state.session.user)
 
@@ -27,7 +26,7 @@ function ConfirmDelete({ onDelete }) {
     }
   }
 
-  console.log("🚀 ~ ConfirmDelete ~ areYouMaster:", areYouMaster())
+  areYouMaster()
 
 
   return (

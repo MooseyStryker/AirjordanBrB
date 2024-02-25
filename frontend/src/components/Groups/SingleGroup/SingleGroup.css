@@ -19,6 +19,7 @@ body {
 
 .fullcontainer{
     width: 100%;
+
 }
 
 .singlegroupcontainer{
@@ -32,9 +33,20 @@ body {
 .singlegroupdetails{
     /* border: 1px solid blue; */
     width: 80%;
+    height: auto;
     margin-top: 60px;
 }
 
+
+.singlegroupdetails{
+
+    max-width: 2000px;
+}
+
+.singlegroup{
+    display: flex;
+    justify-content: space-between;
+}
 
 
 .groupdetails {
@@ -52,9 +64,13 @@ body {
     display: flex;
     flex-direction: column;
 }
+.groupimagesizingcontainer{
+    max-width: 1000px;
+
+}
 
 .groupimagesizing{
-    width: 700px;
+    width: 100%;
     height: auto;
 }
 
