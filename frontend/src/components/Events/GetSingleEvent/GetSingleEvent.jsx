@@ -8,6 +8,12 @@ import { getSingleGroup } from '../../../store/groups';
 import { deleteThisEvent } from '../../../store/events';
 import { useModal } from '../../../context/Modal';
 import ConfirmDelete from '../../ConfirmDeleteModal/ConfirmDelete';
+import { MdAccessTime } from 'react-icons/md';
+import { FaDollarSign } from 'react-icons/fa';
+import { MdLocationOn } from 'react-icons/md';
+
+
+
 
 import './GetSingleEvent.css'
 
@@ -23,6 +29,20 @@ export default function OneEvent() {
     const navigate = useNavigate()
 
     const { setModalContent } = useModal();
+
+
+
+
+    // Setting the Date and Time
+    const startDate = new Date();
+    const endDate = new Date();
+    endDate.setHours(endDate.getHours() + 2);
+
+    const options = { hour: '2-digit', minute: '2-digit' };
+    const startTime = startDate.toLocaleTimeString('en-US', options);
+    const endTime = endDate.toLocaleTimeString('en-US', options);
+    const startDateString = startDate.toLocaleDateString('en-US');
+    const endDateString = endDate.toLocaleDateString('en-US');
 
 
     useEffect(() => {
@@ -104,28 +124,70 @@ export default function OneEvent() {
                                         </div>
                                     </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                     <div className='secondBox-eventDetails'>
-                                        <p>{`START ${event?.startDate}`}</p>
-                                        <p>END {event?.endDate}</p>
-                                        {event?.price === 0 ? <p>FREE</p> : <p>${event?.price}</p>}
+                                    <div style={{display:'flex'}}>
 
-                                        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                            <p>{event?.type}</p>
-
-                                            {areYouMaster() &&
-                                            <div>
-                                                <button className='groupbuttons' onClick={handleEdit}>
-                                                    Update
-                                                </button>
-
-                                                <button className='groupbuttons' onClick={deleteModal}>
-                                                    Delete
-                                                </button>
+                                        <div style={{display:'flex', alignItems:'center'}}>
+                                            <MdAccessTime size={52} />
+                                        </div>
+                                        <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                                            <div style={{marginRight:'10px'}}>
+                                                <p style={{marginBottom:'0'}}>START</p>
+                                                <p style={{marginTop:'0'}}>END</p>
                                             </div>
-
-                                            }
+                                            <div>
+                                                <p style={{marginBottom:'0'}}>{startDateString} · {startTime}</p>
+                                                <p style={{marginTop:'0'}}>{endDateString} · {endTime}</p>
+                                            </div>
                                         </div>
                                     </div>
+
+
+
+                                        {event?.price === 0 ? <p><FaDollarSign size={52}/>FREE</p> : <p><FaDollarSign size={52}/>{event?.price}</p>}
+
+                                        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                            <p><MdLocationOn  size={52} />{event?.type}</p>
+
+                                            {areYouMaster() &&
+                                                <div style={{display:'flex', flexDirection:'row', alignItems:'center'}} >
+                                                    <button className='groupbuttons' onClick={handleEdit}>
+                                                        Update
+                                                    </button>
+
+                                                    <button className='groupbuttons' onClick={deleteModal}>
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            }
+                                        </div>
+
+                                    </div>
+
+
+
+
+
+
+
+
+
+
+
 
                                 </div>
 

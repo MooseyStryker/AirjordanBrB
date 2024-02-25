@@ -59,7 +59,8 @@ export default function UpdateGroup() {
             setName(group.name)
             setAbout(group.about)
             setType(group.type)
-            setPrivateGroup(group.private)
+            // setPrivateGroup(group.private)
+            setPrivateGroup(group.private ? 'Private' : 'Public');
             setLocation(`${group.city}, ${group.state}`)
         }
     }, [group])

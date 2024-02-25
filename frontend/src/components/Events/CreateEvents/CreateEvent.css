@@ -37,3 +37,15 @@
     height: 18px;
     margin-top: 5px;
 }
+textarea{
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.create-event-date-input{
+    width: 160px;
+}
+
+.create-event-input-smaller{
+    width: 100px;
+}
+

@@ -102,7 +102,7 @@ export default function CreateEvent(){
         await dispatch(addEventImage(imageUploaded, eventId))
 
 
-        navigate(`/groups/${id}`)
+        navigate(`/events/${eventId}`)
       };
 
 
@@ -131,6 +131,7 @@ export default function CreateEvent(){
                                     <input
                                     className='create-event-input'
                                     type="text"
+                                    placeholder="Event Name"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
                                     />
@@ -166,44 +167,79 @@ export default function CreateEvent(){
 
 
                         <label className='create-event-label'>
-                            What is the price for your event?
+                                What is the price for your event?
                         </label>
-                            <input
+                        <span className='input-symbol'>$</span>
+                        <input
                             className='create-event-input-smaller'
-                                type="text"
-                                value={price}
-                                onChange={(e) => setPrice(e.target.value)}
-                                />
+                            type="text"
+                            value={price}
+                            placeholder="0"
+                            onChange={(e) => setPrice(e.target.value)}
+                        />
                         {errors.price && <p className="errors" style={{ color: 'red', fontSize: '12px', marginTop: '0'}}>{errors.price}</p>}
 
 
-                        <div style={{borderTop: '1px solid grey'}}>
+
+                        {/* <div style={{borderTop: '1px solid grey'}}>
                             <label className='create-event-label' style={{marginTop: '15px'}}>
                                 When does your event start?
                             </label>
                                 <input
                                     className='create-event-date-input'
                                     type="datetime-local"
+                                    placeholder="MM/DD/YYYY, HH/mm AM"
                                     value={startDate}
                                     onChange={(e) => setStartDate(e.target.value)}
-                                />
+                                    />
                             {errors.startDate && <p className="errors" style={{ color: 'red', fontSize: '12px'}}>{errors.startDate}</p>}
-                        </div>
+                        </div> */}
 
 
 
-                        <label className='create-event-label'>
+                        {/* <label className='create-event-label'>
                             When does your event end?
                         </label>
                             <input
                                 style={{marginBottom: '17px'}}
                                 className='create-event-date-input'
                                 type="datetime-local"
+                                placeholder="MM/DD/YYYY, HH/mm PM"
                                 value={endDate}
                                 onChange={(e) => setEndDate(e.target.value)}
                             />
-                        {errors.endDate && <p className="errors" style={{ color: 'red', fontSize: '12px'}}>{errors.endDate}</p>}
+                        {errors.endDate && <p className="errors" style={{ color: 'red', fontSize: '12px'}}>{errors.endDate}</p>} */}
 
+                        <div style={{borderTop: '1px solid grey'}}>
+                            <label className='create-event-label' style={{marginTop: '15px'}}>
+                                When does your event start?
+                            </label>
+                            <input
+                                className='create-event-date-input'
+                                type="text"
+                                placeholder="MM/DD/YYYY, HH/MM AM"
+                                onFocus={(e) => e.target.type = 'datetime-local'}
+                                onBlur={(e) => e.target.type = 'text'}
+                                value={startDate}
+                                onChange={(e) => setStartDate(e.target.value)}
+                            />
+                            {errors.startDate && <p className="errors" style={{ color: 'red', fontSize: '12px'}}>{errors.startDate}</p>}
+                        </div>
+
+                        <label className='create-event-label'>
+                            When does your event end?
+                        </label>
+                        <input
+                            style={{marginBottom: '17px'}}
+                            className='create-event-date-input'
+                            type="text"
+                            placeholder="MM/DD/YYYY, HH/MM PM"
+                            onFocus={(e) => e.target.type = 'datetime-local'}
+                            onBlur={(e) => e.target.type = 'text'}
+                            value={endDate}
+                            onChange={(e) => setEndDate(e.target.value)}
+                        />
+                        {errors.endDate && <p className="errors" style={{ color: 'red', fontSize: '12px'}}>{errors.endDate}</p>}
 
 
                         <div style={{borderTop: '1px solid grey'}} >
@@ -214,8 +250,9 @@ export default function CreateEvent(){
                                     className='create-event-input'
                                     type="text"
                                     value={imageUrl}
+                                    placeholder="Image URL"
                                     onChange={(e) => setImageUrl(e.target.value)}
-                                />
+                                    />
                             {errors.imageUrl && <p className="errors" style={{ color: 'red', fontSize: '12px', marginTop: '0'}}>{errors.imageUrl}</p>}
                         </div>
 
@@ -227,6 +264,7 @@ export default function CreateEvent(){
                                     rows="10"
                                     cols="58"
                                     value={description}
+                                    placeholder="Please include at least 30 characters"
                                     onChange={(e) => setDescription(e.target.value)}
                                 />
                             {errors.description && <p className="errors" style={{ color: 'red', fontSize: '12px', marginTop: '0'}}>{errors.description}</p>}

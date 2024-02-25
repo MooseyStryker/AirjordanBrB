@@ -31,11 +31,42 @@ function CreateGroup() {
       navigate('/')
     }
 
+    // const errors = {};
+    // if (!name) errors.name = 'Name field is required';
+    // if (name.length > 60) errors.name = 'Name must be 60 characters or less'
+    // if (about.length < 50) errors.about = 'About must have 50 characters or more';
+    // if (type !== 'Online' && type !== 'In person') errors.type = 'Type must be "Online" or "In person"';
+
+    // const [city, state] = location.split(', ').map(item => item.trim());
+
+    // if (!city) errors.city = 'City is required';
+    // if (!state) errors.state = 'State is required';
+
+    // if (groupImage) {
+    //   const fileExtension = groupImage.split('.').pop().toLowerCase();
+    //   if (!['jpg', 'jpeg', 'png'].includes(fileExtension)) {
+    //     errors.groupImage = 'Group image must be a .jpg, .jpeg, or .png file';
+    //   }
+    // }
+
+    // setErrors(errors);
+  }, [name, about, type, privateGroup, sessionUser, location, groupImage,navigate]);
+
+
+
+
+// This is our handle Subit when submitting
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrors({})
+
     const errors = {};
     if (!name) errors.name = 'Name field is required';
     if (name.length > 60) errors.name = 'Name must be 60 characters or less'
     if (about.length < 50) errors.about = 'About must have 50 characters or more';
     if (type !== 'Online' && type !== 'In person') errors.type = 'Type must be "Online" or "In person"';
+    if (!location) errors.location = 'Location is required'
+    if (!groupImage) errors.groupImage = 'Group Image is required'
 
     const [city, state] = location.split(', ').map(item => item.trim());
 
@@ -50,17 +81,7 @@ function CreateGroup() {
     }
 
     setErrors(errors);
-  }, [name, about, type, privateGroup, sessionUser, location, groupImage,navigate]);
 
-
-
-
-// This is our handle Subit when submitting
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setErrors({})
-
-    const [city, state] = location.split(', ').map(item => item.trim());
 
     if (privateGroup === 'Private') {
       setPrivateGroup(true)
@@ -120,7 +141,9 @@ function CreateGroup() {
               value={location}
               onChange={(e) => setLocation(e.target.value)}
             />
-          {errors.location && <p className='errors' style={{ color: 'red', fontSize: '12px'}}>{errors.location}</p>}
+          <p className='errors' style={{ margin:'0px', color: errors.location ? 'red' : 'transparent', fontSize: '12px'}}>
+            {errors.location || '\u00A0'}
+        </p>
         </div>
       </div>
 
@@ -137,7 +160,9 @@ function CreateGroup() {
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-        {errors.name && <p className='errors' style={{ color: 'red', fontSize: '12px'}}>{errors.name}</p>}
+         <p className='errors' style={{ margin:'0px', color: errors.name ? 'red' : 'transparent', fontSize: '12px'}}>
+            {errors.name || '\u00A0'}
+        </p>
       </div>
 
 
@@ -157,7 +182,9 @@ function CreateGroup() {
             value={about}
             onChange={(e) => setAbout(e.target.value)}
           />
-        {errors.about && <p className='errors' style={{ color: 'red', fontSize: '12px'}}>{errors.about}</p>}
+        <p className='errors' style={{ margin:'0px', color: errors.about ? 'red' : 'transparent', fontSize: '12px'}}>
+            {errors.about || '\u00A0'}
+        </p>
 
       </div>
 
@@ -182,16 +209,22 @@ function CreateGroup() {
         </select>
 
         {errors.visibility && <p className='errors' style={{ color: 'red', fontSize: '12px'}}>{errors.visibility}</p>}
+        <p className='errors' style={{ margin:'0px', color: errors.visibility ? 'red' : 'transparent', fontSize: '12px'}}>
+            {errors.visibility || '\u00A0'}
+        </p>
 
         <label className='create-group-label'>
           Please add an image URL for your group below:
           </label>
           <input
           className='create-group-input'
-            type="text"
-            value={groupImage}
-            onChange={(e) => setGroupImage(e.target.value)}
-            />
+          type="text"
+          value={groupImage}
+          onChange={(e) => setGroupImage(e.target.value)}
+          />
+          <p className='errors' style={{ margin:'0px', color: errors.groupImage ? 'red' : 'transparent', fontSize: '12px'}}>
+            {errors.groupImage || '\u00A0'}
+          </p>
 
       </div>
       <button className='signupButton' type="submit">Create Group</button>

@@ -30,10 +30,16 @@ export const addEventImage = (payload, eventId) => async(dispatch) => {
         },
         body: JSON.stringify(payload)
     })
+    if(res.ok){
+        const data = await res.json()
+        console.log("🚀 ~ addEventImage ~ data:", data)
+        dispatch(addImage(data))
+        return data
+    } else {
+        throw new Error('Failed to submit new event Image')
 
-    const data = await res.json()
-    dispatch(addImage(data))
-    return data
+    }
+
 }
 
 
