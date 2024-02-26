@@ -78,7 +78,9 @@ export default function GetAllGroups() {
                                     <p>{`${group.city}, ${group.state}`}</p>
                                     <p>{group.type}</p>
                                     <p>{group.about}</p>
-                                    <p>{eventsPerGroup[group.id]?.length} events · {group.private === false ? "Public" : "Private"}</p>
+                                    {/* <p>{eventsPerGroup[group.id]?.length} events · {group.private === false ? "Public" : "Private"}</p> */}
+                                    <p>{(eventsPerGroup[group.id]?.length || 0)} events · {group.private === false ? "Public" : "Private"}</p>
+
 
                                 </div>
                             </li>
