@@ -142,7 +142,10 @@ export default function CreateEvent(){
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
                                     />
-                                {errors.name && <p style={{ color: 'red', fontSize: '12px', marginTop: '0'}}>{errors.name}</p>}
+                                {/* {errors.name && <p style={{ color: 'red', fontSize: '12px', marginTop: '0'}}>{errors.name}</p>} */}
+                                <p className='error' style={{ margin:'0px', color: errors.name ? 'red' : 'transparent', fontSize: '12px'}}>
+                                    {errors.name || '\u00A0'}
+                                </p>
                             </div>
 
                         </div>
@@ -157,7 +160,10 @@ export default function CreateEvent(){
                                 <option value="In person">In person</option>
                                 <option value="Online">Online</option>
                             </select>
-                            {errors.eventType && <p className="errors" style={{ color: 'red', fontSize: '12px', marginTop: '0'}}>{errors.eventType}</p>}
+                            {/* {errors.eventType && <p className="errors" style={{ color: 'red', fontSize: '12px', marginTop: '0'}}>{errors.eventType}</p>} */}
+                            <p className='error' style={{ margin:'0px', color: errors.eventType ? 'red' : 'transparent', fontSize: '12px'}}>
+                                {errors.eventType || '\u00A0'}
+                            </p>
                         </div>
 
 
@@ -184,7 +190,10 @@ export default function CreateEvent(){
                             placeholder="0"
                             onChange={(e) => setPrice(e.target.value)}
                         />
-                        {errors.price && <p className="errors" style={{ color: 'red', fontSize: '12px', marginTop: '0'}}>{errors.price}</p>}
+                        {/* {errors.price && <p className="errors" style={{ color: 'red', fontSize: '12px', marginTop: '0'}}>{errors.price}</p>} */}
+                        <p className='error' style={{ marginTop:'0px', marginBottom:'5px', color: errors.price ? 'red' : 'transparent', fontSize: '12px'}}>
+                            {errors.price || '\u00A0'}
+                        </p>
 
 
 
@@ -254,7 +263,10 @@ export default function CreateEvent(){
                                     placeholder="Image URL"
                                     onChange={(e) => setImageUrl(e.target.value)}
                                     />
-                            {errors.imageUrl && <p className="errors" style={{ color: 'red', fontSize: '12px', marginTop: '0'}}>{errors.imageUrl}</p>}
+                            {/* {errors.imageUrl && <p className="errors" style={{ color: 'red', fontSize: '12px', marginTop: '0'}}>{errors.imageUrl}</p>} */}
+                            <p className='error' style={{ marginTop:'0px', marginBottom:'5px', color: errors.imageUrl ? 'red' : 'transparent', fontSize: '12px'}}>
+                                {errors.imageUrl || '\u00A0'}
+                            </p>
                         </div>
 
                         <div style={{borderTop: '1px solid grey'}} >
@@ -268,7 +280,10 @@ export default function CreateEvent(){
                                     placeholder="Please include at least 30 characters"
                                     onChange={(e) => setDescription(e.target.value)}
                                 />
-                            {errors.description && <p className="errors" style={{ color: 'red', fontSize: '12px', marginTop: '0'}}>{errors.description}</p>}
+                            {/* {errors.description && <p className="errors" style={{ color: 'red', fontSize: '12px', marginTop: '0'}}>{errors.description}</p>} */}
+                            <p className='error' style={{ marginTop:'0px', marginBottom:'5px', color: errors.description ? 'red' : 'transparent', fontSize: '12px'}}>
+                                {errors.description || '\u00A0'}
+                            </p>
                         </div>
 
                         <button className="signupButton" type="submit">Create Event</button>
